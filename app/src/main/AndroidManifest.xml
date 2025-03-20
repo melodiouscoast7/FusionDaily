@@ -13,7 +13,7 @@
         android:theme="@style/Theme.FusionDailyTest"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.fusiondaily.QuestionnaireActivity"
             android:exported="true"
             android:theme="@style/Theme.FusionDailyTest">
             <intent-filter>
