@@ -3,6 +3,7 @@ package com.example.fusiondaily;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fusiondailytest.R;
@@ -10,6 +11,8 @@ import com.example.fusiondailytest.R;
 public class QuestionnaireActivity extends AppCompatActivity {
 
     private View fragmentOne, fragmentTwo, fragmentThree, fragmentFour, fragmentFive;
+    // Header square TextViews
+    private TextView square1, square2, square3, square4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +26,13 @@ public class QuestionnaireActivity extends AppCompatActivity {
         fragmentFour = findViewById(R.id.fragment_four);
         fragmentFive = findViewById(R.id.fragment_five);
 
-        // Set up buttons for navigation from Fragment One
+        // Initialize header squares
+        square1 = findViewById(R.id.square1);
+        square2 = findViewById(R.id.square2);
+        square3 = findViewById(R.id.square3);
+        square4 = findViewById(R.id.square4);
+
+        // Set up buttons for navigation from Fragment One (Intro)
         Button buttonToFragmentTwoFrom1 = findViewById(R.id.buttonToFragmentTwo_from1);
         buttonToFragmentTwoFrom1.setOnClickListener(v -> showFragment(fragmentTwo));
 
@@ -61,7 +70,50 @@ public class QuestionnaireActivity extends AppCompatActivity {
         fragmentFive.setVisibility(View.GONE);
 
         fragment.setVisibility(View.VISIBLE);
+
+        // Update header squares based on which fragment is visible
+        if (fragment == fragmentTwo) {
+            updateHeaderSquares(2);
+        } else if (fragment == fragmentThree) {
+            updateHeaderSquares(3);
+        } else if (fragment == fragmentFour) {
+            updateHeaderSquares(4);
+        } else if (fragment == fragmentFive) {
+            updateHeaderSquares(5);
+        } else {
+            // For the Intro fragment, reset all squares to inactive
+            updateHeaderSquares(1);
+        }
     }
+
+// This method updates the header squares:
+// 2 => Fragment Two: Activate square1, 3 => Fragment Three: Activate square2, etc
+private void updateHeaderSquares(int fragmentNumber) {
+    // Reset all squares to inactive background
+    square1.setBackgroundResource(R.drawable.qs_square_inactive);
+    square2.setBackgroundResource(R.drawable.qs_square_inactive);
+    square3.setBackgroundResource(R.drawable.qs_square_inactive);
+    square4.setBackgroundResource(R.drawable.qs_square_inactive);
+
+    // Update based on the fragment number
+    switch (fragmentNumber) {
+        case 2:
+            square1.setBackgroundResource(R.drawable.qs_square_active);
+            break;
+        case 3:
+            square2.setBackgroundResource(R.drawable.qs_square_active);
+            break;
+        case 4:
+            square3.setBackgroundResource(R.drawable.qs_square_active);
+            break;
+        case 5:
+            square4.setBackgroundResource(R.drawable.qs_square_active);
+            break;
+        default:
+            // If intro fragment, do nothing or reset all
+            break;
+    }
+}
 
     // This method handles finishing the questionnaire.
     private void finishQuestionnaire() {
