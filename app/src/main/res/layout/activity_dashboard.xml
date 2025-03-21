@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".DashboardActivity">
+
+    <Button
+        android:id="@+id/tasksButton"
+        style="@style/Widget.Material3.Button.IconButton.Filled"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:contentDescription="Goals"
+        app:layout_constraintBottom_toTopOf="@+id/totalProgressBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.953"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <Button
+        android:id="@+id/focusButton"
+        style="@style/Widget.Material3.Button.IconButton.Filled"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:contentDescription="Goals"
+        app:layout_constraintBottom_toTopOf="@+id/totalProgressBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.358"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <Button
+        android:id="@+id/resourcesButton"
+        style="@style/Widget.Material3.Button.IconButton.Filled"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:contentDescription="Goals"
+        app:layout_constraintBottom_toTopOf="@+id/totalProgressBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.662"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <Button
+        android:id="@+id/goalsButton"
+        style="@style/Widget.Material3.Button.IconButton.Filled"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:contentDescription="Goals"
+        app:layout_constraintBottom_toTopOf="@+id/totalProgressBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.049"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <TextView
+        android:id="@+id/goalsButtonText"
+        android:layout_width="40dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="8dp"
+        android:text="Goals"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/goalsButton" />
+
+    <TextView
+        android:id="@+id/focusButtonText"
+        android:layout_width="39dp"
+        android:layout_height="17dp"
+        android:layout_marginTop="8dp"
+        android:text="Focus"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.371"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/focusButton" />
+
+    <TextView
+        android:id="@+id/resourcesButtonText"
+        android:layout_width="68dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="8dp"
+        android:text="Resources"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.65"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/resourcesButton" />
+
+    <TextView
+        android:id="@+id/settingsButtonText"
+        android:layout_width="56dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/action_settings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.921"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tasksButton" />
+
+    <ProgressBar
+        android:id="@+id/totalProgressBar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="377dp"
+        android:layout_height="35dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.558"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dailyProgressBar"
+        app:layout_constraintVertical_bias="0.564" />
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="278dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/app_name"
+        android:textSize="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/dailyProgressBarText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/dailyProgressBarText"
+        android:layout_width="171dp"
+        android:layout_height="44dp"
+        android:fontFamily="@font/roboto"
+        android:text="@string/daily_tasks"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toTopOf="@+id/dailyProgressBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/monthText"
+        android:layout_width="72dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="28dp"
+        android:fontFamily="@font/roboto"
+        android:text="March"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/dailyProgressBarText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleText"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/dayStreakText"
+        android:layout_width="98dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="12dp"
+        android:fontFamily="@font/roboto"
+        android:text="Day Streak"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/dailyProgressBarText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.886" />
+
+    <TextView
+        android:id="@+id/dateText"
+        android:layout_width="67dp"
+        android:layout_height="63dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:text="20"
+        android:textSize="56sp"
+        app:layout_constraintBottom_toTopOf="@+id/dailyProgressBarText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleText"
+        app:layout_constraintVertical_bias="0.037" />
+
+    <TextView
+        android:id="@+id/streakNumberText"
+        android:layout_width="67dp"
+        android:layout_height="63dp"
+        android:layout_marginTop="16dp"
+        android:text="0
+"
+        android:textAlignment="center"
+        android:textSize="56sp"
+        app:layout_constraintBottom_toTopOf="@+id/dailyProgressBarText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.889"
+        app:layout_constraintStart_toEndOf="@+id/dateText"
+        app:layout_constraintTop_toBottomOf="@+id/titleText"
+        app:layout_constraintVertical_bias="0.037" />
+
+    <Button
+        android:id="@+id/todoButton"
+        style="@style/Widget.Material3.Button.Icon"
+        android:layout_width="68dp"
+        android:layout_height="173dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="To do Button"
+        android:text=""
+        app:cornerRadius="23dp"
+        app:layout_constraintEnd_toStartOf="@+id/todoButton1"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/totalProgressBar" />
+
+    <Button
+        android:id="@+id/todoButton1"
+        style="@style/Widget.Material3.Button.Icon"
+        android:layout_width="68dp"
+        android:layout_height="173dp"
+        android:layout_marginStart="92dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="To do Button"
+        android:text=""
+        app:cornerRadius="23dp"
+        app:layout_constraintEnd_toStartOf="@+id/todoButton2"
+        app:layout_constraintHorizontal_bias="0.034"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/totalProgressBar" />
+
+    <Button
+        android:id="@+id/todoButton2"
+        style="@style/Widget.Material3.Button.Icon"
+        android:layout_width="68dp"
+        android:layout_height="173dp"
+        android:layout_marginStart="168dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="To do Button"
+        android:text=""
+        app:cornerRadius="23dp"
+        app:layout_constraintEnd_toStartOf="@+id/todoButton3"
+        app:layout_constraintHorizontal_bias="0.115"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/totalProgressBar" />
+
+    <Button
+        android:id="@+id/todoButton3"
+        style="@style/Widget.Material3.Button.Icon"
+        android:layout_width="68dp"
+        android:layout_height="173dp"
+        android:contentDescription="To do Button"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text=""
+        app:cornerRadius="23dp"
+        app:layout_constraintEnd_toStartOf="@+id/todoButton4"
+        app:layout_constraintTop_toBottomOf="@+id/totalProgressBar" />
+
+    <Button
+        android:id="@+id/todoButton4"
+        style="@style/Widget.Material3.Button.Icon"
+        android:layout_width="68dp"
+        android:layout_height="173dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="To do Button"
+        android:text=""
+        app:cornerRadius="23dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.932"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/totalProgressBar" />
+
+    <TextView
+        android:id="@+id/todoButtonText"
+        android:layout_width="66dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="12dp"
+        android:text="To do"
+        android:textAlignment="center"
+        android:textColor="#FDFDFD"
+        app:layout_constraintEnd_toEndOf="@+id/todoButton"
+        app:layout_constraintHorizontal_bias="0.421"
+        app:layout_constraintStart_toStartOf="@+id/todoButton"
+        app:layout_constraintTop_toTopOf="@+id/todoButton" />
+
+    <TextView
+        android:id="@+id/todoButtonText2"
+        android:layout_width="66dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="12dp"
+        android:text="To do"
+        android:textAlignment="center"
+        android:textColor="#FDFDFD"
+        app:layout_constraintEnd_toEndOf="@+id/todoButton1"
+        app:layout_constraintHorizontal_bias="0.421"
+        app:layout_constraintStart_toStartOf="@+id/todoButton1"
+        app:layout_constraintTop_toTopOf="@+id/todoButton1" />
+
+    <TextView
+        android:id="@+id/todoButtonText3"
+        android:layout_width="66dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="12dp"
+        android:text="To do"
+        android:textAlignment="center"
+        android:textColor="#FDFDFD"
+        app:layout_constraintEnd_toEndOf="@+id/todoButton2"
+        app:layout_constraintHorizontal_bias="0.368"
+        app:layout_constraintStart_toStartOf="@+id/todoButton2"
+        app:layout_constraintTop_toTopOf="@+id/todoButton2" />
+
+    <TextView
+        android:id="@+id/todoButtonText4"
+        android:layout_width="66dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="12dp"
+        android:text="To do"
+        android:textAlignment="center"
+        android:textColor="#FDFDFD"
+        app:layout_constraintEnd_toEndOf="@+id/todoButton3"
+        app:layout_constraintHorizontal_bias="0.394"
+        app:layout_constraintStart_toStartOf="@+id/todoButton3"
+        app:layout_constraintTop_toTopOf="@+id/todoButton3" />
+
+    <TextView
+        android:id="@+id/todoButtonText5"
+        android:layout_width="66dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="12dp"
+        android:text="To do"
+        android:textAlignment="center"
+        android:textColor="#FDFDFD"
+        app:layout_constraintEnd_toEndOf="@+id/todoButton4"
+        app:layout_constraintHorizontal_bias="0.473"
+        app:layout_constraintStart_toStartOf="@+id/todoButton4"
+        app:layout_constraintTop_toTopOf="@+id/todoButton4" />
+
+    <TextView
+        android:id="@+id/dailyCompletionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="65% Complete"
+        app:layout_constraintBottom_toBottomOf="@+id/dailyProgressBar"
+        app:layout_constraintEnd_toEndOf="@+id/dailyProgressBar"
+        app:layout_constraintStart_toStartOf="@+id/dailyProgressBar"
+        app:layout_constraintTop_toTopOf="@+id/dailyProgressBar" />
+
+    <TextView
+        android:id="@+id/totalProgressBarText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Progress 0% Complete"
+        android:textColor="#F4F4F4"
+        app:layout_constraintBottom_toBottomOf="@+id/totalProgressBar"
+        app:layout_constraintEnd_toEndOf="@+id/totalProgressBar"
+        app:layout_constraintStart_toStartOf="@+id/totalProgressBar"
+        app:layout_constraintTop_toTopOf="@+id/totalProgressBar" />
+
+    <ProgressBar
+        android:id="@+id/dailyProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="226dp"
+        android:layout_height="227dp"
+        android:background="@drawable/circle_shape"
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="65"
+        android:progressDrawable="@drawable/circular_progress_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.442" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
