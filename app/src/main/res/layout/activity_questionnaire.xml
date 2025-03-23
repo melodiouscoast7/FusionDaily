@@ -118,7 +118,7 @@
                 android:backgroundTint="#C1C0C0"
                 android:gravity="center"
                 android:text="Begin"
-                android:textColor="#FDFEFF"
+                android:textColor="#37393C"
                 android:textColorLink="#8E8E8E"
                 app:iconTint="#818184" />
         </LinearLayout>
@@ -212,6 +212,7 @@
                     android:layout_weight="1"
                     android:backgroundTint="#B3B3B3"
                     android:text="Back"
+                    android:textColor="#000000"
                     android:textColorLink="#A6A4A4"
                     app:rippleColor="#7C7A7A" />
 
@@ -222,7 +223,8 @@
                     android:layout_marginLeft="15dp"
                     android:layout_weight="1"
                     android:backgroundTint="#B6B6B6"
-                    android:text="Next" />
+                    android:text="Next"
+                    android:textColor="#000000" />
 
             </LinearLayout>
 
@@ -349,7 +351,8 @@
                     android:layout_marginRight="15dp"
                     android:layout_weight="1"
                     android:backgroundTint="#B6B6B6"
-                    android:text="Back" />
+                    android:text="Back"
+                    android:textColor="#000000" />
 
                 <Button
                     android:id="@+id/buttonToFragmentFour_from3"
@@ -358,7 +361,8 @@
                     android:layout_marginLeft="15dp"
                     android:layout_weight="1"
                     android:backgroundTint="#AFAFAF"
-                    android:text="Next" />
+                    android:text="Next"
+                    android:textColor="#000000" />
 
             </LinearLayout>
 
@@ -460,7 +464,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="5. What’s a realistic timeline for this goal, considering your current circumstances?"
-                android:textColor="#E0E0E0"
+                android:textColor="#FAFAFA"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -486,7 +490,8 @@
                     android:layout_marginRight="15dp"
                     android:layout_weight="1"
                     android:backgroundTint="#B3B3B3"
-                    android:text="Back" />
+                    android:text="Back"
+                    android:textColor="#000000" />
 
                 <Button
                     android:id="@+id/buttonToFragmentFive_from4"
@@ -495,7 +500,8 @@
                     android:layout_marginLeft="15dp"
                     android:layout_weight="1"
                     android:backgroundTint="#AFAFAF"
-                    android:text="Next" />
+                    android:text="Next"
+                    android:textColor="#000000" />
 
             </LinearLayout>
 
@@ -586,6 +592,7 @@
                     android:layout_marginRight="15dp"
                     android:layout_weight="1"
                     android:backgroundTint="#B1B1B1"
+                    android:textColor="#000000"
                     android:text="Back" />
 
                 <Button
@@ -595,6 +602,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_weight="1"
                     android:backgroundTint="#BABABA"
+                    android:textColor="#000000"
                     android:text="Finish" />
 
             </LinearLayout>

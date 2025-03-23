@@ -1,6 +1,8 @@
 package com.example.fusiondaily;
 
 import android.os.Bundle;
+import android.widget.TextView;
+import java.util.ArrayList;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,6 +15,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
     private View fragmentOne, fragmentTwo, fragmentThree, fragmentFour, fragmentFive;
     // Header square TextViews
     private TextView square1, square2, square3, square4;
+    private ArrayList<TextView> squares;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,12 @@ public class QuestionnaireActivity extends AppCompatActivity {
         square2 = findViewById(R.id.square2);
         square3 = findViewById(R.id.square3);
         square4 = findViewById(R.id.square4);
+
+        squares = new ArrayList<>();
+        squares.add(square1);
+        squares.add(square2);
+        squares.add(square3);
+        squares.add(square4);
 
         // Set up buttons for navigation from Fragment One (Intro)
         Button buttonToFragmentTwoFrom1 = findViewById(R.id.buttonToFragmentTwo_from1);
@@ -90,24 +99,28 @@ public class QuestionnaireActivity extends AppCompatActivity {
 // 2 => Fragment Two: Activate square1, 3 => Fragment Three: Activate square2, etc
 private void updateHeaderSquares(int fragmentNumber) {
     // Reset all squares to inactive background
-    square1.setBackgroundResource(R.drawable.qs_square_inactive);
-    square2.setBackgroundResource(R.drawable.qs_square_inactive);
-    square3.setBackgroundResource(R.drawable.qs_square_inactive);
-    square4.setBackgroundResource(R.drawable.qs_square_inactive);
+    for (TextView square : squares) {
+        square.setBackgroundResource(R.drawable.qs_square_inactive);
+        square.setTextColor(getResources().getColor(R.color.white));
+    }
 
     // Update based on the fragment number
     switch (fragmentNumber) {
         case 2:
             square1.setBackgroundResource(R.drawable.qs_square_active);
+            square1.setTextColor(getResources().getColor(R.color.black));
             break;
         case 3:
             square2.setBackgroundResource(R.drawable.qs_square_active);
+            square2.setTextColor(getResources().getColor(R.color.black));
             break;
         case 4:
             square3.setBackgroundResource(R.drawable.qs_square_active);
+            square3.setTextColor(getResources().getColor(R.color.black));
             break;
         case 5:
             square4.setBackgroundResource(R.drawable.qs_square_active);
+            square4.setTextColor(getResources().getColor(R.color.black));
             break;
         default:
             // If intro fragment, do nothing or reset all
