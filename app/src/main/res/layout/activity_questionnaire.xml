@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/dead_black">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:padding="16dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <!-- Header: Top section with 4 squares -->
         <LinearLayout
             android:id="@+id/header_squares"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
 
             <!-- Square 1 (will be active on Fragment 2) -->
             <TextView
                 android:id="@+id/square1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="1dp"
                 android:layout_weight="1"
                 android:background="@drawable/qs_square_inactive"
                 android:gravity="center"
                 android:padding="16dp"
-                android:layout_margin="1dp"
                 android:text="Personal Info"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
@@ -41,11 +41,11 @@
                 android:id="@+id/square2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_margin="1dp"
                 android:layout_weight="1"
                 android:background="@drawable/qs_square_inactive"
                 android:gravity="center"
                 android:padding="16dp"
-                android:layout_margin="1dp"
                 android:text="Indentify Goal"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
@@ -56,11 +56,11 @@
                 android:id="@+id/square3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_margin="1dp"
                 android:layout_weight="1"
                 android:background="@drawable/qs_square_inactive"
                 android:gravity="center"
                 android:padding="16dp"
-                android:layout_margin="1dp"
                 android:text="SMART Fix"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
@@ -72,11 +72,11 @@
                 android:id="@+id/square4"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_margin="1dp"
                 android:layout_weight="1"
                 android:background="@drawable/qs_square_inactive"
                 android:gravity="center"
                 android:padding="16dp"
-                android:layout_margin="1dp"
                 android:text="Added Details"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
@@ -127,7 +127,7 @@
                 app:iconTint="#818184" />
         </LinearLayout>
 
-    <!-- Fragment Two Layout -->
+        <!-- Fragment Two Layout -->
         <LinearLayout
             android:id="@+id/fragment_two"
             android:layout_width="match_parent"
@@ -270,9 +270,9 @@
                 android:id="@+id/editTextTextMultiLine3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#FDFDFD"
                 android:ems="10"
                 android:gravity="start|top"
-                android:backgroundTint="#FDFDFD"
                 android:inputType="textMultiLine" />
 
             <TextView
@@ -289,9 +289,9 @@
                 android:id="@+id/editTextTextMultiLine4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#FDFDFD"
                 android:ems="10"
                 android:gravity="start|top"
-                android:backgroundTint="#FDFDFD"
                 android:inputType="textMultiLine" />
 
             <TextView
@@ -308,8 +308,8 @@
                 android:id="@+id/editTextText4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
                 android:backgroundTint="#FDFDFD"
+                android:ems="10"
                 android:inputType="text" />
 
             <TextView
@@ -326,8 +326,8 @@
                 android:id="@+id/editTextText5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
                 android:backgroundTint="#FDFDFD"
+                android:ems="10"
                 android:inputType="text" />
 
             <TextView
@@ -344,9 +344,9 @@
                 android:id="@+id/editTextTextMultiLine5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#FDFDFD"
                 android:ems="10"
                 android:gravity="start|top"
-                android:backgroundTint="#FDFDFD"
                 android:inputType="textMultiLine" />
 
             <LinearLayout
@@ -557,8 +557,8 @@
                 android:id="@+id/editTextText7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
                 android:backgroundTint="#FDFDFD"
+                android:ems="10"
                 android:inputType="text" />
 
             <TextView
@@ -575,9 +575,9 @@
                 android:id="@+id/editTextTextMultiLine10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#FDFDFD"
                 android:ems="10"
                 android:gravity="start|top"
-                android:backgroundTint="#FDFDFD"
                 android:inputType="textMultiLine" />
 
             <TextView
@@ -594,8 +594,8 @@
                 android:id="@+id/editTextText8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
                 android:backgroundTint="#FDFDFD"
+                android:ems="10"
                 android:inputType="text" />
 
             <LinearLayout
@@ -612,8 +612,8 @@
                     android:layout_marginRight="15dp"
                     android:layout_weight="1"
                     android:backgroundTint="#D3D3D3"
-                    android:textColor="#000000"
-                    android:text="Back" />
+                    android:text="Back"
+                    android:textColor="#000000" />
 
                 <Button
                     android:id="@+id/buttonFinish_from5"
@@ -622,8 +622,8 @@
                     android:layout_marginLeft="15dp"
                     android:layout_weight="1"
                     android:backgroundTint="#D3D3D3"
-                    android:textColor="#000000"
-                    android:text="Finish" />
+                    android:text="Finish"
+                    android:textColor="#000000" />
 
             </LinearLayout>
 
