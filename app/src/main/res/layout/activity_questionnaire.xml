@@ -29,6 +29,7 @@
                 android:background="@drawable/qs_square_inactive"
                 android:gravity="center"
                 android:padding="16dp"
+                android:layout_margin="1dp"
                 android:text="Personal Info"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
@@ -44,6 +45,7 @@
                 android:background="@drawable/qs_square_inactive"
                 android:gravity="center"
                 android:padding="16dp"
+                android:layout_margin="1dp"
                 android:text="Indentify Goal"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
@@ -58,6 +60,7 @@
                 android:background="@drawable/qs_square_inactive"
                 android:gravity="center"
                 android:padding="16dp"
+                android:layout_margin="1dp"
                 android:text="SMART Fix"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
@@ -73,6 +76,7 @@
                 android:background="@drawable/qs_square_inactive"
                 android:gravity="center"
                 android:padding="16dp"
+                android:layout_margin="1dp"
                 android:text="Added Details"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
@@ -115,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
-                android:backgroundTint="#C1C0C0"
+                android:backgroundTint="#D3D3D3"
                 android:gravity="center"
                 android:text="Begin"
                 android:textColor="#37393C"
@@ -134,7 +138,7 @@
             android:visibility="gone">
 
             <TextView
-                android:layout_width="379dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/qs_title_header_box"
                 android:text="Personal Information"
@@ -157,6 +161,7 @@
                 android:id="@+id/editTextText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#FDFDFD"
                 android:ems="10"
                 android:inputType="text"
                 android:textColor="#FDFDFD" />
@@ -175,6 +180,7 @@
                 android:id="@+id/editTextTextMultiLine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#FDFDFD"
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine" />
@@ -193,6 +199,7 @@
                 android:id="@+id/editTextTextMultiLine2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#FDFDFD"
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine" />
@@ -210,7 +217,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#B3B3B3"
+                    android:backgroundTint="#D3D3D3"
                     android:text="Back"
                     android:textColor="#000000"
                     android:textColorLink="#A6A4A4"
@@ -222,7 +229,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#B6B6B6"
+                    android:backgroundTint="#D3D3D3"
                     android:text="Next"
                     android:textColor="#000000" />
 
@@ -241,7 +248,7 @@
             android:visibility="gone">
 
             <TextView
-                android:layout_width="379dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/qs_title_header_box"
                 android:text="Identify Goal"
@@ -265,6 +272,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:gravity="start|top"
+                android:backgroundTint="#FDFDFD"
                 android:inputType="textMultiLine" />
 
             <TextView
@@ -283,6 +291,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:gravity="start|top"
+                android:backgroundTint="#FDFDFD"
                 android:inputType="textMultiLine" />
 
             <TextView
@@ -300,6 +309,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:backgroundTint="#FDFDFD"
                 android:inputType="text" />
 
             <TextView
@@ -317,6 +327,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:backgroundTint="#FDFDFD"
                 android:inputType="text" />
 
             <TextView
@@ -335,6 +346,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:gravity="start|top"
+                android:backgroundTint="#FDFDFD"
                 android:inputType="textMultiLine" />
 
             <LinearLayout
@@ -350,7 +362,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#B6B6B6"
+                    android:backgroundTint="#D3D3D3"
                     android:text="Back"
                     android:textColor="#000000" />
 
@@ -360,7 +372,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#AFAFAF"
+                    android:backgroundTint="#D3D3D3"
                     android:text="Next"
                     android:textColor="#000000" />
 
@@ -379,10 +391,10 @@
             android:visibility="gone">
 
             <TextView
-                android:layout_width="379dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/qs_title_header_box"
-                android:text="SMART Adjustment"
+                android:text="SMART Fix"
                 android:textAlignment="center"
                 android:textSize="34sp"
                 android:textStyle="bold" />
@@ -401,6 +413,7 @@
                 android:id="@+id/editTextTextMultiLine6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#FDFDFD"
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine" />
@@ -419,6 +432,7 @@
                 android:id="@+id/editTextTextMultiLine7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#FDFDFD"
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine" />
@@ -437,6 +451,7 @@
                 android:id="@+id/editTextText6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#FDFDFD"
                 android:ems="10"
                 android:inputType="text" />
 
@@ -454,6 +469,7 @@
                 android:id="@+id/editTextTextMultiLine8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#FDFDFD"
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine" />
@@ -472,6 +488,7 @@
                 android:id="@+id/editTextTextMultiLine9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#FDFDFD"
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine" />
@@ -489,7 +506,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#B3B3B3"
+                    android:backgroundTint="#D3D3D3"
                     android:text="Back"
                     android:textColor="#000000" />
 
@@ -499,7 +516,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#AFAFAF"
+                    android:backgroundTint="#D3D3D3"
                     android:text="Next"
                     android:textColor="#000000" />
 
@@ -518,7 +535,7 @@
             android:visibility="gone">
 
             <TextView
-                android:layout_width="379dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/qs_title_header_box"
                 android:text="Additional Details"
@@ -541,6 +558,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:backgroundTint="#FDFDFD"
                 android:inputType="text" />
 
             <TextView
@@ -559,6 +577,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:gravity="start|top"
+                android:backgroundTint="#FDFDFD"
                 android:inputType="textMultiLine" />
 
             <TextView
@@ -576,6 +595,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:backgroundTint="#FDFDFD"
                 android:inputType="text" />
 
             <LinearLayout
@@ -591,7 +611,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#B1B1B1"
+                    android:backgroundTint="#D3D3D3"
                     android:textColor="#000000"
                     android:text="Back" />
 
@@ -601,7 +621,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#BABABA"
+                    android:backgroundTint="#D3D3D3"
                     android:textColor="#000000"
                     android:text="Finish" />
 
