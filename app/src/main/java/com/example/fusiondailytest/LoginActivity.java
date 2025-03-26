@@ -23,6 +23,9 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
+        TextView registerLink = findViewById(R.id.registerLink);
+        registerLink.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
+
         // Check if the user is already logged in
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser != null) {
@@ -35,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         Button loginBtn = findViewById(R.id.loginBtn);
-        TextView registerLink = findViewById(R.id.registerLink);
+
 
         loginBtn.setOnClickListener(v -> {
             String emailText = email.getText().toString().trim();
@@ -55,9 +58,5 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Please enter email and password", Toast.LENGTH_SHORT).show();
             }
         });
-
-        registerLink.setOnClickListener(v ->
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class))
-        );
     }
 }

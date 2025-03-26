@@ -52,8 +52,10 @@ public class RegisterActivity extends AppCompatActivity {
 
                             if (task.isSuccessful()) {
                                 Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                                finish();
+
+                                // Navigate to MainActivity after successful registration
+                                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                finish();  // Close RegisterActivity to prevent user from returning to it
                             } else {
                                 String errorMessage = getFirebaseErrorMessage(task.getException());
                                 Toast.makeText(RegisterActivity.this, errorMessage, Toast.LENGTH_LONG).show();

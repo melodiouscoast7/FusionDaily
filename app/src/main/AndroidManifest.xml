@@ -14,6 +14,15 @@
         android:theme="@style/Theme.FusionDailyTest"
         tools:targetApi="31">
         <activity
+            android:name="com.example.fusiondailytest.RegisterActivity"
+            android:label="Register"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        <activity
+            android:name="com.example.fusiondailytest.MainActivity"
+            android:label="Main"
+            android:theme="@style/Theme.FusionDailyTest" />
+
+        <activity
             android:name="com.example.fusiondailytest.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.FusionDailyTest">
