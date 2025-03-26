@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "344068808757",
+    "project_id": "fusion-daily-6cd7d",
+    "storage_bucket": "fusion-daily-6cd7d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344068808757:android:07b7bba538e091381f117c",
+        "android_client_info": {
+          "package_name": "com.FullSail.FusionDaily"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH4apjAhkQPvyDxIa8AKgtK9CTZgCG3Lw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344068808757:android:09ab9571984169521f117c",
+        "android_client_info": {
+          "package_name": "com.example.fusiondailytest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH4apjAhkQPvyDxIa8AKgtK9CTZgCG3Lw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Primary Colors -->
+    <color name="primaryColor">#6200EE</color>  <!-- Deep Purple -->
+    <color name="primaryLightColor">#BB86FC</color>  <!-- Light Purple -->
+    <color name="primaryDarkColor">#3700B3</color>  <!-- Dark Purple -->
+    <color name="secondaryColor">#03DAC5</color>  <!-- Teal -->
+
+    <!-- Neutral Colors -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="grayLight">#E0E0E0</color>
+    <color name="grayDark">#424242</color>
+
+    <!-- Accent Colors -->
+    <color name="accentRed">#FF3D00</color>
+    <color name="accentPink">#F50057</color>
+    <color name="accentPurple">#9C27B0</color>
+    <color name="accentDeepPurple">#673AB7</color>
+    <color name="accentBlue">#2196F3</color>
+    <color name="accentTeal">#009688</color>
+    <color name="accentGreen">#4CAF50</color>
+    <color name="accentYellow">#FFEB3B</color>
+    <color name="accentOrange">#FF9800</color>
+
+    <!-- Soft / Pastel Colors -->
+    <color name="pastelBlue">#A7C7E7</color>
+    <color name="pastelGreen">#77DD77</color>
+    <color name="pastelYellow">#FFFAA0</color>
+    <color name="pastelPink">#FFB6C1</color>
+    <color name="pastelPurple">#D8BFD8</color>
+
+    <!-- Earth Tones -->
+    <color name="earthBrown">#8B5A2B</color>
+    <color name="earthGreen">#6B8E23</color>
+    <color name="earthBlue">#4682B4</color>
+    <color name="earthClay">#C96A50</color>
+
+    <!-- Gradient Base Colors -->
+    <color name="gradientStart">#FF6F00</color>  <!-- Deep Orange -->
+    <color name="gradientEnd">#D500F9</color>  <!-- Purple -->
+
+    <!-- Custom Brand Color -->
+    <color name="companyColor">#FF5733</color>  <!-- Bright Orange -->
 </resources>
