@@ -21,6 +21,10 @@
             android:name="com.example.fusiondailytest.MainActivity"
             android:label="Main"
             android:theme="@style/Theme.FusionDailyTest" />
+        <activity
+            android:name="com.example.fusiondailytest.DashboardActivity" />
+        <activity
+            android:name="com.example.fusiondaily.QuestionnaireActivity" />
 
         <activity
             android:name="com.example.fusiondailytest.LoginActivity"

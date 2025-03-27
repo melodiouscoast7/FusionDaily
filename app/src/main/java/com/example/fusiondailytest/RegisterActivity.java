@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.fusiondaily.QuestionnaireActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 
@@ -54,7 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
 
                                 // Navigate to MainActivity after successful registration
-                                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                startActivity(new Intent(RegisterActivity.this, QuestionnaireActivity.class));
                                 finish();  // Close RegisterActivity to prevent user from returning to it
                             } else {
                                 String errorMessage = getFirebaseErrorMessage(task.getException());
@@ -64,7 +66,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        loginLink.setOnClickListener(v -> startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
+        loginLink.setOnClickListener(v -> startActivity(new Intent(RegisterActivity.this, QuestionnaireActivity.class)));
     }
 
     private boolean validateInput(String email, String password) {

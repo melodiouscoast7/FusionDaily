@@ -11,7 +11,7 @@
 
 
     <Button
-        android:id="@+id/tasksButton"
+        android:id="@+id/settingsButton"
         style="@style/Widget.Material3.Button.IconButton.Filled"
         android:layout_width="85dp"
         android:layout_height="85dp"
@@ -125,7 +125,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.921"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tasksButton" />
+        app:layout_constraintTop_toBottomOf="@+id/settingsButton" />
 
     <ProgressBar
         android:id="@+id/totalProgressBar"
