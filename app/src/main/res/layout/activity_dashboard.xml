@@ -5,7 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="#3D3E48"
     tools:context=".DashboardActivity">
+
+
 
     <Button
         android:id="@+id/tasksButton"
@@ -63,6 +66,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.9" />
 
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="#4E3030"
+        android:backgroundTint="#2A2A2A"
+        app:layout_constraintBottom_toBottomOf="@+id/dailyProgressBar"
+        app:layout_constraintEnd_toEndOf="@+id/dailyProgressBar"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/dailyProgressBar"
+        app:layout_constraintTop_toBottomOf="@+id/dailyProgressBarTitleText"
+        app:layout_constraintVertical_bias="0.5">
+
+    </ImageView>
+
     <TextView
         android:id="@+id/goalsButtonText"
         android:layout_width="40dp"
@@ -70,6 +87,7 @@
         android:layout_marginStart="36dp"
         android:layout_marginTop="8dp"
         android:text="Goals"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/goalsButton" />
 
@@ -79,6 +97,7 @@
         android:layout_height="17dp"
         android:layout_marginTop="8dp"
         android:text="Focus"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.371"
         app:layout_constraintStart_toStartOf="parent"
@@ -90,6 +109,7 @@
         android:layout_height="20dp"
         android:layout_marginTop="8dp"
         android:text="Resources"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.65"
         app:layout_constraintStart_toStartOf="parent"
@@ -101,6 +121,7 @@
         android:layout_height="22dp"
         android:layout_marginTop="8dp"
         android:text="@string/action_settings"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.921"
         app:layout_constraintStart_toStartOf="parent"
@@ -111,6 +132,10 @@
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="377dp"
         android:layout_height="35dp"
+        android:indeterminate="false"
+        android:indeterminateTint="#9E4949"
+        android:progress="45"
+        android:progressTint="#0078D7"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.558"
@@ -125,6 +150,7 @@
         android:layout_marginTop="40dp"
         android:fontFamily="@font/roboto_bold"
         android:text="@string/app_name"
+        android:textColor="@color/white"
         android:textSize="50dp"
         app:layout_constraintBottom_toTopOf="@+id/dailyProgressBarText"
         app:layout_constraintEnd_toEndOf="parent"
@@ -134,11 +160,12 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/dailyProgressBarText"
+        android:id="@+id/dailyProgressBarTitleText"
         android:layout_width="171dp"
         android:layout_height="44dp"
         android:fontFamily="@font/roboto"
         android:text="@string/daily_tasks"
+        android:textColor="@color/white"
         android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@+id/dailyProgressBar"
         app:layout_constraintEnd_toEndOf="parent"
@@ -150,14 +177,14 @@
         android:layout_width="72dp"
         android:layout_height="28dp"
         android:layout_marginStart="24dp"
-        android:layout_marginBottom="28dp"
         android:fontFamily="@font/roboto"
         android:text="March"
+        android:textColor="@color/white"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/dailyProgressBarText"
+        app:layout_constraintBottom_toTopOf="@+id/dailyProgressBarTitleText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleText"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.706" />
 
     <TextView
         android:id="@+id/dayStreakText"
@@ -166,11 +193,12 @@
         android:layout_marginEnd="12dp"
         android:fontFamily="@font/roboto"
         android:text="Day Streak"
+        android:textColor="@color/white"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/dailyProgressBarText"
+        app:layout_constraintBottom_toTopOf="@+id/dailyProgressBarTitleText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.886" />
+        app:layout_constraintVertical_bias="0.884" />
 
     <TextView
         android:id="@+id/dateText"
@@ -179,27 +207,28 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:text="20"
+        android:textColor="@color/white"
         android:textSize="56sp"
-        app:layout_constraintBottom_toTopOf="@+id/dailyProgressBarText"
+        app:layout_constraintBottom_toTopOf="@+id/monthText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleText"
-        app:layout_constraintVertical_bias="0.037" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/streakNumberText"
         android:layout_width="67dp"
         android:layout_height="63dp"
         android:layout_marginTop="16dp"
-        android:text="0
-"
+        android:text="0"
         android:textAlignment="center"
+        android:textColor="@color/white"
         android:textSize="56sp"
-        app:layout_constraintBottom_toTopOf="@+id/dailyProgressBarText"
+        app:layout_constraintBottom_toTopOf="@+id/dayStreakText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.889"
         app:layout_constraintStart_toEndOf="@+id/dateText"
         app:layout_constraintTop_toBottomOf="@+id/titleText"
-        app:layout_constraintVertical_bias="0.037" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/todoButton"
@@ -344,10 +373,11 @@
         app:layout_constraintTop_toTopOf="@+id/todoButton4" />
 
     <TextView
-        android:id="@+id/dailyCompletionText"
+        android:id="@+id/dailyProgressBarText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="45% Complete"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/dailyProgressBar"
         app:layout_constraintEnd_toEndOf="@+id/dailyProgressBar"
         app:layout_constraintStart_toStartOf="@+id/dailyProgressBar"
@@ -368,7 +398,7 @@
         android:id="@+id/dailyProgressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="226dp"
-        android:layout_height="227dp"
+        android:layout_height="226dp"
         android:background="@drawable/circle_shape"
         android:indeterminate="false"
         android:max="100"
@@ -379,6 +409,6 @@
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.442" />
+        app:layout_constraintVertical_bias="0.441" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
