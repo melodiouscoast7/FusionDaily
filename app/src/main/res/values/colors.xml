@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    // Alive Colors
+    <color name="fusion_blue">#0078D7</color>
+    <color name="neon_mint">#22E2A4</color>
+    <color name="electric_coral">#FF5A5F</color>
+    <color name="bright_yellow">#FFD93D</color>
+    <color name="dark_graphite">#2C2C2E</color>
+    <color name="soft_grey">#F2F2F2</color>
+
+    // Dead Colors
+    <color name="dead_black">#3D3E48</color>
+    <color name="grey">#A29C9C</color>
+
     <!-- Primary Colors -->
     <color name="primaryColor">#6200EE</color>  <!-- Deep Purple -->
     <color name="primaryLightColor">#BB86FC</color>  <!-- Light Purple -->
