@@ -1,5 +1,6 @@
 package com.example.fusiondaily;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 import java.util.ArrayList;
@@ -8,6 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fusiondailytest.DashboardActivity;
+import com.example.fusiondailytest.LoginActivity;
 import com.example.fusiondailytest.R;
 
 public class QuestionnaireActivity extends AppCompatActivity {
@@ -130,7 +133,7 @@ private void updateHeaderSquares(int fragmentNumber) {
 
     // This method handles finishing the questionnaire.
     private void finishQuestionnaire() {
-        // Add your finish logic (e.g., save data, submit responses)
+        startActivity(new Intent(QuestionnaireActivity.this, DashboardActivity.class));
         finish();  // For now, simply finish the activity
     }
 }
