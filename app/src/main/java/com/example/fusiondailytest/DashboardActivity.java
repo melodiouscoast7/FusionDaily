@@ -27,6 +27,10 @@ public class DashboardActivity extends AppCompatActivity {
     private TextView dailyProgressText;
     private Button settingsButton;
 
+    private Button goalsButton;
+
+    private Button focusButton;
+
     private TextView monthText;
     private TextView dateText;
     private int totalProgressValue = 0; // Variable to track task progress (0-100 scale)
@@ -39,7 +43,7 @@ public class DashboardActivity extends AppCompatActivity {
     final private int month = localCalendar.get(Calendar.MONTH);
 
     String[] months = new String[]{"January", "February", "March", "April",
-            "May", "June", "July", "Augest", "September", "October", "November", "December"};
+            "May", "June", "July", "August", "September", "October", "November", "December"};
 
 
     @Override
@@ -54,6 +58,8 @@ public class DashboardActivity extends AppCompatActivity {
         dailyProgressBar = findViewById(R.id.dailyProgressBar);
         dailyProgressText = findViewById(R.id.dailyProgressBarText);
 
+        goalsButton = findViewById(R.id.goalsButton);
+        focusButton = findViewById(R.id.focusButton);
         settingsButton = findViewById(R.id.settingsButton);
         // Example logic to simulate progress updates
         updateTotalProgress(20); // Increment progress by 20%
@@ -73,6 +79,21 @@ public class DashboardActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        goalsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateDailyProgress(-5);
+
+            }
+        });
+
+        focusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateDailyProgress(5);
+            }
+        });
     }
 
     // Method to update progress
@@ -90,7 +111,9 @@ public class DashboardActivity extends AppCompatActivity {
         if (dailyProgressValue > 100) {
             dailyProgressValue = 100; // Cap progress at 100%
         }
-
+        if (dailyProgressValue < 0) {
+            dailyProgressValue = 0; // Cap progress at 100%
+        }
         // Update the ProgressBar and display text
         dailyProgressBar.setProgress(dailyProgressValue);
         dailyProgressText.setText(dailyProgressValue + "% Complete");
