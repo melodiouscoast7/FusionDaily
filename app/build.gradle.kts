@@ -16,6 +16,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "OPENAI_API_KEY", "\"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\"")
     }
 
     buildTypes {
@@ -33,6 +35,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 

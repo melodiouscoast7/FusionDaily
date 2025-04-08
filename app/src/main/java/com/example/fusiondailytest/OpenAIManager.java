@@ -14,7 +14,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 public class OpenAIManager {
-    private static final String API_KEY = "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";
+
+    String API_KEY = BuildConfig.OPENAI_API_KEY;
     private static final String API_URL = "https://api.openai.com/v1/chat/completions";
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private static final int MAX_RETRIES = 3;
