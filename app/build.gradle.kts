@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     //alias(libs.plugins.android.application)
     id("com.android.application")
@@ -17,7 +19,22 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "OPENAI_API_KEY", "\"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\"")
+        //load the values from .properties file
+        val localProperties = Properties().apply {
+            val localPropertiesFile = project.rootProject.file("local.properties")
+            if (localPropertiesFile.exists()) {
+                load(localPropertiesFile.inputStream())
+            }
+        }
+
+        //return empty key in case something goes wrong
+        val apiKey = localProperties.getProperty("OPENAI_API_KEY") ?: ""
+
+        buildConfigField( // Add this inside defaultConfig block
+            type = "String",
+            name = "API_KEY",
+            value = apiKey
+        )
     }
 
     buildTypes {
