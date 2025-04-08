@@ -48,4 +48,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-analytics")
+    // For making HTTP requests
+    implementation ("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation ("org.json:json:20210307")
 }
