@@ -1,8 +1,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="20dp">
+    android:layout_height="match_parent" >
 
     <!-- Company Name at the Top -->
     <TextView
@@ -15,6 +14,19 @@
         android:textSize="60sp"
         android:textStyle="bold"
         android:layout_marginTop="50dp" />
+    <ImageView
+        android:id="@+id/backgroundImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/FusionImage"
+        android:translationY="-50dp" />
+
+    <!-- Your login layout on top of background -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="24dp">
 
     <!-- Login Form at the Bottom -->
     <LinearLayout
@@ -49,7 +61,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
             android:text="No account? Sign up today!"
-            android:textColor="@color/pastelBlue"/>
+            android:textColor="@color/dead_black"/>
     </LinearLayout>
-
+    </ScrollView>
 </FrameLayout>
