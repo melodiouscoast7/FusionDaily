@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/qs_square_inactive"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        style="@style/FragmentTitle"
+        android:text="@string/final_review" />
+
+    <TextView
+        style="@style/FragmentBody"
+        android:text="@string/Review_message" />
+
+    <!-- Navigation -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_marginTop="30dp">
+
+        <Button
+            android:id="@+id/buttonToFragmentFour_from5"
+            style="@style/FragmentNavButton"
+            android:text="@string/back" />
+
+        <Button
+            android:id="@+id/buttonToFragmentSix_from5"
+            style="@style/FragmentNavButton"
+            android:text="@string/submit" />
+    </LinearLayout>
+</LinearLayout>

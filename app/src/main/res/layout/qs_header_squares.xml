@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/header_squares"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/square1"
+        style="@style/HeaderSquare" android:text="@string/personal_info" />
+
+    <TextView
+        android:id="@+id/square2"
+        style="@style/HeaderSquare" android:text="@string/identify_goal" />
+
+    <TextView
+        android:id="@+id/square3"
+        style="@style/HeaderSquare" android:text="@string/smart_fix" />
+
+    <TextView
+        android:id="@+id/square4"
+        style="@style/HeaderSquare" android:text="@string/final_review" />
+</LinearLayout>

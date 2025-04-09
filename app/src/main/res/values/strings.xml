@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Fusion Daily</string>
     <string name="action_settings">Settings</string>
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -8,4 +9,63 @@
     <string name="previous">Previous</string>
     <string name="daily_tasks">Daily Tasks</string>
     <string name="lorem_ipsum"> </string>
+
+    <!-- Strings for Questionnaire Activity-->
+
+        <!-- Fragment Titles -->
+        <string name="personal_info">Personal Info</string>
+        <string name="identify_goal">Identify Goal</string>
+        <string name="smart_fix">SMART Fix</string>
+        <string name="final_review">Final Review</string>
+
+        <!-- Fragment 1 -->
+        <string name="fusion_daily_questionnaire">Fusion Daily Questionnaire</string>
+        <string name="intro_message">Welcome to Daily Fusion! Before we get you started on fulfilling your goals, we need to learn more about you. There are 4 categories of questions you will be asked that will be sent to our AI to help find the best way to help you achieve your goals. These questions are cleverly curated by our team to help form the goal into something that can be achieved in a realistic time frame. Let’s get started!</string>
+        <string name="begin">Begin</string>
+
+        <!-- Fragment 2 -->
+        <string name="personal_information">Personal Information</string>
+        <string name="Question1">1. What’s your name or preferred nickname?</string>
+        <string name="Question2">2. How would you describe your current lifestyle?</string>
+        <string name="Question3">3. What are your primary areas of focus?</string>
+        <string name="Areas_of_Focus">Area of focus</string>
+        <string name="current_lifestyle">Current Lifestyle</string>
+        <string name="name">Name</string>
+        <string name="back">Back</string>
+
+        <!-- Fragment 3 -->
+        <string name="Question4">1. What specific goal would you like to achieve?</string>
+        <string name="specific_goal">Specific Goal</string>
+        <string name="Question5">2. Why is this goal important to you?</string>
+        <string name="goal_importance">Goal Importance</string>
+        <string name="Question6">3. What’s your ideal timeline for achieving this goal?</string>
+        <string name="ideal_timeline">Ideal Timeline</string>
+        <string name="Question7">4. How much time can you realistically dedicate each day or week toward this goal?</string>
+        <string name="time_per_day_week">Time per day/week</string>
+        <string name="Question8">5. What obstacles or challenges might prevent you from achieving this goal?</string>
+        <string name="obstacles_challenges">Obstacles/Challenges</string>
+
+        <!-- Fragment 4 -->
+        <string name="Question9">1. Is your goal specific? (If not, describe it more clearly.)</string>
+        <string name="specific_goal_description">Specific Goal Description</string>
+        <string name="Question10">2. How will you measure your progress?</string>
+        <string name="measurement_method">Measurement Method</string>
+        <string name="Question11">3. Is this goal achievable within the given time frame?</string>
+        <string name="achievable_within_time_frame">Achievable within time frame?</string>
+        <string name="Question12">4. Is this goal relevant to your long‑term plans?</string>
+        <string name="relevant_to_long_term_plans">Relevant to long-term plans?</string>
+        <string name="Question13">5. What’s a realistic timeline considering your circumstances?</string>
+        <string name="realistic_timeline">Realistic Timeline</string>
+
+        <!-- Fragment 5 -->
+        <string name="Review_message">Review your answers and make any adjustments before submitting.</string>
+        <string name="submit">Submit</string>
+
+        <!-- Fragment 6 -->
+        <string name="results">Results</string>
+        <string name="goal">GOAL</string>
+        <string name="timeline">TIMELINE</string>
+        <string name="actions">ACTIONS</string>
+        <string name="home">Home</string>
+
 </resources>

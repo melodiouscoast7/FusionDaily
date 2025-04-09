@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Styles for Questionnaire Activity -->
+
+        <style name="HeaderSquare">
+            <item name="android:layout_width">0dp</item>
+            <item name="android:layout_height">wrap_content</item>
+            <item name="android:layout_weight">1</item>
+            <item name="android:layout_margin">1dp</item>
+            <item name="android:gravity">center</item>
+            <item name="android:padding">16dp</item>
+            <item name="android:background">@drawable/qs_square_inactive</item>
+            <item name="android:textColor">@android:color/white</item>
+            <item name="android:textStyle">bold</item>
+            <item name="android:textSize">14sp</item>
+        </style>
+
+        <style name="FragmentTitle">
+            <item name="android:layout_width">match_parent</item>
+            <item name="android:layout_height">wrap_content</item>
+            <item name="android:background">@drawable/qs_title_header_box</item>
+            <item name="android:textAlignment">center</item>
+            <item name="android:textSize">34sp</item>
+            <item name="android:textStyle">bold</item>
+            <item name="android:padding">8dp</item>
+        </style>
+
+        <style name="FragmentBody">
+            <item name="android:layout_width">match_parent</item>
+            <item name="android:layout_height">wrap_content</item>
+            <item name="android:layout_marginTop">10dp</item>
+            <item name="android:textSize">24sp</item>
+            <item name="android:textColor">@color/white</item>
+        </style>
+
+        <style name="QuestionLabel">
+            <item name="android:layout_width">match_parent</item>
+            <item name="android:layout_height">wrap_content</item>
+            <item name="android:layout_marginTop">20dp</item>
+            <item name="android:textSize">16sp</item>
+            <item name="android:textStyle">bold</item>
+            <item name="android:textColor">@color/white</item>
+        </style>
+
+        <style name="CategoryLabel">
+            <item name="android:layout_width">match_parent</item>
+            <item name="android:layout_height">wrap_content</item>
+            <item name="android:layout_marginTop">20dp</item>
+            <item name="android:textSize">25sp</item>
+            <item name="android:textStyle">bold</item>
+            <item name="android:textColor">@color/white</item>
+        </style>
+
+        <style name="FragmentEditText">
+            <item name="android:layout_width">match_parent</item>
+            <item name="android:layout_height">wrap_content</item>
+            <item name="android:backgroundTint">@color/white</item>
+            <item name="android:inputType">text</item>
+            <item name="android:textColor">@color/white</item>
+        </style>
+
+        <style name="FragmentEditTextBig">
+            <item name="android:layout_width">match_parent</item>
+            <item name="android:layout_height">wrap_content</item>
+            <item name="android:backgroundTint">@color/white</item>
+            <item name="android:inputType">textMultiLine</item>
+            <item name="android:textColor">@color/white</item>
+        </style>
+
+        <style name="FragmentButton">
+            <item name="android:layout_width">wrap_content</item>
+            <item name="android:layout_height">wrap_content</item>
+            <item name="android:layout_weight">1</item>
+            <item name="android:layout_gravity">center</item>
+            <item name="android:layout_margin">8dp</item>
+            <item name="android:gravity">center</item>
+            <item name="android:backgroundTint">@color/lighter_grey</item>
+            <item name="android:textColor">@color/black</item>
+        </style>
+
+        <style name="FragmentNavButton">
+            <item name="android:layout_width">0dp</item>
+            <item name="android:layout_height">wrap_content</item>
+            <item name="android:layout_weight">1</item>
+            <item name="android:layout_margin">8dp</item>
+            <item name="android:backgroundTint">@color/lighter_grey</item>
+            <item name="android:textColor">@color/black</item>
+        </style>
+
+
+</resources>

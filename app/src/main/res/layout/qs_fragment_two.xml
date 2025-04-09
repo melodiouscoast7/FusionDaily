@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/qs_square_inactive"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        style="@style/FragmentTitle"
+        android:text="@string/personal_information" />
+
+    <!-- Question 1 -->
+    <TextView style="@style/QuestionLabel"
+        android:text="@string/Question1" />
+    <EditText
+        android:id="@+id/editTextText"
+        style="@style/FragmentEditText"
+        android:autofillHints=""
+        android:hint="@string/name" />
+
+    <!-- Question 2 -->
+    <TextView style="@style/QuestionLabel"
+        android:text="@string/Question2" />
+    <EditText
+        android:id="@+id/editTextTextMultiLine"
+        style="@style/FragmentEditTextBig"
+        android:autofillHints=""
+        android:hint="@string/current_lifestyle" />
+
+    <!-- Question 3 -->
+    <TextView style="@style/QuestionLabel"
+        android:text="@string/Question3" />
+    <EditText
+        android:id="@+id/editTextTextMultiLine2"
+        style="@style/FragmentEditTextBig"
+        android:autofillHints=""
+        android:hint="@string/Areas_of_Focus" />
+
+    <!-- Navigation Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_marginTop="30dp">
+
+        <Button
+            android:id="@+id/buttonToFragmentOne_from2"
+            style="@style/FragmentNavButton"
+            android:text="@string/back" />
+
+        <Button
+            android:id="@+id/buttonToFragmentThree_from2"
+            style="@style/FragmentNavButton"
+            android:text="@string/next" />
+    </LinearLayout>
+</LinearLayout>

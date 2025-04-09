@@ -2,6 +2,9 @@ package com.example.fusiondailytest;
 
 import android.os.Handler;
 import android.os.Looper;
+
+import androidx.annotation.NonNull;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -22,7 +25,7 @@ public class OpenAIManager {
     private static final long INITIAL_BACKOFF_MS = 1000;
     private boolean isCooldown = false;
 
-    private OkHttpClient client;
+    private final OkHttpClient client;
 
     public OpenAIManager() {
         client = new OkHttpClient();
@@ -74,12 +77,12 @@ public class OpenAIManager {
     private void sendWithRetry(Request request, OpenAIResponseCallback callback, int retryCount, long backoffMs) {
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 new Handler(Looper.getMainLooper()).post(() -> callback.onFailure(e));
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.code() == 429 && retryCount < MAX_RETRIES) {
                     // Retry with exponential backoff
                     new Handler(Looper.getMainLooper()).postDelayed(() -> {
@@ -89,6 +92,7 @@ public class OpenAIManager {
                     new Handler(Looper.getMainLooper()).post(() ->
                             callback.onFailure(new IOException("Unexpected code " + response)));
                 } else {
+                    assert response.body() != null;
                     String responseBody = response.body().string();
                     new Handler(Looper.getMainLooper()).post(() -> callback.onSuccess(responseBody));
                 }

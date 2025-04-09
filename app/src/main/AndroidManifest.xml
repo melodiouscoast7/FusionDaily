@@ -24,7 +24,7 @@
         <activity
             android:name="com.example.fusiondailytest.DashboardActivity" />
         <activity
-            android:name="com.example.fusiondaily.QuestionnaireActivity"
+            android:name=".QuestionnaireActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

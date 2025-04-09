@@ -1,4 +1,4 @@
-package com.example.fusiondaily;
+package com.example.fusiondailytest;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,18 +14,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.fusiondailytest.R;
-import com.example.fusiondailytest.OpenAIManager;
-import com.example.fusiondailytest.DashboardActivity;
 
 public class QuestionnaireActivity extends AppCompatActivity {
-
-    // Description of what the AI should do.
-    public static final String TASK_DESCRIPTION = "You're a helpful personal planner. Based on the user's answers below, create a concise, actionable game-plan (<=334 characters) to help them reach their goal. Format the response as follows, ensuring these exact keys are used: Goal: [goal] Timeline: [timeline], and list each action with a \"-\" in front of it. Do not include the answer's to the questions in the response. Make sure the newline characters are in the string.";
-
-    // The fixed questionnaire questions.
-    public static final String QUESTIONS = "Questions: 1. What’s your name? 2. Describe your current lifestyle. 3. What are your primary areas of focus? 4. What goal do you want to achieve? 5. Why is it important? 6. What’s your ideal timeline? 7. How much time can you commit? 8. What obstacles do you face? 9. Is your goal specific? (If not, could you describe it more clearly?) 10. How will you measure your progress? (e.g., milestones, check-ins, tracking tools, etc.) 11. Is this goal achievable for you within the given time frame? 12. Is this goal relevant to your overall life or long-term plans? (How does it fit with your values and priorities?) 13. What’s a realistic timeline for this goal, considering your current circumstances?";
-
     private View fragmentOne, fragmentTwo, fragmentThree, fragmentFour, fragmentFive, fragmentSix;
     // Header square TextViews
     private TextView square1, square2, square3, square4;
@@ -115,8 +105,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
         }
     }
 
-    // This method updates the header squares:
-    // 2 => Fragment Two: Activate square1, 3 => Fragment Three: Activate square2, etc.
+    // Update header squares based on the current fragment
     private void updateHeaderSquares(int fragmentNumber) {
         // Reset all squares to inactive background
         for (TextView square : squares) {
@@ -165,7 +154,13 @@ public class QuestionnaireActivity extends AppCompatActivity {
         String answer12 = ((EditText) findViewById(R.id.editTextTextMultiLine8)).getText().toString().trim();
         String answer13 = ((EditText) findViewById(R.id.editTextTextMultiLine9)).getText().toString().trim();
 
-        // Build a string with user answers. Here, we simply concatenate for demonstration.
+        // Description of what the AI should do.
+        final String TASK_DESCRIPTION = "You're a helpful personal planner. Based on the user's answers below, create a concise, actionable game-plan (<=334 characters) to help them reach their goal. Format the response as follows, ensuring these exact keys are used: Goal: [goal] Timeline: [timeline], and list each action with a \"-\" in front of it. Do not include the answer's to the questions in the response. Make sure the newline characters are in the string.";
+
+        // The fixed questionnaire questions.
+        final String QUESTIONS = "Questions: 1. What’s your name? 2. Describe your current lifestyle. 3. What are your primary areas of focus? 4. What goal do you want to achieve? 5. Why is it important? 6. What’s your ideal timeline? 7. How much time can you commit? 8. What obstacles do you face? 9. Is your goal specific? (If not, could you describe it more clearly?) 10. How will you measure your progress? (e.g., milestones, check-ins, tracking tools, etc.) 11. Is this goal achievable for you within the given time frame? 12. Is this goal relevant to your overall life or long-term plans? (How does it fit with your values and priorities?) 13. What’s a realistic timeline for this goal, considering your current circumstances?";
+
+        // Build a string with user answers.
         String userAnswers = "Answers: 1. " + answer1 + " 2. " + answer2 + " 3. " + answer3 + " 4. " + answer4 + " 5. " + answer5 + " 6. " + answer6 + " 7. " + answer7 + " 8. " + answer8 + " 9. " + answer9 + " 10. " + answer10 + " 11. " + answer11 + " 12. " + answer12 + " 13. " + answer13;
 
         // Construct the prompt using the fixed strings and the user-provided answers.
