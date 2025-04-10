@@ -24,6 +24,8 @@
         <activity
             android:name="com.example.fusiondailytest.DashboardActivity" />
         <activity
+            android:name="com.example.fusiondailytest.GoalsActivity" />
+        <activity
             android:name="com.example.fusiondaily.QuestionnaireActivity" />
 
         <activity

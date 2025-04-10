@@ -83,7 +83,8 @@ public class DashboardActivity extends AppCompatActivity {
         goalsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateDailyProgress(-5);
+                startActivity(new Intent(DashboardActivity.this, GoalsActivity.class));
+                finish();
 
             }
         });
