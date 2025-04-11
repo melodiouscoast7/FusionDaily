@@ -16,7 +16,8 @@ public class GoalsActivity extends AppCompatActivity {
     private Vector<TextView> goalTitles = new Vector<TextView>();;
     private Vector<TextView> goalStreaks = new Vector<TextView>();;
     private Vector<Button> viewButtons = new Vector<Button>();;
-
+    private int goalAmount = 0;
+    boolean anyGoals = false;
     private Button backButton;
     private Button createButton;
     private Button createFirstButton;
@@ -35,8 +36,22 @@ public class GoalsActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
+        createFirstButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                anyGoals = true;
+                goalAmount++;
+                updateGoalsOverview();
+            }
+        });
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                anyGoals = true;
+                goalAmount++;
+                updateGoalsOverview();
+            }
+        });
     }
 
 
@@ -65,20 +80,15 @@ public class GoalsActivity extends AppCompatActivity {
         createButton = findViewById(R.id.createButton);
         createFirstButton = findViewById(R.id.noGoalsButton);
     }
-
     private void updateGoalsOverview(){
-        boolean anyGoals = true;
-        //for(int i = 0; i < goalLayouts.size(); i++)
-        //    goalLayouts.get(i).setVisibility(View.GONE);
-
-        goalLayouts.get(2).setVisibility(View.GONE);
-        goalLayouts.get(3).setVisibility(View.GONE);
-        goalLayouts.get(4).setVisibility(View.GONE);
-
         if(anyGoals) {
+            for(int i = 0; i < goalAmount; i++)
+                goalLayouts.get(i).setVisibility(View.VISIBLE);
             createFirstButton.setVisibility(View.GONE);
             createButton.setVisibility(View.VISIBLE);
         } else {
+            for(int i = 0; i < goalLayouts.size(); i++)
+                goalLayouts.get(i).setVisibility(View.GONE);
             createFirstButton.setVisibility(View.VISIBLE);
             createButton.setVisibility(View.GONE);
         }

@@ -25,6 +25,7 @@ public class DashboardActivity extends AppCompatActivity {
     private TextView totalProgressText;
     private ProgressBar dailyProgressBar;
     private TextView dailyProgressText;
+    private TextView dailyStreakText;
     private Button settingsButton;
 
     private Button goalsButton;
@@ -35,7 +36,7 @@ public class DashboardActivity extends AppCompatActivity {
     private TextView dateText;
     private int totalProgressValue = 0; // Variable to track task progress (0-100 scale)
     private int dailyProgressValue = 0;
-
+    private int dailyStreak = 0;
 
     Calendar localCalendar = Calendar.getInstance();
 
@@ -120,6 +121,9 @@ public class DashboardActivity extends AppCompatActivity {
         dailyProgressText.setText(dailyProgressValue + "% Complete");
     }
 
+    private void updateDailyStreak() {
+
+    }
 
 
 }
