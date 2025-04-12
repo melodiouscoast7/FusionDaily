@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FusionDailyTest"
         tools:targetApi="31">
+
         <activity
             android:name="com.example.fusiondailytest.RegisterActivity"
             android:label="Register"
@@ -22,15 +23,20 @@
             android:label="Main"
             android:theme="@style/Theme.FusionDailyTest" />
         <activity
-            android:name="com.example.fusiondailytest.DashboardActivity" />
-        <activity
-            android:name=".QuestionnaireActivity"
+            android:name="com.example.fusiondailytest.DashboardActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.example.fusiondailytest.QuestionnaireActivity" />
+        <activity
+            android:name="com.example.fusiondailytest.ResourcesActivity"
+            android:exported="false"/>
+
 
         <activity
             android:name="com.example.fusiondailytest.LoginActivity"
@@ -41,6 +47,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter><!-->
         </activity>
+
     </application>
 
 </manifest>

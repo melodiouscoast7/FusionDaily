@@ -25,6 +25,7 @@ public class DashboardActivity extends AppCompatActivity {
     private TextView dailyProgressText;
 
     private Button settingsButton;
+
     private int totalProgressValue = 0; // Variable to track task progress (0-100 scale)
     int dailyProgressValue = 0;
     @Override
@@ -49,6 +50,15 @@ public class DashboardActivity extends AppCompatActivity {
             public void onClick(View v) {
                 auth.signOut();
                 startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
+                finish();
+            }
+        });
+
+        Button resourcesButton = findViewById(R.id.resourcesButton);
+        resourcesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DashboardActivity.this, ResourcesActivity.class));
                 finish();
             }
         });
