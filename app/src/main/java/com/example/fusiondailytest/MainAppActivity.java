@@ -71,7 +71,8 @@ public class MainAppActivity extends AppCompatActivity {
 
 
     // Dashboard (db) Functions
-    private void assignDashboard() {
+    private void assignDashboard() //Assigns objects for the dashboard fragment
+    {
         dbTotalProgressBar = findViewById(R.id.totalProgressBar);
         dbTotalProgressText = findViewById(R.id.totalProgressBarText);
 
@@ -93,31 +94,37 @@ public class MainAppActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        dbSettingsButton.setOnClickListener(new View.OnClickListener() {
+        dbSettingsButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 auth.signOut();
                 startActivity(new Intent(MainAppActivity.this, LoginActivity.class));
             }
         });
 
-        dbGoalsButton.setOnClickListener(new View.OnClickListener() {
+        dbGoalsButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 setContentView(R.layout.fragment_goals_overview);
                 assignGoalsOverview();
                 updateGoalsOverview();
             }
         });
 
-        dbFocusButton.setOnClickListener(new View.OnClickListener() {
+        dbFocusButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v) {
                 updateDailyProgress(5);
             }
         });
     }
-    private void updateTotalProgress(int increment) {
+    private void updateTotalProgress(int increment)
+    {
         totalProgressValue += increment;
         if (totalProgressValue > 100) {
             totalProgressValue = 100; // Cap progress at 100%
@@ -126,26 +133,31 @@ public class MainAppActivity extends AppCompatActivity {
         dbTotalProgressBar.setProgress(totalProgressValue);
         dbTotalProgressText.setText("Total Progress: " + totalProgressValue + "%");
     }
-    private void updateDailyProgress(int increment) {
+    private void updateDailyProgress(int increment)
+    {
         dailyProgressValue += increment;
-        if (dailyProgressValue > 100) {
+        if (dailyProgressValue > 100)
+        {
             dailyProgressValue = 100; // Cap progress at 100%
         }
-        if (dailyProgressValue < 0) {
+        if (dailyProgressValue < 0)
+        {
             dailyProgressValue = 0; // Cap progress at 100%
         }
         // Update the ProgressBar and display text
         dbDailyProgressBar.setProgress(dailyProgressValue);
         dbDailyProgressText.setText(dailyProgressValue + "% Complete");
     }
-    private void updateDBDailyStreak() {
+    private void updateDBDailyStreak()
+    {
 
     }
 
 
 
     //Goal Overview (go) Functions
-    private void assignGoalsOverview(){ //Assigns objects for the overview fragment
+    private void assignGoalsOverview() //Assigns objects for the overview fragment
+    {
 
         goGoalLayouts.add(findViewById(R.id.goalOneLayout));
         goGoalLayouts.add(findViewById(R.id.goalTwoLayout));
@@ -169,24 +181,30 @@ public class MainAppActivity extends AppCompatActivity {
         goCreateButton = findViewById(R.id.createButton);
         goCreateFirstButton = findViewById(R.id.noGoalsButton);
 
-        goBackButton.setOnClickListener(new View.OnClickListener() {
+        goBackButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 setContentView(R.layout.fragment_dashboard);
                 assignDashboard();
             }
         });
-        goCreateFirstButton.setOnClickListener(new View.OnClickListener() {
+        goCreateFirstButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 goAnyGoals = true;
                 goGoalAmount++;
                 updateGoalsOverview();
             }
         });
-        goCreateButton.setOnClickListener(new View.OnClickListener() {
+        goCreateButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 goAnyGoals = true;
                 goGoalAmount++;
                 updateGoalsOverview();
@@ -195,14 +213,18 @@ public class MainAppActivity extends AppCompatActivity {
 
     }
 
-    private void updateGoalsOverview(){
-        if(goAnyGoals) {
-            for(int i = 0; i < goGoalAmount; i++)
+    private void updateGoalsOverview()
+    {
+        if(goAnyGoals)
+        {
+            for (int i = 0; i < goGoalAmount; i++)
                 goGoalLayouts.get(i).setVisibility(View.VISIBLE);
             goCreateFirstButton.setVisibility(View.GONE);
             goCreateButton.setVisibility(View.VISIBLE);
-        } else {
-            for(int i = 0; i < goGoalLayouts.size(); i++)
+        }
+        else
+        {
+            for (int i = 0; i < goGoalLayouts.size(); i++)
                 goGoalLayouts.get(i).setVisibility(View.GONE);
             goCreateFirstButton.setVisibility(View.VISIBLE);
             goCreateButton.setVisibility(View.GONE);
@@ -212,12 +234,14 @@ public class MainAppActivity extends AppCompatActivity {
 
 
     //Goal View (gv) Functions
-    private void assignGoalsView(){ //Assigns objects for the view fragment
+    private void assignGoalsView() //Assigns objects for the view fragment
+    {
 
     }
 
     //Goal Create (gc) Functions
-    private void assignGoalsCreate(){ //Assigns objects for the create fragment
+    private void assignGoalsCreate() //Assigns objects for the create fragment
+    {
 
     }
 
