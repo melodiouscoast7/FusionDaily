@@ -29,7 +29,8 @@ public class Goal {
         return description;
     }
 
-    public void setDescription(String _description){
+    public void setDescription(String _description)
+    {
         description = _description;
     }
 
@@ -57,6 +58,12 @@ public class Goal {
     {
         dailyTasks.add(new Task(_name, _description));
     }
+
+    public Task getTask(int _index)
+    {
+        return dailyTasks.get(_index);
+    }
+
     public void deleteTask(int _index)
     {
         dailyTasks.remove(_index);

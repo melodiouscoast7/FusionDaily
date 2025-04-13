@@ -91,7 +91,7 @@
             android:background="@drawable/qs_square_inactive"
             android:orientation="vertical"
             android:padding="10dp"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -135,7 +135,7 @@
             android:background="@drawable/qs_square_inactive"
             android:orientation="vertical"
             android:padding="10dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:layout_width="match_parent"

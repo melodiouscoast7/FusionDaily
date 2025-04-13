@@ -37,11 +37,15 @@ public class MainAppActivity extends AppCompatActivity {
     private Vector<TextView> goGoalTitles = new Vector<TextView>();;
     private Vector<TextView> goGoalStreaks = new Vector<TextView>();;
     private Vector<Button> goViewButtons = new Vector<Button>();;
-    private int goGoalAmount = 0;
-    boolean goAnyGoals = false;
     private Button goBackButton;
     private Button goCreateButton;
     private Button goCreateFirstButton;
+
+    //Goal Creation (gc) Variables
+    private Button gcCancelButton;
+    private Button gcSaveButton;
+    private TextView gcNameInput;
+    private TextView gcDescriptionInput;
 
     //Goal Logic
     private Vector<Goal> goals = new Vector<Goal>();
@@ -61,7 +65,6 @@ public class MainAppActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_dashboard);
-
         // Initialize UI components
         assignDashboard();
 
@@ -158,24 +161,40 @@ public class MainAppActivity extends AppCompatActivity {
     //Goal Overview (go) Functions
     private void assignGoalsOverview() //Assigns objects for the overview fragment
     {
-
+        goGoalLayouts.clear();
         goGoalLayouts.add(findViewById(R.id.goalOneLayout));
         goGoalLayouts.add(findViewById(R.id.goalTwoLayout));
         goGoalLayouts.add(findViewById(R.id.goalThreeLayout));
         goGoalLayouts.add(findViewById(R.id.goalFourLayout));
         goGoalLayouts.add(findViewById(R.id.goalFiveLayout));
 
+        goGoalTitles.clear();
         goGoalTitles.add(findViewById(R.id.goalOneText));
         goGoalTitles.add(findViewById(R.id.goalTwoText));
         goGoalTitles.add(findViewById(R.id.goalThreeText));
         goGoalTitles.add(findViewById(R.id.goalFourText));
         goGoalTitles.add(findViewById(R.id.goalFiveText));
 
+        goTotalProgressBars.clear();
         goTotalProgressBars.add(findViewById(R.id.goalOneProgressBar));
         goTotalProgressBars.add(findViewById(R.id.goalTwoProgressBar));
         goTotalProgressBars.add(findViewById(R.id.goalThreeProgressBar));
         goTotalProgressBars.add(findViewById(R.id.goalFourProgressBar));
         goTotalProgressBars.add(findViewById(R.id.goalFiveProgressBar));
+
+        goTotalProgressTexts.clear();
+        goTotalProgressTexts.add(findViewById(R.id.goalOneProgressBarText));
+        goTotalProgressTexts.add(findViewById(R.id.goalTwoProgressBarText));
+        goTotalProgressTexts.add(findViewById(R.id.goalThreeProgressBarText));
+        goTotalProgressTexts.add(findViewById(R.id.goalFourProgressBarText));
+        goTotalProgressTexts.add(findViewById(R.id.goalFiveProgressBarText));
+
+        goGoalStreaks.clear();
+        goGoalStreaks.add(findViewById(R.id.goalOneStreakCounterText));
+        goGoalStreaks.add(findViewById(R.id.goalTwoStreakCounterText));
+        goGoalStreaks.add(findViewById(R.id.goalThreeStreakCounterText));
+        goGoalStreaks.add(findViewById(R.id.goalFourStreakCounterText));
+        goGoalStreaks.add(findViewById(R.id.goalFiveStreakCounterText));
 
         goBackButton = findViewById(R.id.backButton);
         goCreateButton = findViewById(R.id.createButton);
@@ -195,9 +214,8 @@ public class MainAppActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                goAnyGoals = true;
-                goGoalAmount++;
-                updateGoalsOverview();
+                setContentView(R.layout.fragment_goals_create);
+                assignGoalsCreate();
             }
         });
         goCreateButton.setOnClickListener(new View.OnClickListener()
@@ -205,27 +223,36 @@ public class MainAppActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                goAnyGoals = true;
-                goGoalAmount++;
-                updateGoalsOverview();
+                setContentView(R.layout.fragment_goals_create);
+                assignGoalsCreate();
             }
         });
-
     }
+
 
     private void updateGoalsOverview()
     {
-        if(goAnyGoals)
+        for (int i = 0; i < goGoalLayouts.size(); i++)
+            goGoalLayouts.get(i).setVisibility(View.GONE);
+        //String goalSize = "num = " + goals.size();
+        //goGoalStreaks.get(0).setText(goalSize);
+        if(!goals.isEmpty())
         {
-            for (int i = 0; i < goGoalAmount; i++)
+            for (int i = 0; i < goals.size(); i++)
+            {
                 goGoalLayouts.get(i).setVisibility(View.VISIBLE);
+                goGoalTitles.get(i).setText(goals.get(i).getName());
+                goTotalProgressBars.get(i).setProgress(goals.get(i).getTotalProgress());
+                String progressText = "Total Progress: " + goals.get(i).getTotalProgress() + "%";
+                goTotalProgressTexts.get(i).setText(progressText);
+                String streakCounter = "" + goals.get(i).getDailyStreak();
+                goGoalStreaks.get(i).setText(streakCounter);
+            }
             goCreateFirstButton.setVisibility(View.GONE);
             goCreateButton.setVisibility(View.VISIBLE);
         }
         else
         {
-            for (int i = 0; i < goGoalLayouts.size(); i++)
-                goGoalLayouts.get(i).setVisibility(View.GONE);
             goCreateFirstButton.setVisibility(View.VISIBLE);
             goCreateButton.setVisibility(View.GONE);
         }
@@ -233,14 +260,41 @@ public class MainAppActivity extends AppCompatActivity {
 
 
 
-    //Goal View (gv) Functions
-    private void assignGoalsView() //Assigns objects for the view fragment
+    //Goal Create (gc) Functions
+    private void assignGoalsCreate() //Assigns objects for the view fragment
     {
+        gcCancelButton = findViewById(R.id.goalCancelButton);
+        gcSaveButton = findViewById(R.id.goalSaveButton);
+        gcNameInput = findViewById(R.id.textInputName);
+        gcDescriptionInput = findViewById(R.id.textInputDescription);
 
+        gcCancelButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                setContentView(R.layout.fragment_goals_overview);
+                assignGoalsOverview();
+                updateGoalsOverview();
+            }
+        });
+
+        gcSaveButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                goals.add(new Goal(gcNameInput.getText().toString(), gcDescriptionInput.getText().toString()));
+                setContentView(R.layout.fragment_goals_overview);
+                assignGoalsOverview();
+                updateGoalsOverview();
+            }
+        });
     }
 
-    //Goal Create (gc) Functions
-    private void assignGoalsCreate() //Assigns objects for the create fragment
+
+    //Goal View (gv) Functions
+    private void assignGoalsView() //Assigns objects for the create fragment
     {
 
     }
