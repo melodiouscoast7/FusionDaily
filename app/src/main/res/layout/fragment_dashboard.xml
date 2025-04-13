@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="#3D3E48"
-    tools:context=".DashboardActivity">
+    tools:context=".MainAppActivity">
 
 
     <Button

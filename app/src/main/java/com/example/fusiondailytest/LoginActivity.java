@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.fusiondaily.QuestionnaireActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -30,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
         // Check if the user is already logged in
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser != null) {
-            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+            startActivity(new Intent(LoginActivity.this, MainAppActivity.class));
             finish();
             return; // Prevents further execution of onCreate()
         }
@@ -49,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
                 auth.signInWithEmailAndPassword(emailText, passwordText)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+                                startActivity(new Intent(LoginActivity.this, MainAppActivity.class));
                                 finish();
                             } else {
                                 Toast.makeText(LoginActivity.this, "Login Failed!", Toast.LENGTH_SHORT).show();

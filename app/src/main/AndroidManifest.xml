@@ -22,12 +22,9 @@
             android:label="Main"
             android:theme="@style/Theme.FusionDailyTest" />
         <activity
-            android:name="com.example.fusiondailytest.DashboardActivity" />
-        <activity
-            android:name="com.example.fusiondailytest.GoalsActivity" />
+            android:name="com.example.fusiondailytest.MainAppActivity" />
         <activity
             android:name="com.example.fusiondaily.QuestionnaireActivity" />
-
         <activity
             android:name="com.example.fusiondailytest.LoginActivity"
             android:exported="true"
