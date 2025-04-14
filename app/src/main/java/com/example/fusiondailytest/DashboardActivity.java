@@ -15,9 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.google.firebase.auth.FirebaseAuth;
 import android.widget.Button;
-import java.util.TimeZone;
-import java.util.Date;
-import java.util.Calendar;
+
 public class DashboardActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
@@ -25,23 +23,11 @@ public class DashboardActivity extends AppCompatActivity {
     private TextView totalProgressText;
     private ProgressBar dailyProgressBar;
     private TextView dailyProgressText;
+
     private Button settingsButton;
 
-    private TextView monthText;
-    private TextView dateText;
     private int totalProgressValue = 0; // Variable to track task progress (0-100 scale)
-    private int dailyProgressValue = 0;
-
-
-    Calendar localCalendar = Calendar.getInstance();
-
-    final private String day = "" + localCalendar.get(Calendar.DATE);
-    final private int month = localCalendar.get(Calendar.MONTH);
-
-    String[] months = new String[]{"January", "February", "March", "April",
-            "May", "June", "July", "Augest", "September", "October", "November", "December"};
-
-
+    int dailyProgressValue = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,18 +44,21 @@ public class DashboardActivity extends AppCompatActivity {
         // Example logic to simulate progress updates
         updateTotalProgress(20); // Increment progress by 20%
         updateDailyProgress(30); // Increment progress by another 30%
-
-        monthText = findViewById(R.id.monthText);
-        dateText = findViewById(R.id.dateText);
-        monthText.setText(months[month]);
-        dateText.setText(day);
-
         auth = FirebaseAuth.getInstance();
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 auth.signOut();
                 startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
+                finish();
+            }
+        });
+
+        Button resourcesButton = findViewById(R.id.resourcesButton);
+        resourcesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DashboardActivity.this, ResourcesActivity.class));
                 finish();
             }
         });

@@ -68,4 +68,15 @@
         <string name="actions">ACTIONS</string>
         <string name="home">Home</string>
 
+
+    <!-- Strings for Resources Activity -->
+
+        <string name="resource_info">These resources are tailored to your preferences. Each link is carefully selected to enhance your progress. Click on one to get more information on achieving your goals!</string>
+        <string name="general_resources">General Resources</string>
+        <string name="health">Health</string>
+        <string name="fitness">Fitness</string>
+        <string name="mental_health">Mental Health</string>
+        <string name="personalized_resources">Personalized Resources</string>
+        <string name="resourceToDashboard_button">Dashboard</string>
+
 </resources>
