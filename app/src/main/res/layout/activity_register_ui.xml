@@ -5,16 +5,14 @@
     android:padding="20dp">
 
     <!-- Company Name at the Top -->
-    <TextView
-        android:id="@+id/companyName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/logoImage"
+        android:layout_width="286dp"
+        android:layout_height="251dp"
         android:layout_gravity="top|center_horizontal"
-        android:text="Add Logo Here Test"
-        android:textColor="@color/companyColor"
-        android:textSize="60sp"
-        android:textStyle="bold"
-        android:layout_marginTop="50dp" />
+        android:layout_marginTop="50dp"
+        android:contentDescription="Company Logo"
+        android:src="@drawable/fusion_image" />
 
     <!-- Sign-Up Form at the Bottom -->
     <LinearLayout
@@ -59,8 +57,9 @@
             android:id="@+id/Birthday"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Birthday"
-            android:inputType="date"
+            android:hint="Birthday (MM/DD/YYYY)"
+            android:focusable="false"
+            android:clickable="true"
             android:layout_marginBottom="40dp"/>
 
         <Button

@@ -19,10 +19,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/FusionImage"
+        android:src="@drawable/fusion_image"
         android:translationY="-50dp" />
 
-    <!-- Your login layout on top of background -->
+    <!-- login layout on top of background -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
