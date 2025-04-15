@@ -62,7 +62,7 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
-        Button CalendarButton = findViewById(R.id.focusButton);
+        Button CalendarButton = findViewById(R.id.CalendarButton);
         CalendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

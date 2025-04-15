@@ -25,7 +25,7 @@
         app:layout_constraintVertical_bias="0.9" />
 
     <Button
-        android:id="@+id/focusButton"
+        android:id="@+id/CalendarButton"
         style="@style/Widget.Material3.Button.IconButton.Filled"
         android:layout_width="85dp"
         android:layout_height="85dp"
@@ -92,16 +92,16 @@
         app:layout_constraintTop_toBottomOf="@+id/goalsButton" />
 
     <TextView
-        android:id="@+id/focusButtonText"
-        android:layout_width="39dp"
+        android:id="@+id/CalendarButtonText"
+        android:layout_width="wrap_content"
         android:layout_height="17dp"
         android:layout_marginTop="8dp"
-        android:text="Focus"
+        android:text="Calendar"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.371"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/focusButton" />
+        app:layout_constraintTop_toBottomOf="@+id/CalendarButton" />
 
     <TextView
         android:id="@+id/resourcesButtonText"
