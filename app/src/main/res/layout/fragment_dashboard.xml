@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="#3D3E48"
-    tools:context=".DashboardActivity">
-
+    tools:context=".MainAppActivity">
 
 
     <Button
@@ -15,11 +14,11 @@
         style="@style/Widget.Material3.Button.IconButton.Filled"
         android:layout_width="85dp"
         android:layout_height="85dp"
-        android:backgroundTint="#2A2A2A"
+        android:backgroundTint="@color/dark_gray"
         android:contentDescription="Goals"
         app:layout_constraintBottom_toTopOf="@+id/totalProgressBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.953"
+        app:layout_constraintHorizontal_bias="0.96"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.9" />
@@ -29,11 +28,11 @@
         style="@style/Widget.Material3.Button.IconButton.Filled"
         android:layout_width="85dp"
         android:layout_height="85dp"
-        android:backgroundTint="#2A2A2A"
+        android:backgroundTint="@color/dark_gray"
         android:contentDescription="Goals"
         app:layout_constraintBottom_toTopOf="@+id/totalProgressBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.358"
+        app:layout_constraintHorizontal_bias="0.345"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.9" />
@@ -43,11 +42,11 @@
         style="@style/Widget.Material3.Button.IconButton.Filled"
         android:layout_width="85dp"
         android:layout_height="85dp"
-        android:backgroundTint="#2A2A2A"
+        android:backgroundTint="@color/dark_gray"
         android:contentDescription="Goals"
         app:layout_constraintBottom_toTopOf="@+id/totalProgressBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.662"
+        app:layout_constraintHorizontal_bias="0.655"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.9" />
@@ -57,11 +56,11 @@
         style="@style/Widget.Material3.Button.IconButton.Filled"
         android:layout_width="85dp"
         android:layout_height="85dp"
-        android:backgroundTint="#2A2A2A"
+        android:backgroundTint="@color/dark_gray"
         android:contentDescription="Goals"
         app:layout_constraintBottom_toTopOf="@+id/totalProgressBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.049"
+        app:layout_constraintHorizontal_bias="0.04"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.9" />
@@ -70,7 +69,7 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:background="#4E3030"
-        android:backgroundTint="#2A2A2A"
+        android:backgroundTint="@color/dark_gray"
         app:layout_constraintBottom_toBottomOf="@+id/dailyProgressBar"
         app:layout_constraintEnd_toEndOf="@+id/dailyProgressBar"
         app:layout_constraintHorizontal_bias="0.5"
@@ -82,49 +81,46 @@
 
     <TextView
         android:id="@+id/goalsButtonText"
-        android:layout_width="40dp"
-        android:layout_height="21dp"
-        android:layout_marginStart="36dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Goals"
         android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/goalsButton"
+        app:layout_constraintStart_toStartOf="@+id/goalsButton"
         app:layout_constraintTop_toBottomOf="@+id/goalsButton" />
 
     <TextView
         android:id="@+id/focusButtonText"
-        android:layout_width="39dp"
-        android:layout_height="17dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Focus"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.371"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/focusButton"
+        app:layout_constraintStart_toStartOf="@+id/focusButton"
         app:layout_constraintTop_toBottomOf="@+id/focusButton" />
 
     <TextView
         android:id="@+id/resourcesButtonText"
-        android:layout_width="68dp"
-        android:layout_height="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Resources"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.65"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/resourcesButton"
+        app:layout_constraintStart_toStartOf="@+id/resourcesButton"
         app:layout_constraintTop_toBottomOf="@+id/resourcesButton" />
 
     <TextView
         android:id="@+id/settingsButtonText"
-        android:layout_width="56dp"
-        android:layout_height="22dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/action_settings"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.921"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/settingsButton"
+        app:layout_constraintStart_toStartOf="@+id/settingsButton"
         app:layout_constraintTop_toBottomOf="@+id/settingsButton" />
 
     <ProgressBar
@@ -134,30 +130,28 @@
         android:layout_height="35dp"
         android:indeterminate="false"
         android:indeterminateTint="#9E4949"
-        android:progress="45"
+        android:progress="0"
         android:progressTint="#0078D7"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.558"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dailyProgressBar"
         app:layout_constraintVertical_bias="0.564" />
 
     <TextView
         android:id="@+id/titleText"
-        android:layout_width="278dp"
-        android:layout_height="62dp"
-        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:fontFamily="@font/roboto_bold"
         android:text="@string/app_name"
         android:textColor="@color/white"
-        android:textSize="50dp"
-        app:layout_constraintBottom_toTopOf="@+id/dailyProgressBarText"
+        android:textSize="58dp"
+        app:layout_constraintBottom_toTopOf="@+id/dailyProgressBarTitleText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.100000024" />
 
     <TextView
         android:id="@+id/dailyProgressBarTitleText"
@@ -169,13 +163,12 @@
         android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@+id/dailyProgressBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/monthText"
-        android:layout_width="72dp"
-        android:layout_height="28dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:fontFamily="@font/roboto"
         android:text="month"
@@ -183,13 +176,13 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/dailyProgressBarTitleText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleText"
-        app:layout_constraintVertical_bias="0.706" />
+        app:layout_constraintTop_toTopOf="@+id/dayStreakText"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/dayStreakText"
-        android:layout_width="98dp"
-        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
         android:fontFamily="@font/roboto"
         android:text="Day Streak"
@@ -198,35 +191,34 @@
         app:layout_constraintBottom_toTopOf="@+id/dailyProgressBarTitleText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.884" />
+        app:layout_constraintVertical_bias="0.95" />
 
     <TextView
         android:id="@+id/dateText"
-        android:layout_width="67dp"
-        android:layout_height="63dp"
-        android:layout_marginStart="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="date"
         android:textColor="@color/white"
         android:textSize="56sp"
         app:layout_constraintBottom_toTopOf="@+id/monthText"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/monthText"
+        app:layout_constraintStart_toStartOf="@+id/monthText"
         app:layout_constraintTop_toBottomOf="@+id/titleText"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/streakNumberText"
-        android:layout_width="67dp"
-        android:layout_height="63dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="0"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="56sp"
         app:layout_constraintBottom_toTopOf="@+id/dayStreakText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.889"
-        app:layout_constraintStart_toEndOf="@+id/dateText"
+        app:layout_constraintEnd_toEndOf="@+id/dayStreakText"
+        app:layout_constraintStart_toStartOf="@+id/dayStreakText"
         app:layout_constraintTop_toBottomOf="@+id/titleText"
         app:layout_constraintVertical_bias="1.0" />
 
@@ -235,14 +227,13 @@
         style="@style/Widget.Material3.Button.Icon"
         android:layout_width="68dp"
         android:layout_height="173dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:backgroundTint="#2A2A2A"
+        android:backgroundTint="@color/dark_gray"
         android:contentDescription="To do Button"
         android:text=""
         app:cornerRadius="23dp"
-        app:layout_constraintEnd_toStartOf="@+id/todoButton1"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.046"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/totalProgressBar" />
 
@@ -251,14 +242,13 @@
         style="@style/Widget.Material3.Button.Icon"
         android:layout_width="68dp"
         android:layout_height="173dp"
-        android:layout_marginStart="92dp"
         android:layout_marginTop="16dp"
-        android:backgroundTint="#2A2A2A"
+        android:backgroundTint="@color/dark_gray"
         android:contentDescription="To do Button"
         android:text=""
         app:cornerRadius="23dp"
-        app:layout_constraintEnd_toStartOf="@+id/todoButton2"
-        app:layout_constraintHorizontal_bias="0.034"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.271"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/totalProgressBar" />
 
@@ -267,14 +257,12 @@
         style="@style/Widget.Material3.Button.Icon"
         android:layout_width="68dp"
         android:layout_height="173dp"
-        android:layout_marginStart="168dp"
         android:layout_marginTop="16dp"
-        android:backgroundTint="#2A2A2A"
+        android:backgroundTint="@color/dark_gray"
         android:contentDescription="To do Button"
         android:text=""
         app:cornerRadius="23dp"
-        app:layout_constraintEnd_toStartOf="@+id/todoButton3"
-        app:layout_constraintHorizontal_bias="0.115"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/totalProgressBar" />
 
@@ -284,12 +272,13 @@
         android:layout_width="68dp"
         android:layout_height="173dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:backgroundTint="#2A2A2A"
+        android:backgroundTint="@color/dark_gray"
         android:contentDescription="To do Button"
         android:text=""
         app:cornerRadius="23dp"
-        app:layout_constraintEnd_toStartOf="@+id/todoButton4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.73"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/totalProgressBar" />
 
     <Button
@@ -298,12 +287,12 @@
         android:layout_width="68dp"
         android:layout_height="173dp"
         android:layout_marginTop="16dp"
-        android:backgroundTint="#2A2A2A"
+        android:backgroundTint="@color/dark_gray"
         android:contentDescription="To do Button"
         android:text=""
         app:cornerRadius="23dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.932"
+        app:layout_constraintHorizontal_bias="0.96"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/totalProgressBar" />
 

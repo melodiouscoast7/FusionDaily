@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="#3D3E48"
+    tools:context=".MainAppActivity">
+
+    <Button
+        android:id="@+id/createButton"
+        style="@style/Widget.Material3.Button.Icon"
+        android:layout_width="137dp"
+        android:layout_height="52dp"
+        android:backgroundTint="@color/dark_gray"
+        android:contentDescription="To do Button"
+        android:text="Create A Goal!"
+        app:cornerRadius="23dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.850"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.95" />
+
+    <Button
+        android:id="@+id/backButton"
+        style="@style/Widget.Material3.Button.Icon"
+        android:layout_width="137dp"
+        android:layout_height="52dp"
+        android:backgroundTint="@color/dark_gray"
+        android:contentDescription="To do Button"
+        android:text="Back"
+        app:cornerRadius="23dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.150"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.95" />
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_bold"
+        android:text="Goals Overview"
+        android:textColor="@color/white"
+        android:textSize="38dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.055" />
+
+    <Button
+        android:id="@+id/noGoalsButton"
+        style="@style/Widget.Material3.Button.Icon"
+        android:layout_width="240dp"
+        android:layout_height="80dp"
+        android:backgroundTint="@color/dark_gray"
+        android:contentDescription="To do Button"
+        android:text="Create your first goal!"
+        app:cornerRadius="23dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <!--Goal 1-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/goalOneLayout"
+        android:layout_width="369dp"
+        android:layout_height="105dp"
+        android:background="@drawable/dark_bubble"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.16">
+
+        <TextView
+            android:id="@+id/goalOneText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Goal 1 Title"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/goalOneProgressBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ProgressBar
+            android:id="@+id/goalOneProgressBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="340dp"
+            android:layout_height="20dp"
+            android:indeterminate="false"
+            android:indeterminateTint="#9E4949"
+            android:progress="0"
+            android:progressTint="#0078D7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/goalOneProgressBarText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="Total Progress"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/goalOneProgressBar"
+            app:layout_constraintEnd_toEndOf="@+id/goalOneProgressBar"
+            app:layout_constraintStart_toStartOf="@+id/goalOneProgressBar"
+            app:layout_constraintTop_toTopOf="@+id/goalOneProgressBar"
+            app:layout_constraintVertical_bias="0.826" />
+
+        <TextView
+            android:id="@+id/goalOneStreakText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="Day Streak:"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/goalOneProgressBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.555" />
+
+        <TextView
+            android:id="@+id/goalOneStreakCounterText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:text="0"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/goalOneStreakText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.03"
+            app:layout_constraintStart_toEndOf="@+id/goalOneStreakText"
+            app:layout_constraintTop_toTopOf="@+id/goalOneStreakText"
+            app:layout_constraintVertical_bias="0.16000003" />
+
+        <Button
+            android:id="@+id/goalOneViewButton"
+            style="@style/Widget.Material3.Button.Icon"
+            android:layout_width="103dp"
+            android:layout_height="52dp"
+            android:backgroundTint="#3D3E48"
+            android:text="View"
+            app:cornerRadius="23dp"
+            app:layout_constraintEnd_toEndOf="@+id/goalOneProgressBar"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--Goal 2-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/goalTwoLayout"
+        android:layout_width="369dp"
+        android:layout_height="105dp"
+        android:background="@drawable/dark_bubble"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.32">
+
+        <TextView
+            android:id="@+id/goalTwoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Goal 2 Title"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/goalTwoProgressBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ProgressBar
+            android:id="@+id/goalTwoProgressBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="340dp"
+            android:layout_height="20dp"
+            android:indeterminate="false"
+            android:indeterminateTint="#9E4949"
+            android:progress="0"
+            android:progressTint="#0078D7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/goalTwoProgressBarText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="Total Progress"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/goalTwoProgressBar"
+            app:layout_constraintEnd_toEndOf="@+id/goalTwoProgressBar"
+            app:layout_constraintStart_toStartOf="@+id/goalTwoProgressBar"
+            app:layout_constraintTop_toTopOf="@+id/goalTwoProgressBar"
+            app:layout_constraintVertical_bias="0.826" />
+
+        <TextView
+            android:id="@+id/goalTwoStreakText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="Day Streak:"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/goalTwoProgressBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.555" />
+
+        <TextView
+            android:id="@+id/goalTwoStreakCounterText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:text="0"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/goalTwoStreakText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.03"
+            app:layout_constraintStart_toEndOf="@+id/goalTwoStreakText"
+            app:layout_constraintTop_toTopOf="@+id/goalTwoStreakText"
+            app:layout_constraintVertical_bias="0.16000003" />
+
+        <Button
+            android:id="@+id/goalTwoViewButton"
+            style="@style/Widget.Material3.Button.Icon"
+            android:layout_width="103dp"
+            android:layout_height="52dp"
+            android:backgroundTint="#3D3E48"
+            android:text="View"
+            app:cornerRadius="23dp"
+            app:layout_constraintEnd_toEndOf="@+id/goalTwoProgressBar"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--Goal 3-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/goalThreeLayout"
+        android:layout_width="369dp"
+        android:layout_height="105dp"
+        android:background="@drawable/dark_bubble"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.48">
+        
+        <TextView
+            android:id="@+id/goalThreeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Goal 3 Title"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/goalThreeProgressBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ProgressBar
+            android:id="@+id/goalThreeProgressBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="340dp"
+            android:layout_height="20dp"
+            android:indeterminate="false"
+            android:indeterminateTint="#9E4949"
+            android:progress="0"
+            android:progressTint="#0078D7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/goalThreeProgressBarText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="Total Progress"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/goalThreeProgressBar"
+            app:layout_constraintEnd_toEndOf="@+id/goalThreeProgressBar"
+            app:layout_constraintStart_toStartOf="@+id/goalThreeProgressBar"
+            app:layout_constraintTop_toTopOf="@+id/goalThreeProgressBar"
+            app:layout_constraintVertical_bias="0.826" />
+
+        <TextView
+            android:id="@+id/goalThreeStreakText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="Day Streak:"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/goalThreeProgressBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.555" />
+
+        <TextView
+            android:id="@+id/goalThreeStreakCounterText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:text="0"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/goalThreeStreakText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.03"
+            app:layout_constraintStart_toEndOf="@+id/goalThreeStreakText"
+            app:layout_constraintTop_toTopOf="@+id/goalThreeStreakText"
+            app:layout_constraintVertical_bias="0.16000003" />
+
+        <Button
+            android:id="@+id/goalThreeViewButton"
+            style="@style/Widget.Material3.Button.Icon"
+            android:layout_width="103dp"
+            android:layout_height="52dp"
+            android:backgroundTint="#3D3E48"
+            android:text="View"
+            app:cornerRadius="23dp"
+            app:layout_constraintEnd_toEndOf="@+id/goalThreeProgressBar"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--Goal 4-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/goalFourLayout"
+        android:layout_width="369dp"
+        android:layout_height="105dp"
+        android:background="@drawable/dark_bubble"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.64">
+
+        <TextView
+            android:id="@+id/goalFourText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Goal 4 Title"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/goalFourProgressBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ProgressBar
+            android:id="@+id/goalFourProgressBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="340dp"
+            android:layout_height="20dp"
+            android:indeterminate="false"
+            android:indeterminateTint="#9E4949"
+            android:progress="0"
+            android:progressTint="#0078D7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/goalFourProgressBarText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="Total Progress"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/goalFourProgressBar"
+            app:layout_constraintEnd_toEndOf="@+id/goalFourProgressBar"
+            app:layout_constraintStart_toStartOf="@+id/goalFourProgressBar"
+            app:layout_constraintTop_toTopOf="@+id/goalFourProgressBar"
+            app:layout_constraintVertical_bias="0.826" />
+
+        <TextView
+            android:id="@+id/goalFourStreakText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="Day Streak:"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/goalFourProgressBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.555" />
+
+        <TextView
+            android:id="@+id/goalFourStreakCounterText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:text="0"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/goalFourStreakText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.03"
+            app:layout_constraintStart_toEndOf="@+id/goalFourStreakText"
+            app:layout_constraintTop_toTopOf="@+id/goalFourStreakText"
+            app:layout_constraintVertical_bias="0.16000003" />
+
+        <Button
+            android:id="@+id/goalFourViewButton"
+            style="@style/Widget.Material3.Button.Icon"
+            android:layout_width="103dp"
+            android:layout_height="52dp"
+            android:backgroundTint="#3D3E48"
+            android:text="View"
+            app:cornerRadius="23dp"
+            app:layout_constraintEnd_toEndOf="@+id/goalFourProgressBar"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--Goal 5-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/goalFiveLayout"
+        android:layout_width="369dp"
+        android:layout_height="105dp"
+        android:background="@drawable/dark_bubble"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.80">
+
+        <TextView
+            android:id="@+id/goalFiveText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Goal 5 Title"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/goalFiveProgressBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ProgressBar
+            android:id="@+id/goalFiveProgressBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="340dp"
+            android:layout_height="20dp"
+            android:indeterminate="false"
+            android:indeterminateTint="#9E4949"
+            android:progress="0"
+            android:progressTint="#0078D7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/goalFiveProgressBarText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="Total Progress"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/goalFiveProgressBar"
+            app:layout_constraintEnd_toEndOf="@+id/goalFiveProgressBar"
+            app:layout_constraintStart_toStartOf="@+id/goalFiveProgressBar"
+            app:layout_constraintTop_toTopOf="@+id/goalFiveProgressBar"
+            app:layout_constraintVertical_bias="0.826" />
+
+        <TextView
+            android:id="@+id/goalFiveStreakText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="Day Streak:"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/goalFiveProgressBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.555" />
+
+        <TextView
+            android:id="@+id/goalFiveStreakCounterText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:text="0"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/goalFiveStreakText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.03"
+            app:layout_constraintStart_toEndOf="@+id/goalFiveStreakText"
+            app:layout_constraintTop_toTopOf="@+id/goalFiveStreakText"
+            app:layout_constraintVertical_bias="0.16000003" />
+
+        <Button
+            android:id="@+id/goalFiveViewButton"
+            style="@style/Widget.Material3.Button.Icon"
+            android:layout_width="103dp"
+            android:layout_height="52dp"
+            android:backgroundTint="#3D3E48"
+            android:text="View"
+            app:cornerRadius="23dp"
+            app:layout_constraintEnd_toEndOf="@+id/goalFiveProgressBar"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
