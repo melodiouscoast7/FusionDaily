@@ -36,6 +36,8 @@
         <activity
             android:name="com.example.fusiondailytest.ResourcesActivity"
             android:exported="false"/>
+        <activity
+            android:name="com.example.fusiondailytest.CalendarActivity" />
 
 
         <activity
