@@ -24,8 +24,6 @@ public class DashboardActivity extends AppCompatActivity {
     private ProgressBar dailyProgressBar;
     private TextView dailyProgressText;
 
-    private Button settingsButton;
-
     private int totalProgressValue = 0; // Variable to track task progress (0-100 scale)
     int dailyProgressValue = 0;
     @Override
@@ -40,7 +38,8 @@ public class DashboardActivity extends AppCompatActivity {
         dailyProgressBar = findViewById(R.id.dailyProgressBar);
         dailyProgressText = findViewById(R.id.dailyProgressBarText);
 
-        settingsButton = findViewById(R.id.settingsButton);
+        Button settingsButton = findViewById(R.id.settingsButton);
+
         // Example logic to simulate progress updates
         updateTotalProgress(20); // Increment progress by 20%
         updateDailyProgress(30); // Increment progress by another 30%
@@ -59,6 +58,15 @@ public class DashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(DashboardActivity.this, ResourcesActivity.class));
+                finish();
+            }
+        });
+
+        Button CalendarButton = findViewById(R.id.CalendarButton);
+        CalendarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DashboardActivity.this, CalendarActivity.class));
                 finish();
             }
         });
