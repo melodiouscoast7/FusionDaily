@@ -1,10 +1,13 @@
-package com.example.fusiondailytest;
+package com.example.Logic;
 
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.fusiondailytest.MainAppActivity;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -13,11 +16,11 @@ import java.util.Set;
 public class CalendarPagerAdapter
         extends RecyclerView.Adapter<CalendarPagerAdapter.MonthViewHolder> {
 
-    private final List<CalendarActivity.YearMonth> months;
+    private final List<MainAppActivity.YearMonth> months;
     private final Set<Long> streakDays;
     private final long goalEndMillis;
 
-    public CalendarPagerAdapter(List<CalendarActivity.YearMonth> months,
+    public CalendarPagerAdapter(List<MainAppActivity.YearMonth> months,
                                 Set<Long> streakDays, long goalEndMillis) {
         this.months = months;
         this.streakDays = streakDays;
@@ -37,7 +40,7 @@ public class CalendarPagerAdapter
     @Override
     public void onBindViewHolder(@NonNull MonthViewHolder holder, int position) {
         // Get the year and month for the current position
-        CalendarActivity.YearMonth ym = months.get(position);
+        MainAppActivity.YearMonth ym = months.get(position);
         // Create a list to hold the milliseconds for each day in the month
         List<Long> days = new ArrayList<>();
         // Get a Calendar instance and set it to the first day of the current month

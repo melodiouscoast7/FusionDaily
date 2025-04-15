@@ -23,31 +23,19 @@
             android:label="Main"
             android:theme="@style/Theme.FusionDailyTest" />
         <activity
-            android:name="com.example.fusiondailytest.DashboardActivity"
+            android:name="com.example.fusiondailytest.MainAppActivity"/>
+        <activity
+            android:name="com.example.fusiondailytest.QuestionnaireActivity" />
+
+
+        <activity
+            android:name="com.example.fusiondailytest.LoginActivity"
+            android:theme="@style/Theme.FusionDailyTest"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <activity
-            android:name="com.example.fusiondailytest.QuestionnaireActivity" />
-        <activity
-            android:name="com.example.fusiondailytest.ResourcesActivity"
-            android:exported="false"/>
-        <activity
-            android:name="com.example.fusiondailytest.CalendarActivity" />
-
-
-        <activity
-            android:name="com.example.fusiondailytest.LoginActivity"
-            android:exported="false"
-            android:theme="@style/Theme.FusionDailyTest">
-            <!--><intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter><!-->
         </activity>
 
     </application>

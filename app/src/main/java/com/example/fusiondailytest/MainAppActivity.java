@@ -6,14 +6,28 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
+
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import android.widget.Button;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 import com.example.Logic.*;
+
+import android.net.Uri;
+import android.view.LayoutInflater;
+import android.text.util.Linkify;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+import org.json.JSONObject;
+
 public class MainAppActivity extends AppCompatActivity {
 
 
@@ -26,9 +40,25 @@ public class MainAppActivity extends AppCompatActivity {
     private TextView dbDailyStreakText;
     private Button dbSettingsButton;
     private Button dbGoalsButton;
-    private Button dbFocusButton;
+    private Button dbCalenderButton;
+    private Button dbResourcesButton;
     private TextView dbMonthText;
     private TextView dbDateText;
+
+    //Resource View (rv) Variables
+    private LinearLayout rvPersonalizedContainer;
+
+    private final String[] rvSTATIC_URLS = {
+            "https://www.healthline.com/nutrition/27-health-and-nutrition-tips",
+            "https://www.muscleandstrength.com/workout-routines",
+            "https://mhanational.org/"
+    };
+
+    private final int[] rvINCLUDE_IDS = {
+            R.id.link_healthline,
+            R.id.link_bodybuilding,
+            R.id.link_selfimprove
+    };
 
     //Goals Overview (go) Variables
     private Vector<View> goGoalLayouts = new Vector<View>();
@@ -83,8 +113,9 @@ public class MainAppActivity extends AppCompatActivity {
         dbDailyProgressText = findViewById(R.id.dailyProgressBarText);
 
         dbGoalsButton = findViewById(R.id.goalsButton);
-        dbFocusButton = findViewById(R.id.focusButton);
+        dbCalenderButton = findViewById(R.id.calenderButton);
         dbSettingsButton = findViewById(R.id.settingsButton);
+        dbResourcesButton = findViewById(R.id.resourcesButton);
 
         // Example logic to simulate progress updates
         updateTotalProgress(20); // Increment progress by 20%
@@ -118,11 +149,20 @@ public class MainAppActivity extends AppCompatActivity {
             }
         });
 
-        dbFocusButton.setOnClickListener(new View.OnClickListener()
+        dbCalenderButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v) {
-                updateDailyProgress(5);
+                setContentView(R.layout.fragment_calendar);
+                assignCalenderView();
+            }
+        });
+        dbResourcesButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                setContentView(R.layout.fragment_resources);
+                assignResourceView();
             }
         });
     }
@@ -156,7 +196,145 @@ public class MainAppActivity extends AppCompatActivity {
 
     }
 
+    //Resource view (rv) Functions
+    private void assignResourceView() //Assigns objects for the overview fragment
+    {
+        rvPersonalizedContainer = findViewById(R.id.personalized_container);
 
+        Button dashboardButton = findViewById(R.id.resource_dashboard_Button);
+        dashboardButton.setOnClickListener(v -> {
+            setContentView(R.layout.fragment_dashboard);
+            assignDashboard();
+        });
+
+        // Wire up the static links
+        setupStaticLinks();
+
+        fetchPersonalizedResources();
+    }
+    private void setupStaticLinks() {
+        for (int i = 0; i < rvINCLUDE_IDS.length; i++) {
+            View item = findViewById(rvINCLUDE_IDS[i]);
+            String url = rvSTATIC_URLS[i];
+            TextView linkView = item.findViewById(R.id.resource_link);
+            linkView.setText(url);
+            linkView.setOnClickListener(v ->
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))));
+            Linkify.addLinks(linkView, Linkify.WEB_URLS);
+        }
+    }
+
+    private void fetchPersonalizedResources() {
+        String prompt = "Find three reputable online resources (URLs only) to help achieve a random goal. Format as one URL per line, No other text, (Top Priority) No number list, and just provide the home page URLs.";
+        new OpenAIManager().sendPrompt(prompt, new OpenAIManager.OpenAIResponseCallback() {
+            @Override
+            public void onSuccess(String json) {
+                try {
+                    // parse JSON → choices[0].message.content
+                    JSONObject root = new JSONObject(json);
+                    String content = root
+                            .getJSONArray("choices")
+                            .getJSONObject(0)
+                            .getJSONObject("message")
+                            .getString("content");
+
+                    // Expect lines of URLs
+                    for (String line : content.split("\n")) {
+                        String url = line.trim();
+                        if (url.startsWith("http")) {
+                            addPersonalizedLink(url);
+                        }
+                    }
+                } catch (Exception e) {
+                    runOnUiThread(() ->
+                            Toast.makeText(MainAppActivity.this,
+                                    "Error parsing resources", Toast.LENGTH_SHORT).show());
+                }
+            }
+            @Override
+            public void onFailure(Exception e) {
+                runOnUiThread(() ->
+                        Toast.makeText(MainAppActivity.this,
+                                "Failed to load personalized links", Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
+    private void addPersonalizedLink(String url) {
+        runOnUiThread(() -> {
+            View item = LayoutInflater.from(this)
+                    .inflate(R.layout.item_resource, rvPersonalizedContainer, false);
+            TextView linkView = item.findViewById(R.id.resource_link);
+            linkView.setText(url);
+            linkView.setOnClickListener(v ->
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))));
+            rvPersonalizedContainer.addView(item);
+        });
+    }
+
+    //Calender View (cv) Functions
+    private void assignCalenderView()
+    {
+        // This is an example, plug the user's goal end dates here.
+        Calendar goalEndCal = Calendar.getInstance();
+        goalEndCal.add(Calendar.DAY_OF_MONTH, 10);
+        zeroTime(goalEndCal);
+
+        // Build streak set (last N days)
+        Set<Long> streakSet = new HashSet<>();
+        Calendar c = Calendar.getInstance();
+        zeroTime(c);
+        // Example streak length
+        int streakDays = 15;
+        for (int i = 0; i < streakDays; i++) {
+            streakSet.add(c.getTimeInMillis());
+            c.add(Calendar.DAY_OF_MONTH, -1);
+        }
+
+        // Build 12 months: 6 past, current, 5 future
+        List<MainAppActivity.YearMonth> months = new ArrayList<>();
+        Calendar mCal = Calendar.getInstance();
+        mCal.add(Calendar.MONTH, -6);
+        for (int i = 0; i < 12; i++) {
+            months.add(new MainAppActivity.YearMonth(
+                    mCal.get(Calendar.YEAR),
+                    mCal.get(Calendar.MONTH)
+            ));
+            mCal.add(Calendar.MONTH, 1);
+        }
+
+        ViewPager2 pager = findViewById(R.id.calendarPager);
+        CalendarPagerAdapter adapter = new CalendarPagerAdapter(
+                months, streakSet, goalEndCal.getTimeInMillis()
+        );
+        pager.setAdapter(adapter);
+        pager.setCurrentItem(6, false);  // Center on current month
+
+        Button backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setContentView(R.layout.fragment_dashboard);
+                assignDashboard();
+            }
+        });
+    }
+
+    private void zeroTime(Calendar c) {
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+    }
+
+    // Simple holder for year/month
+    public static class YearMonth {
+        public final int year, month;
+        YearMonth(int year, int month) {
+            this.year = year;
+            this.month = month;
+        }
+    }
 
     //Goal Overview (go) Functions
     private void assignGoalsOverview() //Assigns objects for the overview fragment
@@ -297,5 +475,6 @@ public class MainAppActivity extends AppCompatActivity {
     {
 
     }
+
 
 }

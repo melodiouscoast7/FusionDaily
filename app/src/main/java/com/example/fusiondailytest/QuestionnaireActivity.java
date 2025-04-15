@@ -229,7 +229,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
     }
 
     private void leaveQuestionnaire() {
-        startActivity(new Intent(QuestionnaireActivity.this, DashboardActivity.class));
+        startActivity(new Intent(QuestionnaireActivity.this, MainAppActivity.class));
         finish();
     }
 }

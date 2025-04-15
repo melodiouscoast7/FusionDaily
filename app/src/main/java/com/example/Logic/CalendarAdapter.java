@@ -1,4 +1,4 @@
-package com.example.fusiondailytest;
+package com.example.Logic;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.fusiondailytest.R;
+
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
