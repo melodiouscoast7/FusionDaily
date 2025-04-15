@@ -13,25 +13,23 @@ import java.util.List;
 import java.util.Set;
 
 public class CalendarActivity extends AppCompatActivity {
-    private ViewPager2 pager;
-    private final int streakDays = 15;  // Example streak length
-    private Calendar goalEndCal;
-    private Set<Long> streakSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
 
-        // Example goal end date: today + 10 days
-        goalEndCal = Calendar.getInstance();
+        // This is an example, plug the user's goal end dates here.
+        Calendar goalEndCal = Calendar.getInstance();
         goalEndCal.add(Calendar.DAY_OF_MONTH, 10);
         zeroTime(goalEndCal);
 
         // Build streak set (last N days)
-        streakSet = new HashSet<>();
+        Set<Long> streakSet = new HashSet<>();
         Calendar c = Calendar.getInstance();
         zeroTime(c);
+        // Example streak length
+        int streakDays = 15;
         for (int i = 0; i < streakDays; i++) {
             streakSet.add(c.getTimeInMillis());
             c.add(Calendar.DAY_OF_MONTH, -1);
@@ -49,7 +47,7 @@ public class CalendarActivity extends AppCompatActivity {
             mCal.add(Calendar.MONTH, 1);
         }
 
-        pager = findViewById(R.id.calendarPager);
+        ViewPager2 pager = findViewById(R.id.calendarPager);
         CalendarPagerAdapter adapter = new CalendarPagerAdapter(
                 months, streakSet, goalEndCal.getTimeInMillis()
         );

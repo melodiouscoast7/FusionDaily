@@ -36,15 +36,22 @@ public class CalendarPagerAdapter
 
     @Override
     public void onBindViewHolder(@NonNull MonthViewHolder holder, int position) {
+        // Get the year and month for the current position
         CalendarActivity.YearMonth ym = months.get(position);
+        // Create a list to hold the milliseconds for each day in the month
         List<Long> days = new ArrayList<>();
+        // Get a Calendar instance and set it to the first day of the current month
         Calendar c = Calendar.getInstance();
         c.set(Calendar.YEAR, ym.year);
         c.set(Calendar.MONTH, ym.month);
         c.set(Calendar.DAY_OF_MONTH, 1);
+        // Zero out the time (hour, minute, second, millisecond)
         zeroTime(c);
+        // Get the maximum day of the month
         int maxDay = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+        // Loop through each day of the month
         for (int d = 1; d <= maxDay; d++) {
+            // Set the current day and add the time in milliseconds to the list
             c.set(Calendar.DAY_OF_MONTH, d);
             days.add(c.getTimeInMillis());
         }
@@ -52,6 +59,7 @@ public class CalendarPagerAdapter
         CalendarAdapter dayAdapter = new CalendarAdapter(
                 days, streakDays, goalEndMillis
         );
+        // Set the layout manager and adapter for the inner RecyclerView (days)
         holder.recycler.setLayoutManager(new GridLayoutManager(
                 holder.recycler.getContext(), 7
         ));
