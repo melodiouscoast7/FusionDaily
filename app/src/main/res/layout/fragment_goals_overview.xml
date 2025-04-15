@@ -13,7 +13,7 @@
         style="@style/Widget.Material3.Button.Icon"
         android:layout_width="137dp"
         android:layout_height="52dp"
-        android:backgroundTint="#2A2A2A"
+        android:backgroundTint="@color/dark_gray"
         android:contentDescription="To do Button"
         android:text="Create A Goal!"
         app:cornerRadius="23dp"
@@ -29,7 +29,7 @@
         style="@style/Widget.Material3.Button.Icon"
         android:layout_width="137dp"
         android:layout_height="52dp"
-        android:backgroundTint="#2A2A2A"
+        android:backgroundTint="@color/dark_gray"
         android:contentDescription="To do Button"
         android:text="Back"
         app:cornerRadius="23dp"
@@ -39,8 +39,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.95" />
-
-    <!--Goal 1-->
 
     <TextView
         android:id="@+id/titleText"
@@ -62,7 +60,7 @@
         style="@style/Widget.Material3.Button.Icon"
         android:layout_width="240dp"
         android:layout_height="80dp"
-        android:backgroundTint="#2A2A2A"
+        android:backgroundTint="@color/dark_gray"
         android:contentDescription="To do Button"
         android:text="Create your first goal!"
         app:cornerRadius="23dp"
@@ -72,6 +70,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5" />
 
+    <!--Goal 1-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/goalOneLayout"
         android:layout_width="369dp"

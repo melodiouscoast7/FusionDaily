@@ -234,8 +234,7 @@ public class MainAppActivity extends AppCompatActivity {
     {
         for (int i = 0; i < goGoalLayouts.size(); i++)
             goGoalLayouts.get(i).setVisibility(View.GONE);
-        //String goalSize = "num = " + goals.size();
-        //goGoalStreaks.get(0).setText(goalSize);
+
         if(!goals.isEmpty())
         {
             for (int i = 0; i < goals.size(); i++)
