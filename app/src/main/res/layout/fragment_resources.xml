@@ -18,13 +18,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/resource_info"
-            android:textColor="@color/dead_black"
+            android:textColor="@color/white"
             android:textSize="15sp"
             android:textStyle="bold"
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:background="@drawable/qs_title_header_box"
-            android:padding="8dp"/>
+            android:padding="12dp"/>
 
         <!-- Section: General Resources -->
         <TextView
@@ -99,8 +99,8 @@
             android:text="@string/resourceToDashboard_button"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:backgroundTint="@color/soft_grey"
-            android:textColor="@color/dead_black"/>
+            android:backgroundTint="@color/dead_black"
+            android:textColor="@color/white"/>
     </LinearLayout>
 
 </ScrollView>
