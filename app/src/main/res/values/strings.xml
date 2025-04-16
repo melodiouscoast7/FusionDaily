@@ -20,7 +20,7 @@
 
         <!-- Fragment 1 -->
         <string name="fusion_daily_questionnaire">Fusion Daily Questionnaire</string>
-        <string name="intro_message">Welcome to Daily Fusion! Before we get you started on fulfilling your goals, we need to learn more about you. There are 4 categories of questions you will be asked that will be sent to our AI to help find the best way to help you achieve your goals. These questions are cleverly curated by our team to help form the goal into something that can be achieved in a realistic time frame. Let’s get started!</string>
+        <string name="intro_message">Welcome to Daily Fusion! Before we get you started on fulfilling your goals, we need to learn more about you. There are 3 categories of questions you will be asked that will be sent to our AI to help find the best way to help you achieve your goals. These questions are cleverly curated by our team to help form the goal into something that can be achieved in a realistic time frame. Let’s get started!</string>
         <string name="begin">Begin</string>
 
         <!-- Fragment 2 -->
