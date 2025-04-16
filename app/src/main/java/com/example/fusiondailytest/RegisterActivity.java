@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
 import android.app.DatePickerDialog;
 import android.widget.DatePicker;
 
@@ -19,9 +22,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.fusiondaily.QuestionnaireActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth auth;
+    private FirebaseFirestore db;
     private EditText email, password, confirmPassword, birthday;
     private Button registerBtn;
     private TextView loginLink;
@@ -33,6 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register_ui);
 
         auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         confirmPassword = findViewById(R.id.Confirmpassword);
@@ -64,13 +70,29 @@ public class RegisterActivity extends AppCompatActivity {
                             registerBtn.setEnabled(true);
 
                             if (task.isSuccessful()) {
+                                String userId = auth.getCurrentUser().getUid();
+
+                                Map<String, Object> userData = new HashMap<>();
+                                userData.put("email", emailText);
+                                userData.put("birthday", birthdayText); // Store the user's birthday, which can be used for age verification, personalization, etc.
+
+                                db.collection("users").document(userId)
+                                        .set(userData)
+                                        .addOnSuccessListener(aVoid -> {
+                                            Toast.makeText(RegisterActivity.this, "User saved in Firestore!", Toast.LENGTH_SHORT).show();
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Toast.makeText(RegisterActivity.this, "Failed to save user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        });
+
                                 Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(RegisterActivity.this, QuestionnaireActivity.class));
-                                finish();  // Close RegisterActivity to prevent user from returning to it
+                                finish();
                             } else {
                                 String errorMessage = getFirebaseErrorMessage(task.getException());
                                 Toast.makeText(RegisterActivity.this, errorMessage, Toast.LENGTH_LONG).show();
                             }
+
                         });
             }
         });
