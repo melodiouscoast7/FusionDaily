@@ -9,15 +9,24 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
+import android.app.DatePickerDialog;
+import android.widget.DatePicker;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth auth;
-    private EditText email, password;
+    private FirebaseFirestore db;
+    private EditText email, password, confirmPassword, birthday;
     private Button registerBtn;
     private TextView loginLink;
     private ProgressDialog progressDialog;
@@ -28,19 +37,27 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register_ui);
 
         auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
+        confirmPassword = findViewById(R.id.Confirmpassword);
+        birthday = findViewById(R.id.Birthday);
         registerBtn = findViewById(R.id.signUpBtn);
         loginLink = findViewById(R.id.loginLink);
         progressDialog = new ProgressDialog(this);
+
+        // Handle birthday date picker
+        birthday.setOnClickListener(v -> showDatePickerDialog());
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String emailText = email.getText().toString().trim();
                 String passwordText = password.getText().toString().trim();
+                String confirmPasswordText = confirmPassword.getText().toString().trim();
+                String birthdayText = birthday.getText().toString().trim();
 
-                if (!validateInput(emailText, passwordText)) return;
+                if (!validateInput(emailText, passwordText, confirmPasswordText, birthdayText)) return;
 
                 registerBtn.setEnabled(false);  // Disable button to prevent multiple clicks
                 progressDialog.setMessage("Registering...");
@@ -52,35 +69,74 @@ public class RegisterActivity extends AppCompatActivity {
                             registerBtn.setEnabled(true);
 
                             if (task.isSuccessful()) {
-                                Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
+                                String userId = auth.getCurrentUser().getUid();//grabs users ID to continue to add data into profile
 
-                                // Navigate to MainActivity after successful registration
+                                Map<String, Object> userData = new HashMap<>();
+                                userData.put("email", emailText);
+                                userData.put("birthday", birthdayText); // Store the user's birthday, which can be used for age verification, personalization, etc.
+
+                                db.collection("users").document(userId)
+                                        .set(userData)
+                                        .addOnSuccessListener(aVoid -> {
+                                            Toast.makeText(RegisterActivity.this, "User saved in Firestore!", Toast.LENGTH_SHORT).show();
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Toast.makeText(RegisterActivity.this, "Failed to save user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        });
+
+                                Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(RegisterActivity.this, QuestionnaireActivity.class));
-                                finish();  // Close RegisterActivity to prevent user from returning to it
+                                finish();
                             } else {
                                 String errorMessage = getFirebaseErrorMessage(task.getException());
                                 Toast.makeText(RegisterActivity.this, errorMessage, Toast.LENGTH_LONG).show();
                             }
+
                         });
             }
         });
 
         loginLink.setOnClickListener(v -> startActivity(new Intent(RegisterActivity.this, QuestionnaireActivity.class)));
     }
+    private void showDatePickerDialog() {
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-    private boolean validateInput(String email, String password) {
-        if (email.isEmpty() || password.isEmpty()) {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                RegisterActivity.this,
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+                    String selectedDate = (selectedMonth + 1) + "/" + selectedDay + "/" + selectedYear;
+                    birthday.setText(selectedDate);
+                },
+                year, month, day
+        );
+
+        datePickerDialog.show();
+    }
+
+    private boolean validateInput(String email, String password, String confirmPassword, String birthday) {
+        if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || birthday.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return false;
         }
+
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             Toast.makeText(this, "Invalid email format", Toast.LENGTH_SHORT).show();
             return false;
         }
+
         if (password.length() < 6) {
             Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
             return false;
         }
+
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         return true;
     }
 
