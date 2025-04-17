@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#3D3E48"
+    android:fitsSystemWindows="true"
+    tools:context=".MainAppActivity">
+
+    <TextView
+        android:id="@+id/settingsTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="Settings"
+        android:textColor="@color/white"
+        android:textSize="38dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/settingsSignOutButton"
+        style="@style/Widget.Material3.Button.Icon"
+        android:layout_width="202dp"
+        android:layout_height="50dp"
+        android:backgroundTint="@color/dark_gray"
+        android:text="Sign Out"
+        app:cornerRadius="23dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.416" />
+
+    <Button
+        android:id="@+id/settingsQuestionnaireButton"
+        style="@style/Widget.Material3.Button.Icon"
+        android:layout_width="202dp"
+        android:layout_height="50dp"
+        android:backgroundTint="@color/dark_gray"
+        android:text="View Questionnaire"
+        app:cornerRadius="23dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.23" />
+
+    <Button
+        android:id="@+id/settingsDeleteButton"
+        style="@style/Widget.Material3.Button.Icon"
+        android:layout_width="202dp"
+        android:layout_height="50dp"
+        android:backgroundTint="@color/dark_gray"
+        android:text="Delete Account"
+        app:cornerRadius="23dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.509" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Warning: This will also delete ALL of your data."
+        android:textColor="@color/accentRed"
+        android:textSize="9dp"
+        app:layout_constraintStart_toStartOf="@+id/settingsDeleteButton"
+        app:layout_constraintTop_toBottomOf="@+id/settingsDeleteButton" />
+
+    <Button
+        android:id="@+id/settingsPasswordButton"
+        style="@style/Widget.Material3.Button.Icon"
+        android:layout_width="202dp"
+        android:layout_height="50dp"
+        android:backgroundTint="@color/dark_gray"
+        android:text="Change Password"
+        app:cornerRadius="23dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.323" />
+
+    <Button
+        android:id="@+id/settingsBackButton"
+        style="@style/Widget.Material3.Button.Icon"
+        android:layout_width="137dp"
+        android:layout_height="52dp"
+        android:backgroundTint="@color/dark_gray"
+        android:text="Back"
+        app:cornerRadius="23dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.949" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

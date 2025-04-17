@@ -59,6 +59,12 @@ public class MainAppActivity extends AppCompatActivity {
             R.id.link_bodybuilding,
             R.id.link_selfimprove
     };
+    //Settings View (sv) Variables
+    private Button svSignOutButton;
+    private Button svChangePasswordButton;
+    private Button svDeleteAccountButton;
+    private Button svViewQuestionnaireButton;
+    private Button svBackButton;
 
     //Goals Overview (go) Variables
     private Vector<View> goGoalLayouts = new Vector<View>();
@@ -133,8 +139,8 @@ public class MainAppActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                auth.signOut();
-                startActivity(new Intent(MainAppActivity.this, LoginActivity.class));
+                setContentView(R.layout.fragment_settings);
+                assignSettingsView();
             }
         });
 
@@ -145,7 +151,6 @@ public class MainAppActivity extends AppCompatActivity {
             {
                 setContentView(R.layout.fragment_goals_overview);
                 assignGoalsOverview();
-                updateGoalsOverview();
             }
         });
 
@@ -405,6 +410,7 @@ public class MainAppActivity extends AppCompatActivity {
                 assignGoalsCreate();
             }
         });
+        updateGoalsOverview();
     }
 
 
@@ -451,8 +457,6 @@ public class MainAppActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 setContentView(R.layout.fragment_goals_overview);
-                assignGoalsOverview();
-                updateGoalsOverview();
             }
         });
 
@@ -464,7 +468,6 @@ public class MainAppActivity extends AppCompatActivity {
                 goals.add(new Goal(gcNameInput.getText().toString(), gcDescriptionInput.getText().toString()));
                 setContentView(R.layout.fragment_goals_overview);
                 assignGoalsOverview();
-                updateGoalsOverview();
             }
         });
     }
@@ -474,6 +477,63 @@ public class MainAppActivity extends AppCompatActivity {
     private void assignGoalsView() //Assigns objects for the create fragment
     {
 
+    }
+
+    //Settings View (sv) Functions
+    private void assignSettingsView() //Assigns objects for the create fragment
+    {
+        svBackButton = findViewById(R.id.settingsBackButton);
+        svSignOutButton = findViewById(R.id.settingsSignOutButton);
+        svViewQuestionnaireButton = findViewById(R.id.settingsQuestionnaireButton);
+        svChangePasswordButton = findViewById(R.id.settingsPasswordButton);
+        svDeleteAccountButton = findViewById(R.id.settingsDeleteButton);
+
+        svBackButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                setContentView(R.layout.fragment_dashboard);
+                assignDashboard();
+            }
+        });
+
+        svSignOutButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                auth.signOut();
+                startActivity(new Intent(MainAppActivity.this, LoginActivity.class));
+            }
+        });
+
+        svViewQuestionnaireButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                startActivity(new Intent(MainAppActivity.this, QuestionnaireActivity.class));
+            }
+        });
+
+        svChangePasswordButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                //TO DO - Create UI for changing password, add functionality to change password
+            }
+        });
+
+        svDeleteAccountButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                //TO DO - Create UI for confirmation of deleting password and program functionality, delete data from firebase.
+            }
+        });
     }
 
 

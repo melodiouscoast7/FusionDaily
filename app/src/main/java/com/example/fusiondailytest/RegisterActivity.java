@@ -96,7 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        loginLink.setOnClickListener(v -> startActivity(new Intent(RegisterActivity.this, QuestionnaireActivity.class)));
+        loginLink.setOnClickListener(v -> startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
     }
     private void showDatePickerDialog() {
         final Calendar calendar = Calendar.getInstance();
