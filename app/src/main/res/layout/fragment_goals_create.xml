@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3D3E48"
+    android:background="@color/dead_black"
     android:fitsSystemWindows="true"
     tools:context=".MainAppActivity">
 
@@ -60,10 +60,10 @@
             android:backgroundTint="#FDFDFD"
             android:ems="10"
             android:hint="(Write the name of your goal here)"
+            android:textColorHint="@color/grey"
             android:inputType="text"
             android:text=""
             android:textColor="@color/white"
-            android:textColorHint="@color/grey"
             android:maxLength="30"
             app:layout_constraintStart_toStartOf="@+id/goalTitleHeader"
             app:layout_constraintTop_toBottomOf="@+id/goalTitleHeader" />
@@ -108,7 +108,7 @@
             android:textColor="@color/white"
             android:textColorHint="@color/grey"
             android:textSize="16dp"
-            android:maxLength="300"
+            android:maxLength="100"
             app:layout_constraintStart_toStartOf="@+id/goalDescriptionHeader"
             app:layout_constraintTop_toBottomOf="@+id/goalDescriptionHeader" />
 
@@ -118,7 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/roboto_bold"
-            android:text="(300 Character Limit)"
+            android:text="(100 Character Limit)"
             android:textColor="@color/white"
             android:textSize="10dp"
             app:layout_constraintStart_toStartOf="@+id/textInputDescription"
@@ -173,6 +173,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:backgroundTint="#FDFDFD"
+            android:hint="Format mm/dd/yyyy"
+            android:textColorHint="@color/grey"
             android:ems="10"
             android:inputType="date"
             android:text=""
@@ -181,16 +183,15 @@
             android:maxLength="15"
             app:layout_constraintStart_toStartOf="@+id/goalTimelineHeader"
             app:layout_constraintTop_toBottomOf="@+id/goalTimelineHeader" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
-        android:id="@+id/goalSaveButton"
+        android:id="@+id/goalNextButton"
         style="@style/Widget.Material3.Button.Icon"
         android:layout_width="137dp"
         android:layout_height="52dp"
         android:backgroundTint="@color/dark_gray"
-        android:text="Save"
+        android:text="Next"
         app:cornerRadius="23dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

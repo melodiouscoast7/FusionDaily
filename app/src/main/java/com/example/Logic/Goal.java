@@ -2,12 +2,13 @@ package com.example.Logic;
 import java.util.Vector;
 public class Goal {
 
-    private String name, description;
+    private String name, description, completionDate;
     private int totalProgress, dailyStreak;
     private Vector<Task> dailyTasks = new Vector<Task>();
 
-    public Goal(String _name, String _description)
+    public Goal(String _name, String _description, String _completionDate)
     {
+        completionDate = _completionDate;
         name = _name;
         description = _description;
         totalProgress = 0;
@@ -34,6 +35,16 @@ public class Goal {
         description = _description;
     }
 
+    public String getCompletionDate()
+    {
+        return completionDate;
+    }
+
+    public void setCompletionDate(String _completionDate)
+    {
+        completionDate = _completionDate;
+    }
+
     public int getTotalProgress()
     {
         return totalProgress;
@@ -57,6 +68,11 @@ public class Goal {
     public void createTask(String _name, String _description)
     {
         dailyTasks.add(new Task(_name, _description));
+    }
+
+    public int getTaskAmount()
+    {
+        return dailyTasks.size();
     }
 
     public Task getTask(int _index)

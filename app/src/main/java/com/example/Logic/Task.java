@@ -4,13 +4,13 @@ import java.util.Vector;
 
 public class Task {
     private String name, description;
-    private int totalProgress;
+    private boolean isComplete;
 
     public Task(String _name, String _description)
     {
         name = _name;
         description = _description;
-        totalProgress = 0;
+        isComplete = false;
     }
 
     public String getName()
@@ -32,13 +32,13 @@ public class Task {
         description = _description;
     }
 
-    public int getTotalProgress()
+    public boolean isComplete()
     {
-        return totalProgress;
+        return isComplete;
     }
 
-    public void setTotalProgress(int _totalProgress)
+    public void setCompletion(boolean _isComplete)
     {
-        totalProgress = _totalProgress;
+        isComplete = _isComplete;
     }
 }

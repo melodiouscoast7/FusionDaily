@@ -5,17 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="#3D3E48"
+    android:background="@color/dead_black"
     tools:context=".MainAppActivity">
 
     <Button
-        android:id="@+id/createButton"
+        android:id="@+id/taskCreateSaveButton"
         style="@style/Widget.Material3.Button.Icon"
         android:layout_width="137dp"
         android:layout_height="52dp"
         android:backgroundTint="#2A2A2A"
         android:contentDescription="To do Button"
-        android:text="Create A Goal!"
+        android:text="Save"
         app:cornerRadius="23dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,7 +25,7 @@
         app:layout_constraintVertical_bias="0.95" />
 
     <Button
-        android:id="@+id/backButton"
+        android:id="@+id/taskCreateBackButton"
         style="@style/Widget.Material3.Button.Icon"
         android:layout_width="137dp"
         android:layout_height="52dp"
@@ -41,7 +41,7 @@
         app:layout_constraintVertical_bias="0.95" />
 
     <TextView
-        android:id="@+id/titleText"
+        android:id="@+id/taskCreateTitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto_bold"
@@ -56,7 +56,7 @@
         app:layout_constraintVertical_bias="0.055" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/taskNameLayout"
+        android:id="@+id/taskCreateNameLayout"
         android:layout_width="369dp"
         android:layout_height="110dp"
         android:background="@drawable/dark_bubble"
@@ -70,7 +70,7 @@
         app:layout_constraintVertical_bias="0.149">
 
         <TextView
-            android:id="@+id/taskTitleHeader"
+            android:id="@+id/taskCreateTitleHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_bold"
@@ -85,7 +85,7 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <EditText
-            android:id="@+id/textInputTaskName"
+            android:id="@+id/taskCreateTextInputName"
             style="@style/Widget.AppCompat.EditText"
             android:layout_width="278dp"
             android:layout_height="43dp"
@@ -93,13 +93,16 @@
             android:contentDescription=""
             android:ems="10"
             android:inputType="text"
-            android:text="(Write the name of your task here)"
+            android:hint="(Write the name of your task here)"
+            android:textColorHint="@color/grey"
+            android:text=""
             android:textColor="@color/white"
-            app:layout_constraintStart_toStartOf="@+id/taskTitleHeader"
-            app:layout_constraintTop_toBottomOf="@+id/taskTitleHeader" />
+            android:maxLength="30"
+            app:layout_constraintStart_toStartOf="@+id/taskCreateTitleHeader"
+            app:layout_constraintTop_toBottomOf="@+id/taskCreateTitleHeader" />
 
         <TextView
-            android:id="@+id/taskNameCharLimitText"
+            android:id="@+id/taskCreateNameCharLimitText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -107,13 +110,13 @@
             android:text="(30 Character Limit)"
             android:textColor="@color/white"
             android:textSize="10dp"
-            app:layout_constraintStart_toStartOf="@+id/textInputTaskName"
-            app:layout_constraintTop_toBottomOf="@+id/textInputTaskName" />
+            app:layout_constraintStart_toStartOf="@+id/taskCreateTextInputName"
+            app:layout_constraintTop_toBottomOf="@+id/taskCreateTextInputName" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/taskDescriptionLayout"
+        android:id="@+id/taskCreateDescriptionLayout"
         android:layout_width="369dp"
         android:layout_height="300dp"
         android:background="@drawable/dark_bubble"
@@ -127,32 +130,35 @@
         app:layout_constraintVertical_bias="0.444">
 
         <EditText
-            android:id="@+id/textInputTaskDescription"
+            android:id="@+id/taskCreateTextInputDescription"
             style="@style/Widget.AppCompat.EditText"
             android:layout_width="340dp"
             android:layout_height="wrap_content"
             android:backgroundTint="#FDFDFD"
             android:ems="10"
             android:inputType="textMultiLine"
-            android:text="(Describe what your daily task is)"
+            android:hint="(Describe what your daily task is)"
+            android:textColorHint="@color/grey"
+            android:text=""
+            android:maxLength="100"
             android:textColor="@color/white"
-            app:layout_constraintStart_toStartOf="@+id/taskDescriptionHeader"
-            app:layout_constraintTop_toBottomOf="@+id/taskDescriptionHeader" />
+            app:layout_constraintStart_toStartOf="@+id/taskCreateDescriptionHeader"
+            app:layout_constraintTop_toBottomOf="@+id/taskCreateDescriptionHeader" />
 
         <TextView
-            android:id="@+id/taskDescriptionCharLimitText"
+            android:id="@+id/taskCreateDescriptionCharLimitText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/roboto_bold"
-            android:text="(300 Character Limit)"
+            android:text="(100 Character Limit)"
             android:textColor="@color/white"
             android:textSize="10dp"
-            app:layout_constraintStart_toStartOf="@+id/textInputTaskDescription"
-            app:layout_constraintTop_toBottomOf="@+id/textInputTaskDescription" />
+            app:layout_constraintStart_toStartOf="@+id/taskCreateTextInputDescription"
+            app:layout_constraintTop_toBottomOf="@+id/taskCreateTextInputDescription" />
 
         <TextView
-            android:id="@+id/taskDescriptionHeader"
+            android:id="@+id/taskCreateDescriptionHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="#3D3E48"
+    android:fitsSystemWindows="false"
+    android:background="@color/dead_black"
     tools:context=".MainAppActivity">
 
 
@@ -24,7 +24,7 @@
         app:layout_constraintVertical_bias="0.9" />
 
     <Button
-        android:id="@+id/calenderButton"
+        android:id="@+id/calendarButton"
         style="@style/Widget.Material3.Button.IconButton.Filled"
         android:layout_width="85dp"
         android:layout_height="85dp"
@@ -91,15 +91,15 @@
         app:layout_constraintTop_toBottomOf="@+id/goalsButton" />
 
     <TextView
-        android:id="@+id/calenderButtonText"
+        android:id="@+id/calendarButtonText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Calender"
+        android:text="Calendar"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="@+id/calenderButton"
-        app:layout_constraintStart_toStartOf="@+id/calenderButton"
-        app:layout_constraintTop_toBottomOf="@+id/calenderButton" />
+        app:layout_constraintEnd_toEndOf="@+id/calendarButton"
+        app:layout_constraintStart_toStartOf="@+id/calendarButton"
+        app:layout_constraintTop_toBottomOf="@+id/calendarButton" />
 
     <TextView
         android:id="@+id/resourcesButtonText"

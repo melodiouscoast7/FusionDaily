@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="#3D3E48"
+    android:background="@color/dead_black"
     tools:context=".MainAppActivity">
 
     <Button
@@ -15,7 +15,7 @@
         android:layout_height="52dp"
         android:backgroundTint="@color/dark_gray"
         android:contentDescription="To do Button"
-        android:text="Create A Goal!"
+        android:text="Create Goal"
         app:cornerRadius="23dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto_bold"
-        android:text="Goals Overview"
+        android:text="Goal Overview"
         android:textColor="@color/white"
         android:textSize="38dp"
         app:layout_constraintBottom_toBottomOf="parent"
