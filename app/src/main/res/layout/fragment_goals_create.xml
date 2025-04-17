@@ -170,7 +170,7 @@
             android:id="@+id/textInputTimeline"
             style="@style/Widget.AppCompat.EditText"
             android:layout_width="230dp"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:backgroundTint="#FDFDFD"
             android:ems="10"

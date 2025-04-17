@@ -457,6 +457,7 @@ public class MainAppActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 setContentView(R.layout.fragment_goals_overview);
+                assignGoalsOverview();
             }
         });
 
