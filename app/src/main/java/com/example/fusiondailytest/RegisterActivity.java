@@ -70,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
                             registerBtn.setEnabled(true);
 
                             if (task.isSuccessful()) {
-                                String userId = auth.getCurrentUser().getUid();
+                                String userId = auth.getCurrentUser().getUid();//grabs users ID to continue to add data into profile
 
                                 Map<String, Object> userData = new HashMap<>();
                                 userData.put("email", emailText);
