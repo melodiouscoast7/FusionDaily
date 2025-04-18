@@ -6,15 +6,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.firebase.auth.FirebaseAuth;
 import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -119,11 +122,11 @@ public class MainAppActivity extends AppCompatActivity {
     Calendar localCalendar = Calendar.getInstance();
 
     final private String day = "" + localCalendar.get(Calendar.DATE);
-    final private int month = localCalendar.get(Calendar.MONTH);
-
+    final public int month = localCalendar.get(Calendar.MONTH);
+    private List<YearMonth> monthsList;
+    private ViewPager2 pager;
     String[] months = new String[]{"January", "February", "March", "April",
             "May", "June", "July", "August", "September", "October", "November", "December"};
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,7 +197,7 @@ public class MainAppActivity extends AppCompatActivity {
         });
         updateTotalProgress();
         updateDailyProgress();
-        updateDBDailyStreak();
+        //updateDBDailyStreak();
     }
 
     private void updateTotalProgress()
@@ -332,67 +335,160 @@ public class MainAppActivity extends AppCompatActivity {
     }
 
     //Calendar View (cv) Functions
-    private void assignCalendarView()
-    {
-        // This is an example, plug the user's goal end dates here.
-        Calendar goalEndCal = Calendar.getInstance();
-        goalEndCal.add(Calendar.DAY_OF_MONTH, 10);
-        zeroTime(goalEndCal);
+    private void assignCalendarView() {
 
-        // Build streak set (last N days)
-        Set<Long> streakSet = new HashSet<>();
-        Calendar c = Calendar.getInstance();
-        zeroTime(c);
-        // Example streak length
-        int streakDays = 15;
-        for (int i = 0; i < streakDays; i++) {
-            streakSet.add(c.getTimeInMillis());
-            c.add(Calendar.DAY_OF_MONTH, -1);
-        }
-
-        // Build 12 months: 6 past, current, 5 future
-        List<MainAppActivity.YearMonth> months = new ArrayList<>();
+        // 1) build 12-month window (6 past, current, 5 future)
+        monthsList = new ArrayList<>();
         Calendar mCal = Calendar.getInstance();
         mCal.add(Calendar.MONTH, -6);
         for (int i = 0; i < 12; i++) {
-            months.add(new MainAppActivity.YearMonth(
+            monthsList.add(new YearMonth(
                     mCal.get(Calendar.YEAR),
                     mCal.get(Calendar.MONTH)
             ));
             mCal.add(Calendar.MONTH, 1);
         }
 
-        ViewPager2 pager = findViewById(R.id.calendarPager);
-        CalendarPagerAdapter adapter = new CalendarPagerAdapter(
-                months, streakSet, goalEndCal.getTimeInMillis()
-        );
-        pager.setAdapter(adapter);
-        pager.setCurrentItem(6, false);  // Center on current month
+        // 2) find the ViewPager
+        pager = findViewById(R.id.calendarPager);
 
-        Button backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
+        // 3) load goals and render their buttons
+        loadGoals();      // replace with your real data load
+        setupGoalButtons();
+
+        // 4) default to first goal
+        if (!goals.isEmpty()) {
+            selectGoal(goals.get(0));
+        }
+
+        // 1) Find the new header TextView
+        TextView monthHeader = findViewById(R.id.monthHeader);
+
+        // 2) After setting adapter, initialize header to the current page:
+        int defaultPosition = 6; // the index you use for “now”
+        updateMonthHeader(defaultPosition, monthHeader);
+
+        // 3) Add a page‐change callback to update it as you swipe:
+        pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
-            public void onClick(View v) {
-                setContentView(R.layout.fragment_dashboard);
-                assignDashboard();
+            public void onPageSelected(int position) {
+                updateMonthHeader(position, monthHeader);
             }
         });
+
+        // 5) back button returns you to the dashboard
+        Button backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(v -> {
+            setContentView(R.layout.fragment_dashboard);
+            assignDashboard();
+        });
+    }
+
+    /** Helper to display "Month Year" for page at index */
+    private void updateMonthHeader(int position, TextView header) {
+        MainAppActivity.YearMonth ym = monthsList.get(position);
+        // month is 0-based: 0=Jan … 11=Dec
+        String monthName = months[ym.month];      // your String[] months array
+        String text = monthName + " " + ym.year;
+        header.setText(text);
+    }
+
+    private void loadGoals() {
+        goals.clear();
+        Goal g1 = new Goal("Fitness",     "Stay fit",       "2025-05-15");
+        g1.setDailyStreak(3);
+        goals.add(g1);
+        Goal g2 = new Goal("Reading",     "Read books",     "2025-06-01");
+        g2.setDailyStreak(7);
+        goals.add(g2);
+        Goal g3 = new Goal("Meditation",  "Mindfulness",    "2025-05-30");
+        g3.setDailyStreak(1);
+        goals.add(g3);
+        Goal g4 = new Goal("Coding",      "Practice daily", "2025-07-10");
+        g4.setDailyStreak(10);
+        goals.add(g4);
+        Goal g5 = new Goal("Diet",        "Healthy eating", "2025-05-20");
+        g5.setDailyStreak(5);
+        goals.add(g5);
+    }
+
+    private void setupGoalButtons() {
+        LinearLayout container = findViewById(R.id.goalButtonsContainer);
+        container.removeAllViews();
+
+        int padding = dpToPx(8);
+        int margin  = dpToPx(4);   // 4dp margin around each button
+
+        for (Goal goal : goals) {
+            Button btn = new Button(this);
+            btn.setText(goal.getName());
+            btn.setTextColor(getResources().getColor(R.color.white));
+            btn.setBackground(getResources().getDrawable(R.drawable.dark_bubble));
+            btn.setAllCaps(false);
+            btn.setPadding(padding, padding, padding, padding);
+
+            // Create LayoutParams with MATCH_PARENT width and WRAP_CONTENT height
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+
+            // Apply your margins (left, top, right, bottom)
+            lp.setMargins(margin, margin, margin, margin);
+
+            btn.setLayoutParams(lp);
+            btn.setOnClickListener(v -> selectGoal(goal));
+
+            container.addView(btn);
+        }
+    }
+
+    private void selectGoal(Goal goal) {
+        // parse end date
+        Calendar goalCal = Calendar.getInstance();
+        try {
+            String[] p = goal.getCompletionDate().split("-");
+            goalCal.set(Integer.parseInt(p[0]), Integer.parseInt(p[1]) - 1, Integer.parseInt(p[2]));
+        } catch (Exception e) { /* use today on parse fail */ }
+        zeroTime(goalCal);
+
+        // build streak days set
+        Set<Long> streakSet = new HashSet<>();
+        Calendar c = Calendar.getInstance();
+        zeroTime(c);
+        for (int i = 0; i < goal.getDailyStreak(); i++) {
+            streakSet.add(c.getTimeInMillis());
+            c.add(Calendar.DAY_OF_MONTH, -1);
+        }
+
+        // end date set
+        Set<Long> endSet = Collections.singleton(goalCal.getTimeInMillis());
+
+        // install the adapter
+        CalendarPagerAdapter adapter = new CalendarPagerAdapter(
+                monthsList, streakSet, endSet
+        );
+        pager.setAdapter(adapter);
+        pager.setCurrentItem(6, false);  // center on “current” month
     }
 
     private void zeroTime(Calendar c) {
         c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MINUTE,      0);
+        c.set(Calendar.SECOND,      0);
         c.set(Calendar.MILLISECOND, 0);
     }
 
-    // Simple holder for year/month
+    private int dpToPx(int dp) {
+        float d = getResources().getDisplayMetrics().density;
+        return Math.round(dp * d);
+    }
+
+    // inner holder for year+month pairs
     public static class YearMonth {
-        public final int year, month;
-        YearMonth(int year, int month) {
-            this.year = year;
-            this.month = month;
-        }
+        public final int year;
+        public final int month;
+        YearMonth(int y, int m) { year = y; month = m; }
     }
 
     //Goal Overview (go) Functions

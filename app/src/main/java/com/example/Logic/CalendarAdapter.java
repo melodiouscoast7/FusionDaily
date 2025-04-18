@@ -1,5 +1,6 @@
 package com.example.Logic;
 
+import com.example.fusiondailytest.R;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -8,9 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.fusiondailytest.R;
-
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
@@ -20,63 +18,76 @@ public class CalendarAdapter
 
     private final List<Long> daysInMillis;
     private final Set<Long> streakDays;
-    private final long goalEndMillis;
+    private final Set<Long> goalEndDates;
 
+    /**
+     * @param daysInMillis   list of each day in the month (as millis at midnight)
+     * @param streakDays     set of millis‐at‐midnight for the user’s daily‐streak days
+     * @param goalEndDates   set of millis‐at‐midnight for the selected goal’s end date(s)
+     */
     public CalendarAdapter(List<Long> daysInMillis,
-                           Set<Long> streakDays, long goalEndMillis) {
-        this.daysInMillis = daysInMillis;
-        this.streakDays = streakDays;
-        this.goalEndMillis = goalEndMillis;
+                           Set<Long> streakDays,
+                           Set<Long> goalEndDates) {
+        this.daysInMillis   = daysInMillis;
+        this.streakDays     = streakDays;
+        this.goalEndDates   = goalEndDates;
     }
 
     @NonNull @Override
     public DayViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Inflate our custom day cell
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_calendar_day, parent, false); // Inflate the layout for each day
-        int width = parent.getMeasuredWidth() / 7; // Calculate the width for each day
-        v.setLayoutParams(new RecyclerView.LayoutParams(width, width));
+                .inflate(R.layout.item_calendar_day, parent, false);
+
+        // Make each cell roughly 1/7 of the parent width (7 columns)
+        int cellWidth = parent.getMeasuredWidth() / 7;
+        RecyclerView.LayoutParams lp =
+                new RecyclerView.LayoutParams(cellWidth, cellWidth);
+        v.setLayoutParams(lp);
+
         return new DayViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DayViewHolder holder, int pos) {
-        long millis = daysInMillis.get(pos);
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(millis); // Set the Calendar's time to the current day
-        int day = c.get(Calendar.DAY_OF_MONTH);
+    public void onBindViewHolder(@NonNull DayViewHolder holder, int position) {
+        long millis = daysInMillis.get(position);
+
+        // Display the day of month
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(millis);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
         holder.dayNumber.setText(String.valueOf(day));
 
-        // Reset tint to transparent by default for every day, in case it was previously colored
+        // Reset background tint
         holder.dayBackground.setBackgroundTintList(
                 ColorStateList.valueOf(Color.TRANSPARENT));
 
-        /*
-         * Set background tint to green for streak days.
-         * streakDays is a set of millis, so we check if the current day's millis are in the set
-         * If it is, it means the day is part of the streak and needs to be colored green
-         */
+        // If this day is in the user's streak => green
         if (streakDays.contains(millis)) {
             holder.dayBackground.setBackgroundTintList(
                     ColorStateList.valueOf(Color.parseColor("#4CAF50")));
         }
-        /*
-         * Set background tint to red for the goal end date.
-         */
-        if (millis == goalEndMillis) {
+
+        // If this day is a goal end date => red (overrides green)
+        if (goalEndDates.contains(millis)) {
             holder.dayBackground.setBackgroundTintList(
                     ColorStateList.valueOf(Color.parseColor("#F44336")));
         }
     }
 
-    @Override public int getItemCount() { return daysInMillis.size(); }
+    @Override
+    public int getItemCount() {
+        return daysInMillis.size();
+    }
 
     static class DayViewHolder extends RecyclerView.ViewHolder {
         final View dayBackground;
         final TextView dayNumber;
-        DayViewHolder(View v) {
-            super(v);
-            dayBackground = v.findViewById(R.id.day_background);
-            dayNumber     = v.findViewById(R.id.day_number);
+
+        DayViewHolder(View itemView) {
+            super(itemView);
+            dayBackground = itemView.findViewById(R.id.day_background);
+            dayNumber     = itemView.findViewById(R.id.day_number);
         }
     }
 }
