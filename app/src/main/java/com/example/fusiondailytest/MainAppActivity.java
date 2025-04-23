@@ -2,6 +2,7 @@ package com.example.fusiondailytest;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -11,8 +12,12 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import android.widget.Button;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -32,7 +37,7 @@ public class MainAppActivity extends AppCompatActivity {
 
     //firebase authentication
     private FirebaseAuth auth;
-
+    private FirebaseFirestore db;
     //Dashboard (db) Variables
     private ProgressBar dbTotalProgressBar;
     private TextView dbTotalProgressText;
@@ -129,8 +134,62 @@ public class MainAppActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_dashboard);
+        loadGoalToFirestore();
         // Initialize UI components
         assignDashboard();
+    }
+
+    private void loadGoalToFirestore() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        db.collection("users")
+                .document(userId)
+                .collection("goals")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        String name = doc.getString("name");
+                        String description = doc.getString("description");
+                        String completionDate = doc.getString("completionDate");
+                        int totalProgress = doc.getLong("totalProgress").intValue();
+                        int dailyStreak = doc.getLong("dailyStreak").intValue();
+
+                        Goal goal = new Goal(name, description, completionDate);
+                        goal.setTotalProgress(totalProgress);
+                        goal.setDailyStreak(dailyStreak);
+
+                        goals.add(goal);
+                    }
+
+
+                    Log.d("Firestore", "Goals loaded: " + goals.size());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error loading goals", e);
+                });
+    }
+    private void saveGoalToFirestore(Goal goal) {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        Map<String, Object> goalMap = new HashMap<>();
+        goalMap.put("name", goal.getName());
+        goalMap.put("description", goal.getDescription());
+        goalMap.put("completionDate", goal.getCompletionDate());
+        goalMap.put("totalProgress", goal.getTotalProgress());
+        goalMap.put("dailyStreak", goal.getDailyStreak());
+
+        db.collection("users")
+                .document(userId)
+                .collection("goals")
+                .add(goalMap)
+                .addOnSuccessListener(documentReference -> {
+                    Log.d("Firestore", "Goal saved with ID: " + documentReference.getId());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error saving goal", e);
+                });
     }
 
     // Dashboard (db) Functions
@@ -194,7 +253,7 @@ public class MainAppActivity extends AppCompatActivity {
         });
         updateTotalProgress();
         updateDailyProgress();
-        updateDBDailyStreak();
+        //updateDBDailyStreak();
     }
 
     private void updateTotalProgress()
@@ -596,18 +655,25 @@ public class MainAppActivity extends AppCompatActivity {
                 }
             }
         });
-
         gcNextButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 if(isNewGoal) {
-                    goals.add(new Goal(gcNameInput.getText().toString(), gcDescriptionInput.getText().toString(), gcCompletionDate.getText().toString()));
+                    Goal newGoal = new Goal(
+                            gcNameInput.getText().toString(),
+                            gcDescriptionInput.getText().toString(),
+                            gcCompletionDate.getText().toString()
+                    );
+
+                    goals.add(newGoal);
+                    saveGoalToFirestore(newGoal); // Save once
+
                     setContentView(R.layout.fragment_tasks_create);
                     assignTasksCreate();
-                    if(!isNewTask)
-                    {
+
+                    if(!isNewTask) {
                         tcNameInput.setText(tempGoal.getTask(0).getName());
                         tcDescriptionInput.setText(tempGoal.getTask(0).getDescription());
                     }
