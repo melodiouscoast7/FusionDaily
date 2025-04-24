@@ -147,8 +147,7 @@
         app:layout_constraintHorizontal_bias="0.96"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9"
-        tools:visibility="gone" />
+        app:layout_constraintVertical_bias="0.9" />
 
     <Button
         android:id="@+id/calendarButton"
@@ -162,8 +161,7 @@
         app:layout_constraintHorizontal_bias="0.345"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9"
-        tools:visibility="gone" />
+        app:layout_constraintVertical_bias="0.9" />
 
     <Button
         android:id="@+id/resourcesButton"
@@ -177,8 +175,7 @@
         app:layout_constraintHorizontal_bias="0.655"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9"
-        tools:visibility="gone" />
+        app:layout_constraintVertical_bias="0.9" />
 
     <Button
         android:id="@+id/goalsButton"
@@ -192,8 +189,7 @@
         app:layout_constraintHorizontal_bias="0.04"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9"
-        tools:visibility="gone" />
+        app:layout_constraintVertical_bias="0.9" />
 
     <TextView
         android:id="@+id/goalsButtonText"
@@ -204,8 +200,7 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/goalsButton"
         app:layout_constraintStart_toStartOf="@+id/goalsButton"
-        app:layout_constraintTop_toBottomOf="@+id/goalsButton"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toBottomOf="@+id/goalsButton" />
 
     <TextView
         android:id="@+id/calendarButtonText"
@@ -216,8 +211,7 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/calendarButton"
         app:layout_constraintStart_toStartOf="@+id/calendarButton"
-        app:layout_constraintTop_toBottomOf="@+id/calendarButton"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toBottomOf="@+id/calendarButton" />
 
     <TextView
         android:id="@+id/resourcesButtonText"
@@ -228,8 +222,7 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/resourcesButton"
         app:layout_constraintStart_toStartOf="@+id/resourcesButton"
-        app:layout_constraintTop_toBottomOf="@+id/resourcesButton"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toBottomOf="@+id/resourcesButton" />
 
     <TextView
         android:id="@+id/settingsButtonText"
@@ -240,8 +233,7 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/settingsButton"
         app:layout_constraintStart_toStartOf="@+id/settingsButton"
-        app:layout_constraintTop_toBottomOf="@+id/settingsButton"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toBottomOf="@+id/settingsButton" />
 
     <ProgressBar
         android:id="@+id/totalProgressBar"
@@ -256,8 +248,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dailyProgressBar"
-        app:layout_constraintVertical_bias="0.564"
-        tools:visibility="gone" />
+        app:layout_constraintVertical_bias="0.564" />
 
     <Button
         android:id="@+id/todoButton"
@@ -272,8 +263,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.046"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/totalProgressBar"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toBottomOf="@+id/totalProgressBar" />
 
     <Button
         android:id="@+id/todoButton1"
@@ -288,8 +278,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.271"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/totalProgressBar"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toBottomOf="@+id/totalProgressBar" />
 
     <Button
         android:id="@+id/todoButton2"
@@ -303,8 +292,7 @@
         app:cornerRadius="23dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/totalProgressBar"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toBottomOf="@+id/totalProgressBar" />
 
     <Button
         android:id="@+id/todoButton3"
@@ -319,8 +307,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.73"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/totalProgressBar"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toBottomOf="@+id/totalProgressBar" />
 
     <Button
         android:id="@+id/todoButton4"
@@ -335,78 +322,72 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.96"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/totalProgressBar"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toBottomOf="@+id/totalProgressBar" />
 
     <TextView
         android:id="@+id/todoButtonText"
         android:layout_width="66dp"
         android:layout_height="18dp"
         android:layout_marginTop="12dp"
-        android:text="To do"
+        android:text="Goal 1"
         android:textAlignment="center"
         android:textColor="#FDFDFD"
         app:layout_constraintEnd_toEndOf="@+id/todoButton"
         app:layout_constraintHorizontal_bias="0.421"
         app:layout_constraintStart_toStartOf="@+id/todoButton"
-        app:layout_constraintTop_toTopOf="@+id/todoButton"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toTopOf="@+id/todoButton" />
 
     <TextView
         android:id="@+id/todoButtonText2"
         android:layout_width="66dp"
         android:layout_height="18dp"
         android:layout_marginTop="12dp"
-        android:text="To do"
+        android:text="Goal 2"
         android:textAlignment="center"
         android:textColor="#FDFDFD"
         app:layout_constraintEnd_toEndOf="@+id/todoButton1"
         app:layout_constraintHorizontal_bias="0.421"
         app:layout_constraintStart_toStartOf="@+id/todoButton1"
-        app:layout_constraintTop_toTopOf="@+id/todoButton1"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toTopOf="@+id/todoButton1" />
 
     <TextView
         android:id="@+id/todoButtonText3"
         android:layout_width="66dp"
         android:layout_height="18dp"
         android:layout_marginTop="12dp"
-        android:text="To do"
+        android:text="Goal 3"
         android:textAlignment="center"
         android:textColor="#FDFDFD"
         app:layout_constraintEnd_toEndOf="@+id/todoButton2"
         app:layout_constraintHorizontal_bias="0.368"
         app:layout_constraintStart_toStartOf="@+id/todoButton2"
-        app:layout_constraintTop_toTopOf="@+id/todoButton2"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toTopOf="@+id/todoButton2" />
 
     <TextView
         android:id="@+id/todoButtonText4"
         android:layout_width="66dp"
         android:layout_height="18dp"
         android:layout_marginTop="12dp"
-        android:text="To do"
+        android:text="Goal 4"
         android:textAlignment="center"
         android:textColor="#FDFDFD"
         app:layout_constraintEnd_toEndOf="@+id/todoButton3"
         app:layout_constraintHorizontal_bias="0.394"
         app:layout_constraintStart_toStartOf="@+id/todoButton3"
-        app:layout_constraintTop_toTopOf="@+id/todoButton3"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toTopOf="@+id/todoButton3" />
 
     <TextView
         android:id="@+id/todoButtonText5"
         android:layout_width="66dp"
         android:layout_height="18dp"
         android:layout_marginTop="12dp"
-        android:text="To do"
+        android:text="Goal 5"
         android:textAlignment="center"
         android:textColor="#FDFDFD"
         app:layout_constraintEnd_toEndOf="@+id/todoButton4"
         app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="@+id/todoButton4"
-        app:layout_constraintTop_toTopOf="@+id/todoButton4"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toTopOf="@+id/todoButton4" />
 
     <TextView
         android:id="@+id/totalProgressBarText"
@@ -417,8 +398,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/totalProgressBar"
         app:layout_constraintEnd_toEndOf="@+id/totalProgressBar"
         app:layout_constraintStart_toStartOf="@+id/totalProgressBar"
-        app:layout_constraintTop_toTopOf="@+id/totalProgressBar"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toTopOf="@+id/totalProgressBar" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/todoLayout"
@@ -430,7 +410,8 @@
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="gone">
 
         <TextView
             android:id="@+id/todoGoalTitle"
@@ -715,9 +696,9 @@
         android:id="@+id/todoUIExitButton"
         android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:layout_marginBottom="1dp"
-        android:text=""
         android:alpha="0"
+        android:text=""
+        android:visibility="gone"
         app:cornerRadius="0dp"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

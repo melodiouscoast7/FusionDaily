@@ -159,6 +159,7 @@ public class MainAppActivity extends AppCompatActivity {
         dbSettingsButton = findViewById(R.id.settingsButton);
         dbResourcesButton = findViewById(R.id.resourcesButton);
 
+        dbDailyStreakText = findViewById(R.id.streakNumberText);
         dbMonthText = findViewById(R.id.monthText);
         dbDateText = findViewById(R.id.dateText);
         dbMonthText.setText(months[month]);
@@ -285,7 +286,7 @@ public class MainAppActivity extends AppCompatActivity {
         });
         updateTotalProgress();
         updateDailyProgress();
-        //updateDBDailyStreak();
+        updateDBDailyStreak();
         updateToDoButtons();
         assignToDoUI();
     }
@@ -316,7 +317,7 @@ public class MainAppActivity extends AppCompatActivity {
             }
         }
         if (totalTasks > 0)
-            dailyProgressValue = (completedTasks/totalTasks)*100;
+            dailyProgressValue = (int)(((float) completedTasks / totalTasks) * 100);
         // Update the ProgressBar and display text
         dbDailyProgressBar.setProgress(dailyProgressValue);
         dbDailyProgressText.setText(dailyProgressValue + "% Complete");
@@ -324,11 +325,12 @@ public class MainAppActivity extends AppCompatActivity {
 
     private void updateDBDailyStreak()
     {
-        if(!goals.isEmpty()) {
-            int compare = goals.get(0).getDailyStreak();
-            for (int i = 0; i < goals.size(); i++) {
-                if(goals.get(i).getDailyStreak() > compare)
-                    compare = goals.get(i).getDailyStreak();
+        if(!goals.isEmpty())
+        {
+            int compare = 0;
+            for (Goal goal : goals) {
+                if(goal.getDailyStreak() > compare)
+                    compare = goal.getDailyStreak();
             }
             String output = "" + compare;
             dbDailyStreakText.setText(output);
@@ -483,7 +485,10 @@ public class MainAppActivity extends AppCompatActivity {
                 dbResourcesButton.setVisibility(View.VISIBLE);
                 dbGoalsButton.setVisibility(View.VISIBLE);
                 for(int i = 0; i < goals.size(); i++)
+                {
                     dbToDoButtons.get(i).setTranslationY(dbToDoButtons.get(i).getTranslationY() + 720);
+                    dbToDoLabels.get(i).setTranslationY(dbToDoButtons.get(i).getTranslationY() + 5);
+                }
             }
         });
         tdLayout.setVisibility(View.GONE);
@@ -491,13 +496,17 @@ public class MainAppActivity extends AppCompatActivity {
 
     private void runToDoUI()
     {
-        tdLayout.setVisibility(View.VISIBLE);
         tdExitUIButton.setVisibility(View.VISIBLE);
         tdGoalTitleText.setText(goals.get(goalNumber).getName());
         for(View layout : tdTaskLayouts)
             layout.setVisibility(View.GONE);
-        for(int i = 0; i < goals.size(); i++)
-            dbToDoButtons.get(i).setTranslationY(dbToDoButtons.get(i).getTranslationY() - 720);
+        if(!(tdLayout.getVisibility() == View.VISIBLE))
+            for(int i = 0; i < goals.size(); i++)
+            {
+                dbToDoButtons.get(i).setTranslationY(dbToDoButtons.get(i).getTranslationY() - 720);
+                dbToDoLabels.get(i).setTranslationY(dbToDoButtons.get(i).getTranslationY() - 5);
+            }
+
         for(int i = 0; i < goals.get(goalNumber).getTaskAmount(); i++)
         {
             tdTaskLayouts.get(i).setVisibility(View.VISIBLE);
@@ -510,12 +519,12 @@ public class MainAppActivity extends AppCompatActivity {
                 tdTaskCompleteButtons.get(i).setText("Complete");
                 tdTaskTitles.get(i).setPaintFlags(tdTaskTitles.get(i).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
-
         }
         dbResourcesButton.setVisibility(View.GONE);
         dbCalendarButton.setVisibility(View.GONE);
         dbResourcesButton.setVisibility(View.GONE);
         dbGoalsButton.setVisibility(View.GONE);
+        tdLayout.setVisibility(View.VISIBLE);
     }
 
     //Resource view (rv) Functions
