@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.graphics.Paint;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
@@ -45,6 +46,17 @@ public class MainAppActivity extends AppCompatActivity {
     private Button dbResourcesButton;
     private TextView dbMonthText;
     private TextView dbDateText;
+    private Vector<TextView> dbToDoLabels = new Vector<TextView>();
+    private Vector<Button> dbToDoButtons = new Vector<Button>();
+
+    //dashboard to do (td) variables
+    private View tdLayout;
+    private Button tdExitUIButton;
+    private TextView tdGoalTitleText;
+    private Vector<View> tdTaskLayouts = new Vector<View>();
+    private Vector<TextView> tdTaskTitles = new Vector<TextView>();
+    private Vector<TextView> tdTaskDescriptions = new Vector<TextView>();
+    private Vector<Button> tdTaskCompleteButtons = new Vector<Button>();
 
     //Resource View (rv) Variables
     private LinearLayout rvPersonalizedContainer;
@@ -152,7 +164,86 @@ public class MainAppActivity extends AppCompatActivity {
         dbMonthText.setText(months[month]);
         dbDateText.setText(day);
 
+        dbToDoButtons.clear();
+        dbToDoButtons.add(findViewById(R.id.todoButton));
+        dbToDoButtons.add(findViewById(R.id.todoButton1));
+        dbToDoButtons.add(findViewById(R.id.todoButton2));
+        dbToDoButtons.add(findViewById(R.id.todoButton3));
+        dbToDoButtons.add(findViewById(R.id.todoButton4));
+
+        dbToDoLabels.clear();
+        dbToDoLabels.add(findViewById(R.id.todoButtonText));
+        dbToDoLabels.add(findViewById(R.id.todoButtonText2));
+        dbToDoLabels.add(findViewById(R.id.todoButtonText3));
+        dbToDoLabels.add(findViewById(R.id.todoButtonText4));
+        dbToDoLabels.add(findViewById(R.id.todoButtonText5));
+
         auth = FirebaseAuth.getInstance();
+
+        dbToDoButtons.get(0).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(goals.size()>0)
+                {
+                    goalNumber = 0;
+                    runToDoUI();
+                }
+            }
+        });
+
+        dbToDoButtons.get(1).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(goals.size()>1)
+                {
+                    goalNumber = 1;
+                    runToDoUI();
+                }
+            }
+        });
+
+        dbToDoButtons.get(2).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(goals.size()>2)
+                {
+                    goalNumber = 2;
+                    runToDoUI();
+                }
+            }
+        });
+
+        dbToDoButtons.get(3).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(goals.size()>3)
+                {
+                    goalNumber = 3;
+                    runToDoUI();
+                }
+            }
+        });
+
+        dbToDoButtons.get(4).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(goals.size()>4)
+                {
+                    goalNumber = 4;
+                    runToDoUI();
+                }
+            }
+        });
 
         dbSettingsButton.setOnClickListener(new View.OnClickListener()
         {
@@ -194,13 +285,14 @@ public class MainAppActivity extends AppCompatActivity {
         });
         updateTotalProgress();
         updateDailyProgress();
-        updateDBDailyStreak();
+        //updateDBDailyStreak();
+        updateToDoButtons();
+        assignToDoUI();
     }
 
     private void updateTotalProgress()
     {
         int totalProgressValue = 0;
-
         if (totalProgressValue > 100)
         {
             totalProgressValue = 100; // Cap progress at 100%
@@ -232,7 +324,7 @@ public class MainAppActivity extends AppCompatActivity {
 
     private void updateDBDailyStreak()
     {
-        if(goals.size() > 0) {
+        if(!goals.isEmpty()) {
             int compare = goals.get(0).getDailyStreak();
             for (int i = 0; i < goals.size(); i++) {
                 if(goals.get(i).getDailyStreak() > compare)
@@ -241,6 +333,189 @@ public class MainAppActivity extends AppCompatActivity {
             String output = "" + compare;
             dbDailyStreakText.setText(output);
         }
+    }
+
+    private void updateToDoButtons()
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            dbToDoButtons.get(i).setTranslationY(dbToDoButtons.get(i).getTranslationY() + 250);
+            dbToDoLabels.get(i).setVisibility(View.INVISIBLE);
+        }
+        for(int i = 0; i < goals.size(); i++)
+        {
+            dbToDoButtons.get(i).setTranslationY(dbToDoButtons.get(i).getTranslationY() - 250);
+            dbToDoLabels.get(i).setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void assignToDoUI()
+    {
+        tdLayout = findViewById(R.id.todoLayout);
+        tdLayout.setFocusable(false);
+        tdLayout.setFocusableInTouchMode(false);
+
+        tdExitUIButton = findViewById(R.id.todoUIExitButton);
+        tdGoalTitleText = findViewById(R.id.todoGoalTitle);
+
+        tdTaskLayouts.clear();
+        tdTaskLayouts.add(findViewById(R.id.taskLayout1));
+        tdTaskLayouts.add(findViewById(R.id.taskLayout2));
+        tdTaskLayouts.add(findViewById(R.id.taskLayout3));
+        tdTaskLayouts.add(findViewById(R.id.taskLayout4));
+        tdTaskLayouts.add(findViewById(R.id.taskLayout5));
+
+        tdTaskTitles.clear();
+        tdTaskTitles.add(findViewById(R.id.taskTitle1));
+        tdTaskTitles.add(findViewById(R.id.taskTitle2));
+        tdTaskTitles.add(findViewById(R.id.taskTitle3));
+        tdTaskTitles.add(findViewById(R.id.taskTitle4));
+        tdTaskTitles.add(findViewById(R.id.taskTitle5));
+
+        tdTaskDescriptions.clear();
+        tdTaskDescriptions.add(findViewById(R.id.taskDescription1));
+        tdTaskDescriptions.add(findViewById(R.id.taskDescription2));
+        tdTaskDescriptions.add(findViewById(R.id.taskDescription3));
+        tdTaskDescriptions.add(findViewById(R.id.taskDescription4));
+        tdTaskDescriptions.add(findViewById(R.id.taskDescription5));
+
+        tdTaskCompleteButtons.clear();
+        tdTaskCompleteButtons.add(findViewById(R.id.taskCompleteButton1));
+        tdTaskCompleteButtons.add(findViewById(R.id.taskCompleteButton2));
+        tdTaskCompleteButtons.add(findViewById(R.id.taskCompleteButton3));
+        tdTaskCompleteButtons.add(findViewById(R.id.taskCompleteButton4));
+        tdTaskCompleteButtons.add(findViewById(R.id.taskCompleteButton5));
+
+        tdTaskCompleteButtons.get(0).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!goals.get(goalNumber).getTask(0).isComplete()) {
+                    tdTaskCompleteButtons.get(0).setText("Undo Complete");
+                    goals.get(goalNumber).getTask(0).setCompletion(true);
+                    tdTaskTitles.get(0).setPaintFlags(tdTaskTitles.get(0).getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else {
+                    tdTaskCompleteButtons.get(0).setText("Complete");
+                    goals.get(goalNumber).getTask(0).setCompletion(false);
+                    tdTaskTitles.get(0).setPaintFlags(tdTaskTitles.get(0).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                }
+                updateDailyProgress();
+                updateTotalProgress();
+            }
+        });
+
+        tdTaskCompleteButtons.get(1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!goals.get(goalNumber).getTask(1).isComplete()) {
+                    tdTaskCompleteButtons.get(1).setText("Undo Complete");
+                    goals.get(goalNumber).getTask(1).setCompletion(true);
+                    tdTaskTitles.get(1).setPaintFlags(tdTaskTitles.get(1).getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else {
+                    tdTaskCompleteButtons.get(1).setText("Complete");
+                    goals.get(goalNumber).getTask(1).setCompletion(false);
+                    tdTaskTitles.get(1).setPaintFlags(tdTaskTitles.get(1).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                }
+                updateDailyProgress();
+                updateTotalProgress();
+            }
+        });
+
+        tdTaskCompleteButtons.get(2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!goals.get(goalNumber).getTask(2).isComplete()) {
+                    tdTaskCompleteButtons.get(2).setText("Undo Complete");
+                    goals.get(goalNumber).getTask(2).setCompletion(true);
+                    tdTaskTitles.get(2).setPaintFlags(tdTaskTitles.get(2).getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else {
+                    tdTaskCompleteButtons.get(2).setText("Complete");
+                    goals.get(goalNumber).getTask(2).setCompletion(false);
+                    tdTaskTitles.get(2).setPaintFlags(tdTaskTitles.get(2).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                }
+                updateDailyProgress();
+                updateTotalProgress();
+            }
+        });
+
+        tdTaskCompleteButtons.get(3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!goals.get(goalNumber).getTask(3).isComplete()) {
+                    tdTaskCompleteButtons.get(3).setText("Undo Complete");
+                    goals.get(goalNumber).getTask(3).setCompletion(true);
+                    tdTaskTitles.get(3).setPaintFlags(tdTaskTitles.get(3).getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else {
+                    tdTaskCompleteButtons.get(3).setText("Complete");
+                    goals.get(goalNumber).getTask(3).setCompletion(false);
+                    tdTaskTitles.get(3).setPaintFlags(tdTaskTitles.get(3).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                }
+                updateDailyProgress();
+                updateTotalProgress();
+            }
+        });
+
+        tdTaskCompleteButtons.get(4).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!goals.get(goalNumber).getTask(4).isComplete()) {
+                    tdTaskCompleteButtons.get(4).setText("Undo Complete");
+                    goals.get(goalNumber).getTask(4).setCompletion(true);
+                    tdTaskTitles.get(4).setPaintFlags(tdTaskTitles.get(4).getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else {
+                    tdTaskCompleteButtons.get(4).setText("Complete");
+                    goals.get(goalNumber).getTask(4).setCompletion(false);
+                    tdTaskTitles.get(4).setPaintFlags(tdTaskTitles.get(4).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                }
+                updateDailyProgress();
+                updateTotalProgress();
+            }
+        });
+
+        tdExitUIButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                tdLayout.setVisibility(View.GONE);
+                tdExitUIButton.setVisibility(View.GONE);
+                dbResourcesButton.setVisibility(View.VISIBLE);
+                dbCalendarButton.setVisibility(View.VISIBLE);
+                dbResourcesButton.setVisibility(View.VISIBLE);
+                dbGoalsButton.setVisibility(View.VISIBLE);
+                for(int i = 0; i < goals.size(); i++)
+                    dbToDoButtons.get(i).setTranslationY(dbToDoButtons.get(i).getTranslationY() + 720);
+            }
+        });
+        tdLayout.setVisibility(View.GONE);
+    }
+
+    private void runToDoUI()
+    {
+        tdLayout.setVisibility(View.VISIBLE);
+        tdExitUIButton.setVisibility(View.VISIBLE);
+        tdGoalTitleText.setText(goals.get(goalNumber).getName());
+        for(View layout : tdTaskLayouts)
+            layout.setVisibility(View.GONE);
+        for(int i = 0; i < goals.size(); i++)
+            dbToDoButtons.get(i).setTranslationY(dbToDoButtons.get(i).getTranslationY() - 720);
+        for(int i = 0; i < goals.get(goalNumber).getTaskAmount(); i++)
+        {
+            tdTaskLayouts.get(i).setVisibility(View.VISIBLE);
+            tdTaskTitles.get(i).setText(goals.get(goalNumber).getTask(i).getName());
+            tdTaskDescriptions.get(i).setText(goals.get(goalNumber).getTask(i).getDescription());
+            if (goals.get(goalNumber).getTask(i).isComplete()) {
+                tdTaskCompleteButtons.get(i).setText("Undo Complete");
+                tdTaskTitles.get(i).setPaintFlags(tdTaskTitles.get(i).getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            } else {
+                tdTaskCompleteButtons.get(i).setText("Complete");
+                tdTaskTitles.get(i).setPaintFlags(tdTaskTitles.get(i).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            }
+
+        }
+        dbResourcesButton.setVisibility(View.GONE);
+        dbCalendarButton.setVisibility(View.GONE);
+        dbResourcesButton.setVisibility(View.GONE);
+        dbGoalsButton.setVisibility(View.GONE);
     }
 
     //Resource view (rv) Functions
