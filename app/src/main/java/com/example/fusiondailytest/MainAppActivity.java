@@ -337,7 +337,7 @@ public class MainAppActivity extends AppCompatActivity {
     //Calendar View (cv) Functions
     private void assignCalendarView() {
 
-        // 1) build 12-month window (6 past, current, 5 future)
+        // build 12-month window (6 past, current, 5 future)
         monthsList = new ArrayList<>();
         Calendar mCal = Calendar.getInstance();
         mCal.add(Calendar.MONTH, -6);
@@ -349,26 +349,25 @@ public class MainAppActivity extends AppCompatActivity {
             mCal.add(Calendar.MONTH, 1);
         }
 
-        // 2) find the ViewPager
         pager = findViewById(R.id.calendarPager);
 
-        // 3) load goals and render their buttons
-        loadGoals();      // replace with your real data load
+        // load goals and render their buttons
+        loadGoals();
         setupGoalButtons();
 
-        // 4) default to first goal
+        // default to first goal
         if (!goals.isEmpty()) {
             selectGoal(goals.get(0));
         }
 
-        // 1) Find the new header TextView
+        // Find the new header TextView
         TextView monthHeader = findViewById(R.id.monthHeader);
 
-        // 2) After setting adapter, initialize header to the current page:
-        int defaultPosition = 6; // the index you use for “now”
+        // After setting adapter, initialize header to the current page:
+        int defaultPosition = 6;
         updateMonthHeader(defaultPosition, monthHeader);
 
-        // 3) Add a page‐change callback to update it as you swipe:
+        // Add a page‐change callback to update it as you swipe:
         pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -376,7 +375,7 @@ public class MainAppActivity extends AppCompatActivity {
             }
         });
 
-        // 5) back button returns you to the dashboard
+        // back button returns you to the dashboard
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> {
             setContentView(R.layout.fragment_dashboard);
@@ -387,12 +386,12 @@ public class MainAppActivity extends AppCompatActivity {
     /** Helper to display "Month Year" for page at index */
     private void updateMonthHeader(int position, TextView header) {
         MainAppActivity.YearMonth ym = monthsList.get(position);
-        // month is 0-based: 0=Jan … 11=Dec
-        String monthName = months[ym.month];      // your String[] months array
+        String monthName = months[ym.month];
         String text = monthName + " " + ym.year;
         header.setText(text);
     }
 
+    // Need to get goals from database soon
     private void loadGoals() {
         goals.clear();
         Goal g1 = new Goal("Fitness",     "Stay fit",       "2025-05-15");
@@ -427,13 +426,11 @@ public class MainAppActivity extends AppCompatActivity {
             btn.setAllCaps(false);
             btn.setPadding(padding, padding, padding, padding);
 
-            // Create LayoutParams with MATCH_PARENT width and WRAP_CONTENT height
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
             );
 
-            // Apply your margins (left, top, right, bottom)
             lp.setMargins(margin, margin, margin, margin);
 
             btn.setLayoutParams(lp);
@@ -469,7 +466,8 @@ public class MainAppActivity extends AppCompatActivity {
                 monthsList, streakSet, endSet
         );
         pager.setAdapter(adapter);
-        pager.setCurrentItem(6, false);  // center on “current” month
+        // center on “current” month
+        pager.setCurrentItem(6, false);
     }
 
     private void zeroTime(Calendar c) {
