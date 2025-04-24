@@ -4,20 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.graphics.Paint;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.firebase.auth.FirebaseAuth;
 import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,6 +46,17 @@ public class MainAppActivity extends AppCompatActivity {
     private Button dbResourcesButton;
     private TextView dbMonthText;
     private TextView dbDateText;
+    private Vector<TextView> dbToDoLabels = new Vector<TextView>();
+    private Vector<Button> dbToDoButtons = new Vector<Button>();
+
+    //dashboard to do (td) variables
+    private View tdLayout;
+    private Button tdExitUIButton;
+    private TextView tdGoalTitleText;
+    private Vector<View> tdTaskLayouts = new Vector<View>();
+    private Vector<TextView> tdTaskTitles = new Vector<TextView>();
+    private Vector<TextView> tdTaskDescriptions = new Vector<TextView>();
+    private Vector<Button> tdTaskCompleteButtons = new Vector<Button>();
 
     //Resource View (rv) Variables
     private LinearLayout rvPersonalizedContainer;
@@ -122,11 +131,11 @@ public class MainAppActivity extends AppCompatActivity {
     Calendar localCalendar = Calendar.getInstance();
 
     final private String day = "" + localCalendar.get(Calendar.DATE);
-    final public int month = localCalendar.get(Calendar.MONTH);
-    private List<YearMonth> monthsList;
-    private ViewPager2 pager;
+    final private int month = localCalendar.get(Calendar.MONTH);
+
     String[] months = new String[]{"January", "February", "March", "April",
             "May", "June", "July", "August", "September", "October", "November", "December"};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,12 +159,92 @@ public class MainAppActivity extends AppCompatActivity {
         dbSettingsButton = findViewById(R.id.settingsButton);
         dbResourcesButton = findViewById(R.id.resourcesButton);
 
+        dbDailyStreakText = findViewById(R.id.streakNumberText);
         dbMonthText = findViewById(R.id.monthText);
         dbDateText = findViewById(R.id.dateText);
         dbMonthText.setText(months[month]);
         dbDateText.setText(day);
 
+        dbToDoButtons.clear();
+        dbToDoButtons.add(findViewById(R.id.todoButton));
+        dbToDoButtons.add(findViewById(R.id.todoButton1));
+        dbToDoButtons.add(findViewById(R.id.todoButton2));
+        dbToDoButtons.add(findViewById(R.id.todoButton3));
+        dbToDoButtons.add(findViewById(R.id.todoButton4));
+
+        dbToDoLabels.clear();
+        dbToDoLabels.add(findViewById(R.id.todoButtonText));
+        dbToDoLabels.add(findViewById(R.id.todoButtonText2));
+        dbToDoLabels.add(findViewById(R.id.todoButtonText3));
+        dbToDoLabels.add(findViewById(R.id.todoButtonText4));
+        dbToDoLabels.add(findViewById(R.id.todoButtonText5));
+
         auth = FirebaseAuth.getInstance();
+
+        dbToDoButtons.get(0).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(goals.size()>0)
+                {
+                    goalNumber = 0;
+                    runToDoUI();
+                }
+            }
+        });
+
+        dbToDoButtons.get(1).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(goals.size()>1)
+                {
+                    goalNumber = 1;
+                    runToDoUI();
+                }
+            }
+        });
+
+        dbToDoButtons.get(2).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(goals.size()>2)
+                {
+                    goalNumber = 2;
+                    runToDoUI();
+                }
+            }
+        });
+
+        dbToDoButtons.get(3).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(goals.size()>3)
+                {
+                    goalNumber = 3;
+                    runToDoUI();
+                }
+            }
+        });
+
+        dbToDoButtons.get(4).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(goals.size()>4)
+                {
+                    goalNumber = 4;
+                    runToDoUI();
+                }
+            }
+        });
 
         dbSettingsButton.setOnClickListener(new View.OnClickListener()
         {
@@ -197,13 +286,14 @@ public class MainAppActivity extends AppCompatActivity {
         });
         updateTotalProgress();
         updateDailyProgress();
-        //updateDBDailyStreak();
+        updateDBDailyStreak();
+        updateToDoButtons();
+        assignToDoUI();
     }
 
     private void updateTotalProgress()
     {
         int totalProgressValue = 0;
-
         if (totalProgressValue > 100)
         {
             totalProgressValue = 100; // Cap progress at 100%
@@ -227,7 +317,7 @@ public class MainAppActivity extends AppCompatActivity {
             }
         }
         if (totalTasks > 0)
-            dailyProgressValue = (completedTasks/totalTasks)*100;
+            dailyProgressValue = (int)(((float) completedTasks / totalTasks) * 100);
         // Update the ProgressBar and display text
         dbDailyProgressBar.setProgress(dailyProgressValue);
         dbDailyProgressText.setText(dailyProgressValue + "% Complete");
@@ -235,15 +325,206 @@ public class MainAppActivity extends AppCompatActivity {
 
     private void updateDBDailyStreak()
     {
-        if(goals.size() > 0) {
-            int compare = goals.get(0).getDailyStreak();
-            for (int i = 0; i < goals.size(); i++) {
-                if(goals.get(i).getDailyStreak() > compare)
-                    compare = goals.get(i).getDailyStreak();
+        if(!goals.isEmpty())
+        {
+            int compare = 0;
+            for (Goal goal : goals) {
+                if(goal.getDailyStreak() > compare)
+                    compare = goal.getDailyStreak();
             }
             String output = "" + compare;
             dbDailyStreakText.setText(output);
         }
+    }
+
+    private void updateToDoButtons()
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            dbToDoButtons.get(i).setTranslationY(dbToDoButtons.get(i).getTranslationY() + 250);
+            dbToDoLabels.get(i).setVisibility(View.INVISIBLE);
+        }
+        for(int i = 0; i < goals.size(); i++)
+        {
+            dbToDoButtons.get(i).setTranslationY(dbToDoButtons.get(i).getTranslationY() - 250);
+            dbToDoLabels.get(i).setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void assignToDoUI()
+    {
+        tdLayout = findViewById(R.id.todoLayout);
+        tdLayout.setFocusable(false);
+        tdLayout.setFocusableInTouchMode(false);
+
+        tdExitUIButton = findViewById(R.id.todoUIExitButton);
+        tdGoalTitleText = findViewById(R.id.todoGoalTitle);
+
+        tdTaskLayouts.clear();
+        tdTaskLayouts.add(findViewById(R.id.taskLayout1));
+        tdTaskLayouts.add(findViewById(R.id.taskLayout2));
+        tdTaskLayouts.add(findViewById(R.id.taskLayout3));
+        tdTaskLayouts.add(findViewById(R.id.taskLayout4));
+        tdTaskLayouts.add(findViewById(R.id.taskLayout5));
+
+        tdTaskTitles.clear();
+        tdTaskTitles.add(findViewById(R.id.taskTitle1));
+        tdTaskTitles.add(findViewById(R.id.taskTitle2));
+        tdTaskTitles.add(findViewById(R.id.taskTitle3));
+        tdTaskTitles.add(findViewById(R.id.taskTitle4));
+        tdTaskTitles.add(findViewById(R.id.taskTitle5));
+
+        tdTaskDescriptions.clear();
+        tdTaskDescriptions.add(findViewById(R.id.taskDescription1));
+        tdTaskDescriptions.add(findViewById(R.id.taskDescription2));
+        tdTaskDescriptions.add(findViewById(R.id.taskDescription3));
+        tdTaskDescriptions.add(findViewById(R.id.taskDescription4));
+        tdTaskDescriptions.add(findViewById(R.id.taskDescription5));
+
+        tdTaskCompleteButtons.clear();
+        tdTaskCompleteButtons.add(findViewById(R.id.taskCompleteButton1));
+        tdTaskCompleteButtons.add(findViewById(R.id.taskCompleteButton2));
+        tdTaskCompleteButtons.add(findViewById(R.id.taskCompleteButton3));
+        tdTaskCompleteButtons.add(findViewById(R.id.taskCompleteButton4));
+        tdTaskCompleteButtons.add(findViewById(R.id.taskCompleteButton5));
+
+        tdTaskCompleteButtons.get(0).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!goals.get(goalNumber).getTask(0).isComplete()) {
+                    tdTaskCompleteButtons.get(0).setText("Undo Complete");
+                    goals.get(goalNumber).getTask(0).setCompletion(true);
+                    tdTaskTitles.get(0).setPaintFlags(tdTaskTitles.get(0).getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else {
+                    tdTaskCompleteButtons.get(0).setText("Complete");
+                    goals.get(goalNumber).getTask(0).setCompletion(false);
+                    tdTaskTitles.get(0).setPaintFlags(tdTaskTitles.get(0).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                }
+                updateDailyProgress();
+                updateTotalProgress();
+            }
+        });
+
+        tdTaskCompleteButtons.get(1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!goals.get(goalNumber).getTask(1).isComplete()) {
+                    tdTaskCompleteButtons.get(1).setText("Undo Complete");
+                    goals.get(goalNumber).getTask(1).setCompletion(true);
+                    tdTaskTitles.get(1).setPaintFlags(tdTaskTitles.get(1).getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else {
+                    tdTaskCompleteButtons.get(1).setText("Complete");
+                    goals.get(goalNumber).getTask(1).setCompletion(false);
+                    tdTaskTitles.get(1).setPaintFlags(tdTaskTitles.get(1).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                }
+                updateDailyProgress();
+                updateTotalProgress();
+            }
+        });
+
+        tdTaskCompleteButtons.get(2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!goals.get(goalNumber).getTask(2).isComplete()) {
+                    tdTaskCompleteButtons.get(2).setText("Undo Complete");
+                    goals.get(goalNumber).getTask(2).setCompletion(true);
+                    tdTaskTitles.get(2).setPaintFlags(tdTaskTitles.get(2).getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else {
+                    tdTaskCompleteButtons.get(2).setText("Complete");
+                    goals.get(goalNumber).getTask(2).setCompletion(false);
+                    tdTaskTitles.get(2).setPaintFlags(tdTaskTitles.get(2).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                }
+                updateDailyProgress();
+                updateTotalProgress();
+            }
+        });
+
+        tdTaskCompleteButtons.get(3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!goals.get(goalNumber).getTask(3).isComplete()) {
+                    tdTaskCompleteButtons.get(3).setText("Undo Complete");
+                    goals.get(goalNumber).getTask(3).setCompletion(true);
+                    tdTaskTitles.get(3).setPaintFlags(tdTaskTitles.get(3).getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else {
+                    tdTaskCompleteButtons.get(3).setText("Complete");
+                    goals.get(goalNumber).getTask(3).setCompletion(false);
+                    tdTaskTitles.get(3).setPaintFlags(tdTaskTitles.get(3).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                }
+                updateDailyProgress();
+                updateTotalProgress();
+            }
+        });
+
+        tdTaskCompleteButtons.get(4).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!goals.get(goalNumber).getTask(4).isComplete()) {
+                    tdTaskCompleteButtons.get(4).setText("Undo Complete");
+                    goals.get(goalNumber).getTask(4).setCompletion(true);
+                    tdTaskTitles.get(4).setPaintFlags(tdTaskTitles.get(4).getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else {
+                    tdTaskCompleteButtons.get(4).setText("Complete");
+                    goals.get(goalNumber).getTask(4).setCompletion(false);
+                    tdTaskTitles.get(4).setPaintFlags(tdTaskTitles.get(4).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                }
+                updateDailyProgress();
+                updateTotalProgress();
+            }
+        });
+
+        tdExitUIButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                tdLayout.setVisibility(View.GONE);
+                tdExitUIButton.setVisibility(View.GONE);
+                dbResourcesButton.setVisibility(View.VISIBLE);
+                dbCalendarButton.setVisibility(View.VISIBLE);
+                dbResourcesButton.setVisibility(View.VISIBLE);
+                dbGoalsButton.setVisibility(View.VISIBLE);
+                for(int i = 0; i < goals.size(); i++)
+                {
+                    dbToDoButtons.get(i).setTranslationY(dbToDoButtons.get(i).getTranslationY() + 720);
+                    dbToDoLabels.get(i).setTranslationY(dbToDoButtons.get(i).getTranslationY() + 5);
+                }
+            }
+        });
+        tdLayout.setVisibility(View.GONE);
+    }
+
+    private void runToDoUI()
+    {
+        tdExitUIButton.setVisibility(View.VISIBLE);
+        tdGoalTitleText.setText(goals.get(goalNumber).getName());
+        for(View layout : tdTaskLayouts)
+            layout.setVisibility(View.GONE);
+        if(!(tdLayout.getVisibility() == View.VISIBLE))
+            for(int i = 0; i < goals.size(); i++)
+            {
+                dbToDoButtons.get(i).setTranslationY(dbToDoButtons.get(i).getTranslationY() - 720);
+                dbToDoLabels.get(i).setTranslationY(dbToDoButtons.get(i).getTranslationY() - 5);
+            }
+
+        for(int i = 0; i < goals.get(goalNumber).getTaskAmount(); i++)
+        {
+            tdTaskLayouts.get(i).setVisibility(View.VISIBLE);
+            tdTaskTitles.get(i).setText(goals.get(goalNumber).getTask(i).getName());
+            tdTaskDescriptions.get(i).setText(goals.get(goalNumber).getTask(i).getDescription());
+            if (goals.get(goalNumber).getTask(i).isComplete()) {
+                tdTaskCompleteButtons.get(i).setText("Undo Complete");
+                tdTaskTitles.get(i).setPaintFlags(tdTaskTitles.get(i).getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            } else {
+                tdTaskCompleteButtons.get(i).setText("Complete");
+                tdTaskTitles.get(i).setPaintFlags(tdTaskTitles.get(i).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            }
+        }
+        dbResourcesButton.setVisibility(View.GONE);
+        dbCalendarButton.setVisibility(View.GONE);
+        dbResourcesButton.setVisibility(View.GONE);
+        dbGoalsButton.setVisibility(View.GONE);
+        tdLayout.setVisibility(View.VISIBLE);
     }
 
     //Resource view (rv) Functions
@@ -335,158 +616,67 @@ public class MainAppActivity extends AppCompatActivity {
     }
 
     //Calendar View (cv) Functions
-    private void assignCalendarView() {
+    private void assignCalendarView()
+    {
+        // This is an example, plug the user's goal end dates here.
+        Calendar goalEndCal = Calendar.getInstance();
+        goalEndCal.add(Calendar.DAY_OF_MONTH, 10);
+        zeroTime(goalEndCal);
 
-        // build 12-month window (6 past, current, 5 future)
-        monthsList = new ArrayList<>();
+        // Build streak set (last N days)
+        Set<Long> streakSet = new HashSet<>();
+        Calendar c = Calendar.getInstance();
+        zeroTime(c);
+        // Example streak length
+        int streakDays = 15;
+        for (int i = 0; i < streakDays; i++) {
+            streakSet.add(c.getTimeInMillis());
+            c.add(Calendar.DAY_OF_MONTH, -1);
+        }
+
+        // Build 12 months: 6 past, current, 5 future
+        List<MainAppActivity.YearMonth> months = new ArrayList<>();
         Calendar mCal = Calendar.getInstance();
         mCal.add(Calendar.MONTH, -6);
         for (int i = 0; i < 12; i++) {
-            monthsList.add(new YearMonth(
+            months.add(new MainAppActivity.YearMonth(
                     mCal.get(Calendar.YEAR),
                     mCal.get(Calendar.MONTH)
             ));
             mCal.add(Calendar.MONTH, 1);
         }
 
-        pager = findViewById(R.id.calendarPager);
-
-        // load goals and render their buttons
-        loadGoals();
-        setupGoalButtons();
-
-        // default to first goal
-        if (!goals.isEmpty()) {
-            selectGoal(goals.get(0));
-        }
-
-        // Find the new header TextView
-        TextView monthHeader = findViewById(R.id.monthHeader);
-
-        // After setting adapter, initialize header to the current page:
-        int defaultPosition = 6;
-        updateMonthHeader(defaultPosition, monthHeader);
-
-        // Add a page‐change callback to update it as you swipe:
-        pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                updateMonthHeader(position, monthHeader);
-            }
-        });
-
-        // back button returns you to the dashboard
-        Button backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(v -> {
-            setContentView(R.layout.fragment_dashboard);
-            assignDashboard();
-        });
-    }
-
-    /** Helper to display "Month Year" for page at index */
-    private void updateMonthHeader(int position, TextView header) {
-        MainAppActivity.YearMonth ym = monthsList.get(position);
-        String monthName = months[ym.month];
-        String text = monthName + " " + ym.year;
-        header.setText(text);
-    }
-
-    // Need to get goals from database soon
-    private void loadGoals() {
-        goals.clear();
-        Goal g1 = new Goal("Fitness",     "Stay fit",       "2025-05-15");
-        g1.setDailyStreak(3);
-        goals.add(g1);
-        Goal g2 = new Goal("Reading",     "Read books",     "2025-06-01");
-        g2.setDailyStreak(7);
-        goals.add(g2);
-        Goal g3 = new Goal("Meditation",  "Mindfulness",    "2025-05-30");
-        g3.setDailyStreak(1);
-        goals.add(g3);
-        Goal g4 = new Goal("Coding",      "Practice daily", "2025-07-10");
-        g4.setDailyStreak(10);
-        goals.add(g4);
-        Goal g5 = new Goal("Diet",        "Healthy eating", "2025-05-20");
-        g5.setDailyStreak(5);
-        goals.add(g5);
-    }
-
-    private void setupGoalButtons() {
-        LinearLayout container = findViewById(R.id.goalButtonsContainer);
-        container.removeAllViews();
-
-        int padding = dpToPx(8);
-        int margin  = dpToPx(4);   // 4dp margin around each button
-
-        for (Goal goal : goals) {
-            Button btn = new Button(this);
-            btn.setText(goal.getName());
-            btn.setTextColor(getResources().getColor(R.color.white));
-            btn.setBackground(getResources().getDrawable(R.drawable.dark_bubble));
-            btn.setAllCaps(false);
-            btn.setPadding(padding, padding, padding, padding);
-
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            );
-
-            lp.setMargins(margin, margin, margin, margin);
-
-            btn.setLayoutParams(lp);
-            btn.setOnClickListener(v -> selectGoal(goal));
-
-            container.addView(btn);
-        }
-    }
-
-    private void selectGoal(Goal goal) {
-        // parse end date
-        Calendar goalCal = Calendar.getInstance();
-        try {
-            String[] p = goal.getCompletionDate().split("-");
-            goalCal.set(Integer.parseInt(p[0]), Integer.parseInt(p[1]) - 1, Integer.parseInt(p[2]));
-        } catch (Exception e) { /* use today on parse fail */ }
-        zeroTime(goalCal);
-
-        // build streak days set
-        Set<Long> streakSet = new HashSet<>();
-        Calendar c = Calendar.getInstance();
-        zeroTime(c);
-        for (int i = 0; i < goal.getDailyStreak(); i++) {
-            streakSet.add(c.getTimeInMillis());
-            c.add(Calendar.DAY_OF_MONTH, -1);
-        }
-
-        // end date set
-        Set<Long> endSet = Collections.singleton(goalCal.getTimeInMillis());
-
-        // install the adapter
+        ViewPager2 pager = findViewById(R.id.calendarPager);
         CalendarPagerAdapter adapter = new CalendarPagerAdapter(
-                monthsList, streakSet, endSet
+                months, streakSet, goalEndCal.getTimeInMillis()
         );
         pager.setAdapter(adapter);
-        // center on “current” month
-        pager.setCurrentItem(6, false);
+        pager.setCurrentItem(6, false);  // Center on current month
+
+        Button backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setContentView(R.layout.fragment_dashboard);
+                assignDashboard();
+            }
+        });
     }
 
     private void zeroTime(Calendar c) {
         c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE,      0);
-        c.set(Calendar.SECOND,      0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
     }
 
-    private int dpToPx(int dp) {
-        float d = getResources().getDisplayMetrics().density;
-        return Math.round(dp * d);
-    }
-
-    // inner holder for year+month pairs
+    // Simple holder for year/month
     public static class YearMonth {
-        public final int year;
-        public final int month;
-        YearMonth(int y, int m) { year = y; month = m; }
+        public final int year, month;
+        YearMonth(int year, int month) {
+            this.year = year;
+            this.month = month;
+        }
     }
 
     //Goal Overview (go) Functions
