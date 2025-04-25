@@ -13,8 +13,12 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import android.widget.Button;
 
+import java.util.Map;
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -30,11 +34,13 @@ import android.text.util.Linkify;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import org.json.JSONObject;
+import android.util.Log;
 
 public class MainAppActivity extends AppCompatActivity {
 
     //firebase authentication
     private FirebaseAuth auth;
+    private FirebaseFirestore db;
 
     //Dashboard (db) Variables
     private ProgressBar dbTotalProgressBar;
@@ -143,6 +149,7 @@ public class MainAppActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_dashboard);
+        loadGoalFromFirestore();
         // Initialize UI components
         assignDashboard();
     }
@@ -339,6 +346,20 @@ public class MainAppActivity extends AppCompatActivity {
         }
     }
 
+    private void checkStreak()
+    {
+        boolean isComplete = true;
+        if(goals.get(goalNumber).getTaskAmount() > 0)
+            for(int i = 0; i < goals.get(goalNumber).getTaskAmount(); i++)
+                if(!goals.get(goalNumber).getTask(i).isComplete())
+                    isComplete = false;
+        if(isComplete)
+            goals.get(goalNumber).setDailyStreak(goals.get(goalNumber).getDailyStreak() + 1);
+        else if(goals.get(goalNumber).getDailyStreak() > 0)
+            goals.get(goalNumber).setDailyStreak(goals.get(goalNumber).getDailyStreak() - 1);
+        updateDailyProgress();
+    }
+
     private void updateToDoButtons()
     {
         for(int i = 0; i < 5; i++)
@@ -404,6 +425,7 @@ public class MainAppActivity extends AppCompatActivity {
                 }
                 updateDailyProgress();
                 updateTotalProgress();
+                checkStreak();
             }
         });
 
@@ -421,6 +443,7 @@ public class MainAppActivity extends AppCompatActivity {
                 }
                 updateDailyProgress();
                 updateTotalProgress();
+                checkStreak();
             }
         });
 
@@ -438,6 +461,7 @@ public class MainAppActivity extends AppCompatActivity {
                 }
                 updateDailyProgress();
                 updateTotalProgress();
+                checkStreak();
             }
         });
 
@@ -455,6 +479,7 @@ public class MainAppActivity extends AppCompatActivity {
                 }
                 updateDailyProgress();
                 updateTotalProgress();
+                checkStreak();
             }
         });
 
@@ -472,6 +497,7 @@ public class MainAppActivity extends AppCompatActivity {
                 }
                 updateDailyProgress();
                 updateTotalProgress();
+                checkStreak();
             }
         });
 
@@ -635,7 +661,7 @@ public class MainAppActivity extends AppCompatActivity {
         pager = findViewById(R.id.calendarPager);
 
         // load goals and render their buttons
-        loadGoals();
+        //loadGoals();
         setupGoalButtons();
 
         // default to first goal
@@ -1196,7 +1222,6 @@ public class MainAppActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-
                 if(isFromGoalView)
                 {
                     if(isNewTask)
@@ -1235,11 +1260,14 @@ public class MainAppActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                if(isFromGoalView) {
-                    if (isNewTask) {
+                if(isFromGoalView)
+                {
+                    if (isNewTask)
+                    {
                         //new task and existing goal
                         goals.get(goalNumber).createTask(tcNameInput.getText().toString(), tcDescriptionInput.getText().toString());
                         tempGoal = goals.get(goalNumber);
+                        saveGoalToFirestore(goals.get(goalNumber));
                         setContentView(R.layout.fragment_goals_view);
                         assignGoalsView();
                     } else {
@@ -1247,6 +1275,7 @@ public class MainAppActivity extends AppCompatActivity {
                         goals.get(goalNumber).getTask(goalNumber).setName(tcNameInput.getText().toString());
                         goals.get(goalNumber).getTask(goalNumber).setDescription(tcDescriptionInput.getText().toString());
                         tempGoal = goals.get(goalNumber);
+                        saveGoalToFirestore(goals.get(goalNumber));
                         setContentView(R.layout.fragment_goals_view);
                         assignGoalsView();
                     }
@@ -1257,6 +1286,7 @@ public class MainAppActivity extends AppCompatActivity {
                     goals.get(goals.size() - 1).createTask(tcNameInput.getText().toString(), tcDescriptionInput.getText().toString());
                     setContentView(R.layout.fragment_goals_overview);
                     assignGoalsOverview();
+                    saveGoalToFirestore(goals.get(goals.size() - 1));
                 }
             }
         });
@@ -1317,5 +1347,59 @@ public class MainAppActivity extends AppCompatActivity {
                 //TO DO - Create UI for confirmation of deleting password and program functionality, delete data from firebase.
             }
         });
+    }
+
+    private void loadGoalFromFirestore() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        db.collection("users")
+                .document(userId)
+                .collection("goals")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        String name = doc.getString("name");
+                        String description = doc.getString("description");
+                        String completionDate = doc.getString("completionDate");
+                        int totalProgress = doc.getLong("totalProgress").intValue();
+                        int dailyStreak = doc.getLong("dailyStreak").intValue();
+
+                        Goal goal = new Goal(name, description, completionDate);
+                        goal.setTotalProgress(totalProgress);
+                        goal.setDailyStreak(dailyStreak);
+
+                        goals.add(goal);
+                    }
+
+
+                    Log.d("Firestore", "Goals loaded: " + goals.size());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error loading goals", e);
+                });
+    }
+
+    private void saveGoalToFirestore(Goal goal) {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        Map<String, Object> goalMap = new HashMap<>();
+        goalMap.put("name", goal.getName());
+        goalMap.put("description", goal.getDescription());
+        goalMap.put("completionDate", goal.getCompletionDate());
+        goalMap.put("totalProgress", goal.getTotalProgress());
+        goalMap.put("dailyStreak", goal.getDailyStreak());
+
+        db.collection("users")
+                .document(userId)
+                .collection("goals")
+                .add(goalMap)
+                .addOnSuccessListener(documentReference -> {
+                    Log.d("Firestore", "Goal saved with ID: " + documentReference.getId());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error saving goal", e);
+                });
     }
 }
