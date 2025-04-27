@@ -3,6 +3,7 @@ package com.example.fusiondailytest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import android.view.View;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.auth.FirebaseUser;
 import android.widget.Button;
 
 import java.util.HashMap;
@@ -988,23 +990,48 @@ public class MainAppActivity extends AppCompatActivity {
                 startActivity(new Intent(MainAppActivity.this, QuestionnaireActivity.class));
             }
         });
+        EditText newPasswordInput = findViewById(R.id.svNewPasswordInput);
+        Button confirmChangeButton = findViewById(R.id.svConfirmChangePasswordButton);
+        Button changePasswordButton = findViewById(R.id.settingsPasswordButton);
 
-        svChangePasswordButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                //TO DO - Create UI for changing password, add functionality to change password
+// Hide everything at first
+        newPasswordInput.setVisibility(View.GONE);
+        confirmChangeButton.setVisibility(View.GONE);
+
+        changePasswordButton.setOnClickListener(v -> {
+            newPasswordInput.setVisibility(View.VISIBLE);
+            newPasswordInput.requestFocus(); // Optional: opens keyboard
+        });
+
+// Show confirm button only when user starts typing
+        newPasswordInput.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                confirmChangeButton.setVisibility(View.VISIBLE);
             }
         });
 
-        svDeleteAccountButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                //TO DO - Create UI for confirmation of deleting password and program functionality, delete data from firebase.
+        confirmChangeButton.setOnClickListener(v -> {
+            String newPassword = newPasswordInput.getText().toString();
+            if (!newPassword.isEmpty()) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    user.updatePassword(newPassword)
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(this, "Password updated successfully", Toast.LENGTH_SHORT).show();
+                                    newPasswordInput.setVisibility(View.GONE);
+                                    confirmChangeButton.setVisibility(View.GONE);
+                                    newPasswordInput.setText("");
+                                } else {
+                                    Toast.makeText(this, "Failed to update password", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+            } else {
+                Toast.makeText(this, "Please enter a new password", Toast.LENGTH_SHORT).show();
             }
         });
+
+
     }
 }
