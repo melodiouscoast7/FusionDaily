@@ -540,10 +540,13 @@ public class MainAppActivity extends AppCompatActivity {
             tdTaskLayouts.get(i).setVisibility(View.VISIBLE);
             tdTaskTitles.get(i).setText(goals.get(goalNumber).getTask(i).getName());
             tdTaskDescriptions.get(i).setText(goals.get(goalNumber).getTask(i).getDescription());
-            if (goals.get(goalNumber).getTask(i).isComplete()) {
+            if (goals.get(goalNumber).getTask(i).isComplete())
+            {
                 tdTaskCompleteButtons.get(i).setText("Undo Complete");
                 tdTaskTitles.get(i).setPaintFlags(tdTaskTitles.get(i).getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            } else {
+            }
+            else
+            {
                 tdTaskCompleteButtons.get(i).setText("Complete");
                 tdTaskTitles.get(i).setPaintFlags(tdTaskTitles.get(i).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
