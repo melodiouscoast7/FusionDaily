@@ -1305,6 +1305,8 @@ public class MainAppActivity extends AppCompatActivity {
         svViewQuestionnaireButton = findViewById(R.id.settingsQuestionnaireButton);
         svChangePasswordButton = findViewById(R.id.settingsPasswordButton);
         svDeleteAccountButton = findViewById(R.id.settingsDeleteButton);
+        EditText newPasswordInput = findViewById(R.id.svNewPasswordInput);
+        Button confirmChangeButton = findViewById(R.id.svConfirmChangePasswordButton);
 
         svBackButton.setOnClickListener(new View.OnClickListener()
         {
@@ -1334,15 +1336,13 @@ public class MainAppActivity extends AppCompatActivity {
                 startActivity(new Intent(MainAppActivity.this, QuestionnaireActivity.class));
             }
         });
-        EditText newPasswordInput = findViewById(R.id.svNewPasswordInput);
-        Button confirmChangeButton = findViewById(R.id.svConfirmChangePasswordButton);
-        Button changePasswordButton = findViewById(R.id.settingsPasswordButton);
+
 
 // Hide everything at first
         newPasswordInput.setVisibility(View.GONE);
         confirmChangeButton.setVisibility(View.GONE);
 
-        changePasswordButton.setOnClickListener(v -> {
+        svChangePasswordButton.setOnClickListener(v -> {
             newPasswordInput.setVisibility(View.VISIBLE);
             newPasswordInput.requestFocus(); // Optional: opens keyboard
         });
