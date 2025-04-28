@@ -13,6 +13,13 @@ public class Task {
         isComplete = false;
     }
 
+    public Task(String _name, String _description, boolean _icComplete)
+    {
+        name = _name;
+        description = _description;
+        isComplete = _icComplete;
+    }
+
     public String getName()
     {
         return name;

@@ -15,6 +15,7 @@ import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import android.widget.Button;
@@ -41,8 +42,9 @@ import android.util.Log;
 public class MainAppActivity extends AppCompatActivity {
 
     //firebase authentication
-    private FirebaseAuth auth;
-    private FirebaseFirestore db;
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     //Dashboard (db) Variables
     private ProgressBar dbTotalProgressBar;
@@ -190,7 +192,7 @@ public class MainAppActivity extends AppCompatActivity {
         dbToDoLabels.add(findViewById(R.id.todoButtonText4));
         dbToDoLabels.add(findViewById(R.id.todoButtonText5));
 
-        auth = FirebaseAuth.getInstance();
+
 
         dbToDoButtons.get(0).setOnClickListener(new View.OnClickListener()
         {
@@ -350,16 +352,18 @@ public class MainAppActivity extends AppCompatActivity {
 
     private void checkStreak()
     {
-        boolean isComplete = true;
-        if(goals.get(goalNumber).getTaskAmount() > 0)
-            for(int i = 0; i < goals.get(goalNumber).getTaskAmount(); i++)
-                if(!goals.get(goalNumber).getTask(i).isComplete())
+        boolean isComplete = false;
+        if(goals.get(goalNumber).getTaskAmount() > 0) {
+            isComplete = true;
+            for (int i = 0; i < goals.get(goalNumber).getTaskAmount(); i++)
+                if (!goals.get(goalNumber).getTask(i).isComplete())
                     isComplete = false;
+        }
         if(isComplete)
             goals.get(goalNumber).setDailyStreak(goals.get(goalNumber).getDailyStreak() + 1);
         else if(goals.get(goalNumber).getDailyStreak() > 0)
             goals.get(goalNumber).setDailyStreak(goals.get(goalNumber).getDailyStreak() - 1);
-        updateDailyProgress();
+        updateDBDailyStreak();
     }
 
     private void updateToDoButtons()
@@ -508,6 +512,7 @@ public class MainAppActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
+                saveGoalToFirestore(goals.get(goalNumber));
                 tdLayout.setVisibility(View.GONE);
                 tdExitUIButton.setVisibility(View.GONE);
                 dbResourcesButton.setVisibility(View.VISIBLE);
@@ -1158,6 +1163,7 @@ public class MainAppActivity extends AppCompatActivity {
             {
                 setContentView(R.layout.fragment_goals_overview);
                 assignGoalsOverview();
+                saveGoalToFirestore(goals.get(goalNumber));
             }
         });
         gvCreateButton.setOnClickListener(new View.OnClickListener()
@@ -1377,57 +1383,90 @@ public class MainAppActivity extends AppCompatActivity {
         });
     }
 
-    private void loadGoalFromFirestore() {
+    private void loadGoalFromFirestore()
+    {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        db.collection("users")
-                .document(userId)
-                .collection("goals")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                        String name = doc.getString("name");
-                        String description = doc.getString("description");
-                        String completionDate = doc.getString("completionDate");
-                        int totalProgress = doc.getLong("totalProgress").intValue();
-                        int dailyStreak = doc.getLong("dailyStreak").intValue();
-
-                        Goal goal = new Goal(name, description, completionDate);
-                        goal.setTotalProgress(totalProgress);
-                        goal.setDailyStreak(dailyStreak);
-
-                        goals.add(goal);
+        db.collection("users").document(userId).collection("goals").get().addOnSuccessListener(queryDocumentSnapshots ->
+        {
+            for (DocumentSnapshot doc : queryDocumentSnapshots)
+            {
+                String name = doc.getString("name");
+                String description = doc.getString("description");
+                String completionDate = doc.getString("completionDate");
+                int totalProgress = doc.getLong("totalProgress").intValue();
+                int dailyStreak = doc.getLong("dailyStreak").intValue();
+                String docID = doc.getId();
+                Goal goal = new Goal(name, description, completionDate, totalProgress, dailyStreak, docID);
+                for(int i = 0; i < 5; i++)
+                {
+                    if(doc.contains("task" + (i + 1)))
+                    {
+                        Map<String, Object> taskMap = (Map<String, Object>) doc.get("task" + (i+1));
+                        String taskName = (String)taskMap.get("name");
+                        String taskDescription = (String)taskMap.get("description");
+                        boolean isComplete = (boolean)taskMap.get("isComplete");
+                        goal.createTask(taskName, taskDescription, isComplete);
                     }
+                }
+                goals.add(goal);
+            }
 
-
-                    Log.d("Firestore", "Goals loaded: " + goals.size());
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Firestore", "Error loading goals", e);
-                });
+            Log.d("Firestore", "Goals loaded: " + goals.size());
+        }).addOnFailureListener(e ->
+        {
+            Log.e("Firestore", "Error loading goals", e);
+        });
     }
 
-    private void saveGoalToFirestore(Goal goal) {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private void saveGoalToFirestore(Goal goal)
+    {
+        db = FirebaseFirestore.getInstance();
 
+        //
         Map<String, Object> goalMap = new HashMap<>();
         goalMap.put("name", goal.getName());
         goalMap.put("description", goal.getDescription());
         goalMap.put("completionDate", goal.getCompletionDate());
         goalMap.put("totalProgress", goal.getTotalProgress());
         goalMap.put("dailyStreak", goal.getDailyStreak());
+        for(int i = 0; i < goal.getTaskAmount(); i++)
+        {
+            Map<String, Object> taskMap = new HashMap<>();
+            taskMap.put("name", goal.getTask(i).getName());
+            taskMap.put("description", goal.getTask(i).getDescription());
+            taskMap.put("isComplete", goal.getTask(i).isComplete());
+            goalMap.put("task" + (i+1), taskMap);
+        }
 
-        db.collection("users")
-                .document(userId)
-                .collection("goals")
-                .add(goalMap)
-                .addOnSuccessListener(documentReference -> {
-                    Log.d("Firestore", "Goal saved with ID: " + documentReference.getId());
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Firestore", "Error saving goal", e);
-                });
+        if(!goal.getDocID().isEmpty())
+        {
+            db.collection("users").document(userId).collection("goals").get().addOnSuccessListener(querySnapshot ->
+            {
+                for (DocumentSnapshot document : querySnapshot.getDocuments())
+                {
+                    if (document.getId().equals(goal.getDocID()))
+                    {
+                        db.collection("users").document(userId).collection("goals").document(goal.getDocID()).set(goalMap);
+                    }
+                }
+            }).addOnFailureListener(e -> Log.w("Firestore", "Error getting documents", e));
+        }
+        else
+        {
+            db.collection("users").document(userId).collection("goals").add(goalMap).addOnSuccessListener(documentReference ->
+            {
+                for(int i = 0; i < goals.size(); i++)
+                {
+                    if(goals.get(i).equals(goal))
+                        goals.get(i).setDocID(documentReference.getId());
+                }
+                Log.d("Firestore", "Goal saved with ID: " + documentReference.getId());
+            }).addOnFailureListener(e ->
+            {
+                Log.e("Firestore", "Error saving goal", e);
+            });
+        }
     }
 }
