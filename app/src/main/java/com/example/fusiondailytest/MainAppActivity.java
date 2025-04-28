@@ -2,6 +2,7 @@ package com.example.fusiondailytest;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -91,6 +92,8 @@ public class MainAppActivity extends AppCompatActivity {
     private Button svDeleteAccountButton;
     private Button svViewQuestionnaireButton;
     private Button svBackButton;
+    private TextView svDeleteText;
+    private boolean isPasswordChange;
 
     //Goals Overview (go) Variables
     private Vector<View> goGoalLayouts = new Vector<View>();
@@ -1003,6 +1006,7 @@ public class MainAppActivity extends AppCompatActivity {
                 }
                 else
                 {
+                    deleteGoalFromFirestore(goals.get(goalNumber));
                     goals.remove(goalNumber);
                     setContentView(R.layout.fragment_goals_overview);
                     assignGoalsOverview();
@@ -1306,13 +1310,20 @@ public class MainAppActivity extends AppCompatActivity {
     //Settings View (sv) Functions
     private void assignSettingsView() //Assigns objects for the create fragment
     {
+        db = FirebaseFirestore.getInstance();
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         svBackButton = findViewById(R.id.settingsBackButton);
         svSignOutButton = findViewById(R.id.settingsSignOutButton);
         svViewQuestionnaireButton = findViewById(R.id.settingsQuestionnaireButton);
         svChangePasswordButton = findViewById(R.id.settingsPasswordButton);
         svDeleteAccountButton = findViewById(R.id.settingsDeleteButton);
+        svDeleteText = findViewById(R.id.warningDeleteText);
         EditText newPasswordInput = findViewById(R.id.svNewPasswordInput);
-        Button confirmChangeButton = findViewById(R.id.svConfirmChangePasswordButton);
+        Button confirmButton = findViewById(R.id.svConfirmChangePasswordButton);
+
+        svDeleteText.setVisibility(View.INVISIBLE);
+        newPasswordInput.setVisibility(View.INVISIBLE);
+        confirmButton.setVisibility(View.INVISIBLE);
 
         svBackButton.setOnClickListener(new View.OnClickListener()
         {
@@ -1334,6 +1345,21 @@ public class MainAppActivity extends AppCompatActivity {
             }
         });
 
+        svDeleteAccountButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                isPasswordChange = false;
+                svDeleteText.setVisibility(View.VISIBLE);
+                newPasswordInput.setVisibility(View.VISIBLE);
+                confirmButton.setText("DELETE ACCOUNT");
+                newPasswordInput.requestFocus();
+                newPasswordInput.setInputType(InputType.TYPE_CLASS_TEXT);
+                newPasswordInput.setHint("type 'DELETE'");
+            }
+        });
+
         svViewQuestionnaireButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -1343,50 +1369,70 @@ public class MainAppActivity extends AppCompatActivity {
             }
         });
 
-
-// Hide everything at first
-        newPasswordInput.setVisibility(View.GONE);
-        confirmChangeButton.setVisibility(View.GONE);
-
-        svChangePasswordButton.setOnClickListener(v -> {
+        svChangePasswordButton.setOnClickListener(v ->
+        {
+            isPasswordChange = true;
+            svDeleteText.setVisibility(View.INVISIBLE);
             newPasswordInput.setVisibility(View.VISIBLE);
+            confirmButton.setText("Confirm Change");
+            newPasswordInput.setHint("Enter new password");
+            newPasswordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             newPasswordInput.requestFocus(); // Optional: opens keyboard
         });
 
-// Show confirm button only when user starts typing
-        newPasswordInput.setOnFocusChangeListener((v, hasFocus) -> {
+        // Show confirm button only when user starts typing
+        newPasswordInput.setOnFocusChangeListener((v, hasFocus) ->
+        {
             if (hasFocus) {
-                confirmChangeButton.setVisibility(View.VISIBLE);
+                confirmButton.setVisibility(View.VISIBLE);
             }
         });
 
-        confirmChangeButton.setOnClickListener(v -> {
-            String newPassword = newPasswordInput.getText().toString();
-            if (!newPassword.isEmpty()) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-                    user.updatePassword(newPassword)
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(this, "Password updated successfully", Toast.LENGTH_SHORT).show();
-                                    newPasswordInput.setVisibility(View.GONE);
-                                    confirmChangeButton.setVisibility(View.GONE);
-                                    newPasswordInput.setText("");
-                                } else {
-                                    Toast.makeText(this, "Failed to update password", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+        confirmButton.setOnClickListener(v ->
+        {
+            if(isPasswordChange)
+            {
+                String newPassword = newPasswordInput.getText().toString();
+                if (!newPassword.isEmpty())
+                {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null)
+                    {
+                        user.updatePassword(newPassword).addOnCompleteListener(task ->
+                        {
+                            if (task.isSuccessful())
+                            {
+                                Toast.makeText(this, "Password updated successfully", Toast.LENGTH_SHORT).show();
+                                newPasswordInput.setVisibility(View.INVISIBLE);
+                                confirmButton.setVisibility(View.INVISIBLE);
+                                newPasswordInput.setText("");
+                            } else {
+                                Toast.makeText(this, "Failed to update password", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
                 }
-            } else {
-                Toast.makeText(this, "Please enter a new password", Toast.LENGTH_SHORT).show();
+                else
+                {
+                    Toast.makeText(this, "Please enter a new password", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                if (newPasswordInput.getText().toString().equals("DELETE"))
+                {
+                    FirebaseAuth.getInstance().getCurrentUser().delete();
+                    startActivity(new Intent(MainAppActivity.this, LoginActivity.class));
+                }
+                else
+                    Toast.makeText(this, "Type 'DELETE' first! (case sensitive)", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void loadGoalFromFirestore()
     {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        db = FirebaseFirestore.getInstance();
 
         db.collection("users").document(userId).collection("goals").get().addOnSuccessListener(queryDocumentSnapshots ->
         {
@@ -1468,5 +1514,11 @@ public class MainAppActivity extends AppCompatActivity {
                 Log.e("Firestore", "Error saving goal", e);
             });
         }
+    }
+    private void deleteGoalFromFirestore(Goal goal)
+    {
+        db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("users").document(userId).collection("goals").document(goal.getDocID());
+        docRef.delete().addOnSuccessListener(aVoid -> Log.d("Firestore", "Document successfully deleted")).addOnFailureListener(e -> Log.w("Firestore", "Error deleting document", e));
     }
 }
