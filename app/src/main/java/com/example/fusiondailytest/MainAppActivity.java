@@ -1,5 +1,8 @@
 package com.example.fusiondailytest;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.graphics.Paint;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -1313,31 +1317,25 @@ public class MainAppActivity extends AppCompatActivity {
         svChangePasswordButton = findViewById(R.id.settingsPasswordButton);
         svDeleteAccountButton = findViewById(R.id.settingsDeleteButton);
 
-        svBackButton.setOnClickListener(new View.OnClickListener()
-        {
+        svBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 setContentView(R.layout.fragment_dashboard);
                 assignDashboard();
             }
         });
 
-        svSignOutButton.setOnClickListener(new View.OnClickListener()
-        {
+        svSignOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 auth.signOut();
                 startActivity(new Intent(MainAppActivity.this, LoginActivity.class));
             }
         });
 
-        svViewQuestionnaireButton.setOnClickListener(new View.OnClickListener()
-        {
+        svViewQuestionnaireButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 startActivity(new Intent(MainAppActivity.this, QuestionnaireActivity.class));
             }
         });
@@ -1361,12 +1359,17 @@ public class MainAppActivity extends AppCompatActivity {
             }
         });
 
-        svDeleteAccountButton.setOnClickListener(new View.OnClickListener()
-        {
+        svDeleteAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                //TO DO - Create UI for confirmation of deleting password and program functionality, delete data from firebase.
+            public void onClick(View v) {
+                new AlertDialog.Builder(MainAppActivity.this)
+                        .setTitle("Delete Account")
+                        .setMessage("Are you sure you want to delete your account? This action cannot be undone.")
+                        .setPositiveButton("Yes, Delete", (dialog, which) -> {
+                            deleteUserAccount(); //
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
             }
         });
 
@@ -1425,5 +1428,44 @@ public class MainAppActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     Log.e("Firestore", "Error saving goal", e);
                 });
+    }
+    private void deleteUserAccount() {
+        ProgressDialog progressDialog = new ProgressDialog(MainAppActivity.this);
+        progressDialog.setMessage("Deleting your account...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        if (user != null) {
+            String uid = user.getUid();
+
+            // Step 1: Delete Firestore user document
+            db.collection("users").document(uid)
+                    .delete()
+                    .addOnSuccessListener(aVoid -> {
+                        // Step 2: Delete Authentication account
+                        user.delete()
+                                .addOnCompleteListener(task -> {
+                                    progressDialog.dismiss();
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(MainAppActivity.this, "Account deleted successfully", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(MainAppActivity.this, LoginActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    } else {
+                                        Toast.makeText(MainAppActivity.this, "Failed to delete account.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    })
+                    .addOnFailureListener(e -> {
+                        progressDialog.dismiss();
+                        Toast.makeText(MainAppActivity.this, "Failed to delete your data. Please try again.", Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            progressDialog.dismiss();
+            Toast.makeText(MainAppActivity.this, "No user signed in.", Toast.LENGTH_SHORT).show();
+        }
     }
 }
