@@ -26,6 +26,8 @@ import android.view.View;
 import android.util.Log;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+
+import java.text.ParseException;
 import java.util.concurrent.*;
 
 //firebase imports
@@ -341,7 +343,7 @@ public class MainAppActivity extends AppCompatActivity {
 
     private void updateTotalProgress(){
         int totalProgressValue = 0;
-        long furthestGoal = Long.MIN_VALUE;
+        int furthestGoal = Integer.MIN_VALUE;
         long startDate = 0;
         for (Goal goal : goals)
         {
@@ -351,17 +353,21 @@ public class MainAppActivity extends AppCompatActivity {
                 cal.setTime(Objects.requireNonNull(dateFormat.parse(goal.getStartDate())));
                 startDate = cal.getTimeInMillis();
                 cal.setTime(Objects.requireNonNull(dateFormat.parse(goal.getCompletionDate())));
-
+                long totalDays = TimeUnit.MILLISECONDS.toDays(cal.getTimeInMillis() - startDate);
+                long daysPassed = TimeUnit.MILLISECONDS.toDays(localCalendar.getTimeInMillis() - startDate);
+                totalProgressValue = (int)((float)daysPassed / totalDays * 100);
+                totalProgressValue = Math.max(0 , Math.min(totalProgressValue, 100));
+                goal.setTotalProgress(totalProgressValue);
+                db.collection("users").document(userId).collection("goals").document(goal.getDocID()).update("totalProgress", goal.getTotalProgress());
             } catch(Exception e) {
                 Log.e("Goal", "Wrongly Formatted goal completion date", e);
             }
-            furthestGoal = Math.max(cal.getTimeInMillis(), furthestGoal);
+            furthestGoal = Math.max(totalProgressValue, furthestGoal);
         }
-        long totalDays = TimeUnit.MILLISECONDS.toDays(furthestGoal - startDate);
-        long daysPassed = TimeUnit.MILLISECONDS.toDays(localCalendar.getTimeInMillis() - startDate);
 
-        totalProgressValue = (int)((float)daysPassed / totalDays * 100);
-        totalProgressValue = Math.max(0 , Math.min(totalProgressValue, 100));
+
+
+        totalProgressValue = furthestGoal;
         // Update the ProgressBar and display text
         dbTotalProgressBar.setProgress(totalProgressValue);
         dbTotalProgressText.setText("Total Progress: " + totalProgressValue + "%");
@@ -1118,6 +1124,14 @@ public class MainAppActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
+                try
+                {
+                    dateFormat.parse(gcCompletionDate.getText().toString());
+                }
+                catch(ParseException e)
+                {
+                    return;
+                }
                 if(isNewGoal) {
                     goals.add(new Goal(gcNameInput.getText().toString(), gcDescriptionInput.getText().toString(), currentDate, gcCompletionDate.getText().toString()));
                     setContentView(R.layout.fragment_tasks_create);
