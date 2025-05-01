@@ -167,11 +167,9 @@ public class MainAppActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_dashboard);
         loadGoalFromFirestore();
-        // Initialize UI components
-        assignDashboard();
-
         assignQuoteScreenViews();
         showQuoteScreen();
+        assignDashboard();
     }
 
     // Dashboard (db) Functions
@@ -595,20 +593,20 @@ public class MainAppActivity extends AppCompatActivity {
     }
 
     private void showQuoteScreen() {
-        // 1) Hide dashboard & show overlay, but start invisible
+        // Hide dashboard & show overlay, but start invisible
         mainLayout.setVisibility(View.GONE);
         quoteOverlay.setAlpha(0f);
         quoteOverlay.setVisibility(View.VISIBLE);
 
         refreshQuote();
 
-        // 2) Fade the overlay itself in
+        // Fade the overlay itself in
         quoteOverlay.animate()
                 .alpha(1f)
                 .setDuration(500)
                 .start();
 
-        // 3) Now fade in the quote text, author, and refresh button
+        // Now fade in the quote text, author, and refresh button
         quoteTextView.setAlpha(0f);
         authorTextView.setAlpha(0f);
 
@@ -629,12 +627,12 @@ public class MainAppActivity extends AppCompatActivity {
     }
 
     private void hideQuoteScreen() {
-        // 1) Fade out the overlay
+        // Fade out the overlay
         quoteOverlay.animate()
                 .alpha(0f)
                 .setDuration(500)
                 .withEndAction(() -> {
-                    // 2) when the animation ends, hide it and show the dashboard
+                    // when the animation ends, hide it and show the dashboard
                     quoteOverlay.setVisibility(View.GONE);
                     mainLayout.setVisibility(View.VISIBLE);
 
@@ -665,6 +663,105 @@ public class MainAppActivity extends AppCompatActivity {
         quotes.add(new Quote("I have not failed. I've just found 10,000 ways that won't work.", "Thomas A. Edison"));
         quotes.add(new Quote("The mind is everything. What you think you become.", "Buddha"));
         quotes.add(new Quote("The best and most beautiful things in the world cannot be seen or even touched—they must be felt with the heart.", "Helen Keller"));
+        quotes.add(new Quote("Success usually comes to those who are too busy to be looking for it.", "Henry David Thoreau"));
+        quotes.add(new Quote("Don’t watch the clock; do what it does. Keep going.", "Sam Levenson"));
+        quotes.add(new Quote("Keep your eyes on the stars, and your feet on the ground.", "Theodore Roosevelt"));
+        quotes.add(new Quote("The future depends on what you do today.", "Mahatma Gandhi"));
+        quotes.add(new Quote("It does not matter how slowly you go as long as you do not stop.", "Confucius"));
+        quotes.add(new Quote("Everything you’ve ever wanted is on the other side of fear.", "George Addair"));
+        quotes.add(new Quote("Hardships often prepare ordinary people for an extraordinary destiny.", "C.S. Lewis"));
+        quotes.add(new Quote("Believe you can and you’re halfway there.", "Theodore Roosevelt"));
+        quotes.add(new Quote("What we achieve inwardly will change outer reality.", "Plutarch"));
+        quotes.add(new Quote("Either you run the day or the day runs you.", "Jim Rohn"));
+        quotes.add(new Quote("Act as if what you do makes a difference. It does.", "William James"));
+        quotes.add(new Quote("Quality is not an act, it is a habit.", "Aristotle"));
+        quotes.add(new Quote("The secret of getting ahead is getting started.", "Mark Twain"));
+        quotes.add(new Quote("Don’t limit your challenges. Challenge your limits.", "Unknown"));
+        quotes.add(new Quote("Dream big and dare to fail.", "Norman Vaughan"));
+        quotes.add(new Quote("If opportunity doesn’t knock, build a door.", "Milton Berle"));
+        quotes.add(new Quote("You miss 100% of the shots you don’t take.", "Wayne Gretzky"));
+        quotes.add(new Quote("The only person you are destined to become is the person you decide to be.", "Ralph Waldo Emerson"));
+        quotes.add(new Quote("Go confidently in the direction of your dreams. Live the life you have imagined.", "Henry David Thoreau"));
+        quotes.add(new Quote("Start where you are. Use what you have. Do what you can.", "Arthur Ashe"));
+        quotes.add(new Quote("The harder the conflict, the more glorious the triumph.", "Thomas Paine"));
+        quotes.add(new Quote("Don’t be afraid to give up the good to go for the great.", "John D. Rockefeller"));
+        quotes.add(new Quote("I attribute my success to this: I never gave or took any excuse.", "Florence Nightingale"));
+        quotes.add(new Quote("You are never too old to set another goal or to dream a new dream.", "C.S. Lewis"));
+        quotes.add(new Quote("A champion is defined not by their wins but by how they can recover when they fall.", "Serena Williams"));
+        quotes.add(new Quote("It always seems impossible until it’s done.", "Nelson Mandela"));
+        quotes.add(new Quote("Fall seven times, stand up eight.", "Japanese Proverb"));
+        quotes.add(new Quote("When the going gets tough, the tough get going.", "Joe Kennedy"));
+        quotes.add(new Quote("Everything you can imagine is real.", "Pablo Picasso"));
+        quotes.add(new Quote("Believe in yourself and all that you are.", "Christian D. Larson"));
+        quotes.add(new Quote("Don’t count the days, make the days count.", "Muhammad Ali"));
+        quotes.add(new Quote("Impossible is just an opinion.", "Paulo Coelho"));
+        quotes.add(new Quote("The only limit to our realization of tomorrow is our doubts of today.", "Franklin D. Roosevelt"));
+        quotes.add(new Quote("Perseverance is failing 19 times and succeeding the 20th.", "Julie Andrews"));
+        quotes.add(new Quote("What you get by achieving your goals is not as important as what you become by achieving your goals.", "Zig Ziglar"));
+        quotes.add(new Quote("Keep going. Everything you need will come to you at the perfect time.", "Unknown"));
+        quotes.add(new Quote("You don’t have to be great to start, but you have to start to be great.", "Zig Ziglar"));
+        quotes.add(new Quote("Success is not final, failure is not fatal: it is the courage to continue that counts.", "Winston Churchill"));
+        quotes.add(new Quote("The best time to plant a tree was 20 years ago. The second best time is now.", "Chinese Proverb"));
+        quotes.add(new Quote("Don’t wish it were easier. Wish you were better.", "Jim Rohn"));
+        quotes.add(new Quote("Everything has beauty, but not everyone can see.", "Confucius"));
+        quotes.add(new Quote("Do something today that your future self will thank you for.", "Unknown"));
+        quotes.add(new Quote("The key to success is to focus on goals, not obstacles.", "Unknown"));
+        quotes.add(new Quote("Small steps in the right direction can turn out to be the biggest step of your life.", "Unknown"));
+        quotes.add(new Quote("The difference between ordinary and extraordinary is that little extra.", "Jimmy Johnson"));
+        quotes.add(new Quote("Challenges are what make life interesting; overcoming them is what makes life meaningful.", "Joshua Marine"));
+        quotes.add(new Quote("Strength does not come from physical capacity. It comes from indomitable will.", "Mahatma Gandhi"));
+        quotes.add(new Quote("You are braver than you believe, stronger than you seem and smarter than you think.", "A.A. Milne"));
+        quotes.add(new Quote("Opportunities don’t happen, you create them.", "Chris Grosser"));
+        quotes.add(new Quote("Success is walking from failure to failure with no loss of enthusiasm.", "Winston Churchill"));
+        quotes.add(new Quote("Dream big. Start small. Act now.", "Robin Sharma"));
+        quotes.add(new Quote("If you can dream it, you can achieve it.", "Zig Ziglar"));
+        quotes.add(new Quote("Magic is believing in yourself, if you can do that, you can make anything happen.", "Johann Wolfgang von Goethe"));
+        quotes.add(new Quote("The only way to achieve the impossible is to believe it is possible.", "Charles Kingsleigh"));
+        quotes.add(new Quote("The harder I work, the luckier I get.", "Samuel Goldwyn"));
+        quotes.add(new Quote("Don’t stop until you’re proud.", "Unknown"));
+        quotes.add(new Quote("Wake up with determination. Go to bed with satisfaction.", "Unknown"));
+        quotes.add(new Quote("The man who moves a mountain begins by carrying away small stones.", "Confucius"));
+        quotes.add(new Quote("Success usually comes to those who are too busy to be looking for it.", "Henry David Thoreau"));
+        quotes.add(new Quote("Opportunities don’t happen, you create them.", "Chris Grosser"));
+        quotes.add(new Quote("Try not to become a man of success but rather try to become a man of value.", "Albert Einstein"));
+        quotes.add(new Quote("What seems to us as bitter trials are often blessings in disguise.", "Oscar Wilde"));
+        quotes.add(new Quote("It’s not whether you get knocked down; it’s whether you get up.", "Vince Lombardi"));
+        quotes.add(new Quote("The road to freedom is uphill, even if it’s downhill.", "Arnold Schwarzenegger"));
+        quotes.add(new Quote("No masterpiece was ever created by a lazy artist.", "Unknown"));
+        quotes.add(new Quote("Good things come to people who wait, but better things come to those who go out and get them.", "Unknown"));
+        quotes.add(new Quote("Success is the sum of small efforts repeated day in and day out.", "Robert Collier"));
+        quotes.add(new Quote("Positive anything is better than negative nothing.", "Elbert Hubbard"));
+        quotes.add(new Quote("Energy and persistence conquer all things.", "Benjamin Franklin"));
+        quotes.add(new Quote("Life is 10% what happens to us and 90% how we react to it.", "Charles R. Swindoll"));
+        quotes.add(new Quote("I find that the harder I work, the more luck I seem to have.", "Thomas Jefferson"));
+        quotes.add(new Quote("Don’t let yesterday take up too much of today.", "Will Rogers"));
+        quotes.add(new Quote("The only place where success comes before work is in the dictionary.", "Vidal Sassoon"));
+        quotes.add(new Quote("The secret of getting things done is to act!", "Unknown"));
+        quotes.add(new Quote("The best revenge is massive success.", "Frank Sinatra"));
+        quotes.add(new Quote("You must do the thing you think you cannot do.", "Eleanor Roosevelt"));
+        quotes.add(new Quote("Success is liking yourself, liking what you do, and liking how you do it.", "Maya Angelou"));
+        quotes.add(new Quote("There are no shortcuts to any place worth going.", "Beverly Sills"));
+        quotes.add(new Quote("Go the extra mile. It’s never crowded there.", "Dr. Wayne Dyer"));
+        quotes.add(new Quote("Hard work beats talent when talent doesn’t work hard.", "Tim Notke"));
+        quotes.add(new Quote("If you want something you’ve never had, you must be willing to do something you’ve never done.", "Thomas Jefferson"));
+        quotes.add(new Quote("Failure will never overtake me if my determination to succeed is strong enough.", "Og Mandino"));
+        quotes.add(new Quote("You don’t have to be great to start, but you have to start to be great.", "Zig Ziglar"));
+        quotes.add(new Quote("Either you run the day or the day runs you.", "Jim Rohn"));
+        quotes.add(new Quote("The way to get started is to quit talking and start doing.", "Walt Disney"));
+        quotes.add(new Quote("Only put off until tomorrow what you are willing to die having left undone.", "Pablo Picasso"));
+        quotes.add(new Quote("The pain you feel today will be the strength you feel tomorrow.", "Unknown"));
+        quotes.add(new Quote("Don’t wait. The time will never be just right.", "Napoleon Hill"));
+        quotes.add(new Quote("We generate fears while we sit. We overcome them by action.", "Dr. Henry Link"));
+        quotes.add(new Quote("Quality is more important than quantity. One home run is much better than two doubles.", "Steve Jobs"));
+        quotes.add(new Quote("It’s not about ideas. It’s about making ideas happen.", "Scott Belsky"));
+        quotes.add(new Quote("If you are not willing to risk the usual you will have to settle for the ordinary.", "Jim Rohn"));
+        quotes.add(new Quote("Build your own dreams, or someone else will hire you to build theirs.", "Farrah Gray"));
+        quotes.add(new Quote("Do one thing every day that scares you.", "Eleanor Roosevelt"));
+        quotes.add(new Quote("Whenever you see a successful person you only see the public glories, never the private sacrifices.", "Vaibhav Shah"));
+        quotes.add(new Quote("What you lack in talent can be made up with desire, hustle, and giving 110% all the time.", "Don Zimmer"));
+        quotes.add(new Quote("Develop success from failures. Discouragement and failure are two of the surest stepping stones to success.", "Dale Carnegie"));
+        quotes.add(new Quote("You don’t drown by falling in water; you drown by staying there.", "Ed Cole"));
+        quotes.add(new Quote("The distance between insanity and genius is measured only by success.", "Bruce Feirstein"));
 
         int idx = new Random().nextInt(quotes.size());
         return quotes.get(idx);
