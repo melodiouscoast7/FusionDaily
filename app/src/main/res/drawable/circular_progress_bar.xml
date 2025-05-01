@@ -5,17 +5,17 @@
     <shape
         android:innerRadiusRatio="4"
         android:shape="ring"
-        android:thickness="50dp"
+        android:thickness="46dp"
         android:useLevel="true">
 
         <gradient
-            android:angle="0"
-            android:endColor="#7E7E7E"
-            android:startColor="#7E7E7E"
+            android:angle="10"
+            android:endColor="@color/wheel_gray"
+            android:startColor="@color/wheel_gray"
             android:type="sweep"
             android:useLevel="false" />
         <stroke
-            android:width="5dp"
-            android:color="#2A2A2A"/>
+            android:width="1dp"
+            android:color="@color/dark_gray"/>
     </shape>
 </rotate>

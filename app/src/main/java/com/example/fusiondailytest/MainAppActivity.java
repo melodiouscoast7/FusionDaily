@@ -1,7 +1,12 @@
 package com.example.fusiondailytest;
 
 //android imports
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.ViewGroup;
@@ -155,6 +160,8 @@ public class MainAppActivity extends AppCompatActivity {
     private boolean isNewTask = true;
     String currentDate = "";
     String previousDate = "";
+    int targetColor;
+    int prevTarget;
 
     //Calendar Variables
     Calendar localCalendar = Calendar.getInstance();
@@ -169,13 +176,14 @@ public class MainAppActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_dashboard);
+        //load quote screen here
         currentDate = dateFormat.format(localCalendar.getTime());
-
+        targetColor = getResources().getColor(R.color.wheel_gray);
+        prevTarget = getResources().getColor(R.color.wheel_gray);
         Executors.newSingleThreadExecutor().execute(() -> {
-            loadGoalFromFirestore();
+            loadFirestoreData();
 
-            // Once data is loaded, switch to the main UI
+            // Once data is loaded, load quote before switching to main dashboard
             runOnUiThread(() ->
             {
                 setContentView(R.layout.fragment_dashboard);
@@ -360,6 +368,7 @@ public class MainAppActivity extends AppCompatActivity {
 
     private void updateDailyProgress()
     {
+        //daily progress logic
         int dailyProgressValue = 0;
         int totalTasks = 0, completedTasks = 0;
         for(int i = 0; i < goals.size(); i++)
@@ -373,11 +382,43 @@ public class MainAppActivity extends AppCompatActivity {
         }
         if (totalTasks > 0)
             dailyProgressValue = (int)(((float) completedTasks / totalTasks) * 100);
-        // Update the ProgressBar and display text
 
         dailyProgressValue = Math.max(0 , Math.min(dailyProgressValue, 100));
-        dbDailyProgressBar.setProgress(dailyProgressValue);
-        dbDailyProgressText.setText(dailyProgressValue + "% Complete");
+
+
+        //daily progress animations
+        ValueAnimator progressAnimator = ValueAnimator.ofInt(dbDailyProgressBar.getProgress(), dailyProgressValue);
+        progressAnimator.setDuration(1000);
+        progressAnimator.addUpdateListener(animation -> {
+            int animatedValue = (int) animation.getAnimatedValue();
+            dbDailyProgressBar.setProgress(animatedValue);
+            dbDailyProgressText.setText(animatedValue + "% Complete");
+        });
+        progressAnimator.start();
+
+
+        if (dailyProgressValue < 100)
+        {
+            prevTarget = targetColor;
+            targetColor = (int) new ArgbEvaluator().evaluate((float)dailyProgressValue/100, getResources().getColor(R.color.wheel_gray), getResources().getColor(R.color.accentGreen));
+        }
+        else
+        {
+            prevTarget = targetColor;
+            targetColor = getResources().getColor(R.color.accentBlue);
+        }
+
+
+        ValueAnimator colorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), prevTarget, targetColor);
+        colorAnimator.setDuration(1000);
+        colorAnimator.addUpdateListener(animator -> {
+            int animatedColor = (int) animator.getAnimatedValue();
+            dbDailyProgressBar.getProgressDrawable().setTint(animatedColor);
+            dbDailyProgressText.setTextColor(animatedColor);
+        });
+
+        colorAnimator.start();
+
     }
 
     private void updateDBDailyStreak()
@@ -1470,9 +1511,10 @@ public class MainAppActivity extends AppCompatActivity {
         });
     }
 
-    private void loadGoalFromFirestore()
+    private void loadFirestoreData()
     {
-        try {
+        try
+        {
             // Load previous date
             Task<DocumentSnapshot> userTask = db.collection("users").document(userId).get();
             DocumentSnapshot userSnapshot = Tasks.await(userTask); // Wait for Firestore response
@@ -1489,7 +1531,8 @@ public class MainAppActivity extends AppCompatActivity {
             // Load goals
             Task<QuerySnapshot> goalsTask = db.collection("users").document(userId).collection("goals").get();
             QuerySnapshot goalsSnapshot = Tasks.await(goalsTask); // Wait for Firestore response
-            for (DocumentSnapshot doc : goalsSnapshot.getDocuments()) {
+            for (DocumentSnapshot doc : goalsSnapshot.getDocuments())
+            {
                 String name = doc.getString("name");
                 String description = doc.getString("description");
                 String startDate = doc.getString("startDate");
@@ -1500,8 +1543,10 @@ public class MainAppActivity extends AppCompatActivity {
                 Goal goal = new Goal(name, description, startDate, completionDate, totalProgress, dailyStreak, docID);
 
                 // Load tasks inside each goal
-                for (int i = 0; i < 5; i++) {
-                    if (doc.contains("task" + (i + 1))) {
+                for (int i = 0; i < 5; i++)
+                {
+                    if (doc.contains("task" + (i + 1)))
+                    {
                         Map<String, Object> taskMap = (Map<String, Object>) doc.get("task" + (i + 1));
                         String taskName = (String) taskMap.get("name");
                         String taskDescription = (String) taskMap.get("description");
@@ -1514,7 +1559,9 @@ public class MainAppActivity extends AppCompatActivity {
 
             Log.d("Firestore", "Goals loaded: " + goals.size());
 
-        } catch (ExecutionException | InterruptedException e) {
+        }
+        catch (ExecutionException | InterruptedException e)
+        {
             Log.e("Firestore", "Error loading data from Firestore", e);
         }
     }
