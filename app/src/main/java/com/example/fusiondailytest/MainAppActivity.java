@@ -50,6 +50,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import com.example.Logic.*;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -158,7 +159,6 @@ public class MainAppActivity extends AppCompatActivity {
     private boolean isFromGoalView = false;
     private boolean isNewGoal = true;
     private boolean isNewTask = true;
-    private boolean isNewDay = false;
     String currentDate = "";
     String previousDate = "";
     int targetColor;
@@ -427,18 +427,10 @@ public class MainAppActivity extends AppCompatActivity {
     {
         if(!goals.isEmpty())
         {
-            boolean tasksDone = true;
-            int compare = Integer.MAX_VALUE;
+            updateStreak(goals.get(goalNumber));
+            int compare = Integer.MIN_VALUE;
             for (Goal goal : goals) {
-                if(!checkStreak(goal))
-                    tasksDone = false;
-                compare = Math.min(compare, goal.getDailyStreak());
-            }
-
-            if(tasksDone)
-            {
-                isNewDay = false;
-                db.collection("users").document(userId).update("isNewDay", isNewDay);
+                compare = Math.max(compare, goal.getDailyStreak());
             }
 
             String output = "" + compare;
@@ -446,28 +438,29 @@ public class MainAppActivity extends AppCompatActivity {
         }
     }
 
-    private boolean checkStreak(Goal goal)
+    private void updateStreak(Goal goal)
     {
         boolean isComplete = false;
         if(goal.getTaskAmount() > 0) {
             isComplete = true;
-            for (int i = 0; i < goals.get(goalNumber).getTaskAmount(); i++)
-                if (!goals.get(goalNumber).getTask(i).isComplete())
+            for (int i = 0; i < goal.getTaskAmount(); i++)
+                if (!goal.getTask(i).isComplete())
                     isComplete = false;
         }
 
-        if(isComplete && isNewDay)
+        if(isComplete && !goal.isCompletedToday())
         {
-            goal.setDailyStreak(goals.get(goalNumber).getDailyStreak() + 1);
+            goal.setDailyStreak(goal.getDailyStreak() + 1);
             db.collection("users").document(userId).collection("goals").document(goal.getDocID()).update("dailyStreak", goal.getDailyStreak());
+            goal.setCompletedToday(true);
+            db.collection("users").document(userId).collection("goals").document(goal.getDocID()).update("completedToday", goal.isCompletedToday());
         }
-        else if(goals.get(goalNumber).getDailyStreak() > 0 && !isNewDay && !isComplete) {
-            goals.get(goalNumber).setDailyStreak(goals.get(goalNumber).getDailyStreak() - 1);
+        else if(goal.getDailyStreak() > 0 && goal.isCompletedToday() && !isComplete) {
+            goal.setDailyStreak(goal.getDailyStreak() - 1);
             db.collection("users").document(userId).collection("goals").document(goal.getDocID()).update("dailyStreak", goal.getDailyStreak());
-            isNewDay = true;
-            db.collection("users").document(userId).update("isNewDay", isNewDay);
+            goal.setCompletedToday(false);
+            db.collection("users").document(userId).collection("goals").document(goal.getDocID()).update("completedToday", goal.isCompletedToday());
         }
-        return isComplete;
     }
 
     private void checkDayResetter()
@@ -475,10 +468,9 @@ public class MainAppActivity extends AppCompatActivity {
         if(!previousDate.equals(currentDate))
         {
             //check if any tasks are incomplete, if so, reset that goal's daily streak, then set all task completions to false
-            isNewDay = true;
-            db.collection("users").document(userId).update("isNewDay", isNewDay);
             for (Goal goal : goals)
             {
+                goal.setCompletedToday(false);
                 for (int i = 0; i < goal.getTaskAmount(); i++)
                 {
                     if(!goal.getTask(i).isComplete())
@@ -1548,7 +1540,6 @@ public class MainAppActivity extends AppCompatActivity {
             DocumentSnapshot userDateSnapshot = Tasks.await(userDateTask); // Wait for Firestore response
             if (userDateSnapshot.exists()) {
                 previousDate = userDateSnapshot.getString("currentDate");
-                isNewDay = userDateSnapshot.getBoolean("isNewDay");
             }
 
             // Update current date in Firestore
@@ -1558,7 +1549,7 @@ public class MainAppActivity extends AppCompatActivity {
             Tasks.await(updateTask); // Wait for update completion
 
             // Load goals
-            Task<QuerySnapshot> goalsTask = db.collection("users").document(userId).collection("goals").get();
+            Task<QuerySnapshot> goalsTask = db.collection("users").document(userId).collection("goals").orderBy("startDate", Query.Direction.ASCENDING).get();
             QuerySnapshot goalsSnapshot = Tasks.await(goalsTask); // Wait for Firestore response
             for (DocumentSnapshot doc : goalsSnapshot.getDocuments())
             {
@@ -1568,8 +1559,9 @@ public class MainAppActivity extends AppCompatActivity {
                 String completionDate = doc.getString("completionDate");
                 int totalProgress = doc.getLong("totalProgress").intValue();
                 int dailyStreak = doc.getLong("dailyStreak").intValue();
+                boolean dailyCompletion = doc.getBoolean("completedToday");
                 String docID = doc.getId();
-                Goal goal = new Goal(name, description, startDate, completionDate, totalProgress, dailyStreak, docID);
+                Goal goal = new Goal(name, description, startDate, completionDate, totalProgress, dailyStreak, dailyCompletion, docID);
 
                 // Load tasks inside each goal
                 for (int i = 0; i < 5; i++)
@@ -1609,6 +1601,7 @@ public class MainAppActivity extends AppCompatActivity {
         goalMap.put("startDate", goal.getStartDate());
         goalMap.put("completionDate", goal.getCompletionDate());
         goalMap.put("totalProgress", goal.getTotalProgress());
+        goalMap.put("completedToday", goal.isCompletedToday());
         goalMap.put("dailyStreak", goal.getDailyStreak());
         for(int i = 0; i < goal.getTaskAmount(); i++)
         {

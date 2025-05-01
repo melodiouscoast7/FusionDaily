@@ -13,11 +13,11 @@ public class Task {
         isComplete = false;
     }
 
-    public Task(String _name, String _description, boolean _icComplete)
+    public Task(String _name, String _description, boolean _isComplete)
     {
         name = _name;
         description = _description;
-        isComplete = _icComplete;
+        isComplete = _isComplete;
     }
 
     public String getName()

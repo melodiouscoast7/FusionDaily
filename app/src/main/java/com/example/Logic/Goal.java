@@ -4,6 +4,7 @@ public class Goal {
 
     private String name, description, completionDate, startDate, docID;
     private int totalProgress, dailyStreak;
+    private boolean completedToday;
     private Vector<Task> dailyTasks = new Vector<Task>();
 
     public Goal(String _name, String _description, String _startDate, String _completionDate) {
@@ -14,15 +15,17 @@ public class Goal {
         totalProgress = 0;
         dailyStreak = 0;
         docID = "";
+        completedToday = false;
     }
 
-    public Goal(String _name, String _description, String _startDate, String _completionDate, int _totalProgress, int _dailyStreak, String _docID) {
+    public Goal(String _name, String _description, String _startDate, String _completionDate, int _totalProgress, int _dailyStreak, boolean _completedToday, String _docID) {
         startDate = _startDate;
         completionDate = _completionDate;
         name = _name;
         description = _description;
         totalProgress = _totalProgress;
         dailyStreak = _dailyStreak;
+        completedToday = _completedToday;
         docID = _docID;
     }
 
@@ -99,5 +102,15 @@ public class Goal {
     public String getStartDate()
     {
         return startDate;
+    }
+
+    public boolean isCompletedToday()
+    {
+        return completedToday;
+    }
+
+    public void setCompletedToday(boolean _completedToday)
+    {
+        completedToday = _completedToday;
     }
 }
