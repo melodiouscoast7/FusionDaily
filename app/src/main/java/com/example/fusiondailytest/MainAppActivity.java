@@ -713,26 +713,6 @@ public class MainAppActivity extends AppCompatActivity {
         header.setText(text);
     }
 
-    // Need to get goals from database soon
-    private void loadGoals() {
-        goals.clear();
-        Goal g1 = new Goal("Fitness",     "Stay fit",       "2025/05/15");
-        g1.setDailyStreak(3);
-        goals.add(g1);
-        Goal g2 = new Goal("Reading",     "Read books",     "2025/06/01");
-        g2.setDailyStreak(7);
-        goals.add(g2);
-        Goal g3 = new Goal("Meditation",  "Mindfulness",    "2025/05/30");
-        g3.setDailyStreak(1);
-        goals.add(g3);
-        Goal g4 = new Goal("Coding",      "Practice daily", "2025/07/10");
-        g4.setDailyStreak(10);
-        goals.add(g4);
-        Goal g5 = new Goal("Diet",        "Healthy eating", "2025/05/20");
-        g5.setDailyStreak(5);
-        goals.add(g5);
-    }
-
     private void setupGoalButtons() {
         LinearLayout container = findViewById(R.id.goalButtonsContainer);
         container.removeAllViews();
@@ -767,7 +747,7 @@ public class MainAppActivity extends AppCompatActivity {
         Calendar goalCal = Calendar.getInstance();
         try {
             String[] p = goal.getCompletionDate().split("/");
-            goalCal.set(Integer.parseInt(p[0]), Integer.parseInt(p[1]) - 1, Integer.parseInt(p[2]));
+            goalCal.set(Integer.parseInt(p[2]), Integer.parseInt(p[0]) - 1, Integer.parseInt(p[1]));
         } catch (Exception e) { /* use today on parse fail */ }
         zeroTime(goalCal);
 
