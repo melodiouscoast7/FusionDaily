@@ -191,6 +191,8 @@ public class MainAppActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //load quote screen here
+        setContentView(R.layout.fragment_dashboard);
+        showQuoteScreen();
         currentDate = dateFormat.format(localCalendar.getTime());
         targetColor = getResources().getColor(R.color.wheel_gray);
         prevTarget = getResources().getColor(R.color.wheel_gray);
@@ -199,8 +201,6 @@ public class MainAppActivity extends AppCompatActivity {
             //Happens once data is loaded, load quote before switching to main dashboard
             runOnUiThread(() ->
             {
-                setContentView(R.layout.fragment_dashboard);
-                showQuoteScreen();
                 checkDayResetter();
                 assignDashboard();
             });
@@ -927,7 +927,14 @@ public class MainAppActivity extends AppCompatActivity {
 
     private void fetchPersonalizedResources()
     {
-        String prompt = "Find three reputable online resources (URLs only) to help achieve a random goal. Format as one URL per line, No other text, (Top Priority) No number list, and just provide the home page URLs.";
+        StringBuilder goalNames = new StringBuilder();
+
+         for (Goal goal : goals) {
+            goalNames.append(goal.getName()).append(", ");
+         }
+
+        String prompt = "Find three reputable online resources (URLs only) that can help a user with the following goals: " + goalNames.toString() + ". Format as one URL per line, No other text, (Top Priority) No number list, and just provide the home page URLs.";
+
         new OpenAIManager().sendPrompt(prompt, new OpenAIManager.OpenAIResponseCallback()
         {
             @Override
