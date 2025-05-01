@@ -614,7 +614,8 @@ public class MainAppActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                saveGoalToFirestore(goals.get(goalNumber));
+                for(Goal goal : goals)
+                    saveGoalToFirestore(goal);
                 tdLayout.setVisibility(View.GONE);
                 tdExitUIButton.setVisibility(View.GONE);
                 dbResourcesButton.setVisibility(View.VISIBLE);
