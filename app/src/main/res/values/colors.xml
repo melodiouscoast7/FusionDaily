@@ -11,6 +11,7 @@
     // Dead Colors
     <color name="dead_black">#3D3E48</color>
     <color name="grey">#A29C9C</color>
+    <color name="wheel_gray">#7E7E7E</color>
     <color name="lighter_grey">#D3D3D3</color>
     <color name="dark_gray">#2A2A2A</color>
 

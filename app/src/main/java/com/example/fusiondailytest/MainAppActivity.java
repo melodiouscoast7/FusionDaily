@@ -1,28 +1,45 @@
 package com.example.fusiondailytest;
 
+//android imports
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.InputType;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.graphics.Paint;
-
+import android.widget.Button;
+import android.net.Uri;
+import android.view.LayoutInflater;
+import android.text.util.Linkify;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
-
 import android.view.View;
+import android.util.Log;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 
+import java.text.ParseException;
+import java.util.concurrent.*;
+
+//firebase imports
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import android.widget.Button;
 
+//java imports
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -30,18 +47,17 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Vector;
-import com.example.Logic.*;
 
-import android.net.Uri;
-import android.view.LayoutInflater;
-import android.text.util.Linkify;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+import com.example.Logic.*;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import org.json.JSONObject;
-import android.util.Log;
+
 
 public class MainAppActivity extends AppCompatActivity {
 
@@ -118,7 +134,8 @@ public class MainAppActivity extends AppCompatActivity {
     private Button gvCreateButton;
     private Button gvEditGoalButton;
     private TextView gvDailyStreakText;
-    private TextView gvDateText;
+    private TextView gvStartDateText;
+    private TextView gvEndDateText;
     private TextView gvGoalTitleText;
     private TextView gvGoalDescriptionText;
 
@@ -129,6 +146,7 @@ public class MainAppActivity extends AppCompatActivity {
     private TextView gcNameInput;
     private TextView gcDescriptionInput;
     private TextView gcCompletionDate;
+
 
     //Task Create (tc) Functions
     private Button tcCancelButton;
@@ -143,18 +161,14 @@ public class MainAppActivity extends AppCompatActivity {
     private boolean isFromGoalView = false;
     private boolean isNewGoal = true;
     private boolean isNewTask = true;
-
-    //Quote Screen Variables
-    private View mainLayout;
-    private View quoteOverlay;
-    private TextView quoteTextView;
-    private TextView authorTextView;
-    private Handler quoteHandler;
-    private Runnable hideQuoteRunnable;
+    String currentDate = "";
+    String previousDate = "";
+    int targetColor;
+    int prevTarget;
 
     //Calendar Variables
     Calendar localCalendar = Calendar.getInstance();
-
+    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
     final private String day = "" + localCalendar.get(Calendar.DATE);
     final public int month = localCalendar.get(Calendar.MONTH);
     private List<YearMonth> monthsList;
@@ -165,11 +179,21 @@ public class MainAppActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_dashboard);
-        loadGoalFromFirestore();
-        assignQuoteScreenViews();
-        showQuoteScreen();
-        assignDashboard();
+        //load quote screen here
+        currentDate = dateFormat.format(localCalendar.getTime());
+        targetColor = getResources().getColor(R.color.wheel_gray);
+        prevTarget = getResources().getColor(R.color.wheel_gray);
+        Executors.newSingleThreadExecutor().execute(() -> {
+            loadFirestoreData();
+
+            //Happens once data is loaded, load quote before switching to main dashboard
+            runOnUiThread(() ->
+            {
+                setContentView(R.layout.fragment_dashboard);
+                checkDayResetter();
+                assignDashboard();
+            });
+        });
     }
 
     // Dashboard (db) Functions
@@ -205,8 +229,6 @@ public class MainAppActivity extends AppCompatActivity {
         dbToDoLabels.add(findViewById(R.id.todoButtonText3));
         dbToDoLabels.add(findViewById(R.id.todoButtonText4));
         dbToDoLabels.add(findViewById(R.id.todoButtonText5));
-
-
 
         dbToDoButtons.get(0).setOnClickListener(new View.OnClickListener()
         {
@@ -311,6 +333,7 @@ public class MainAppActivity extends AppCompatActivity {
                 assignResourceView();
             }
         });
+
         updateTotalProgress();
         updateDailyProgress();
         updateDBDailyStreak();
@@ -318,20 +341,42 @@ public class MainAppActivity extends AppCompatActivity {
         assignToDoUI();
     }
 
-    private void updateTotalProgress()
-    {
+    private void updateTotalProgress(){
         int totalProgressValue = 0;
-        if (totalProgressValue > 100)
+        int furthestGoal = Integer.MIN_VALUE;
+        long startDate = 0;
+        for (Goal goal : goals)
         {
-            totalProgressValue = 100; // Cap progress at 100%
+            Calendar cal = Calendar.getInstance();
+            try
+            {
+                cal.setTime(Objects.requireNonNull(dateFormat.parse(goal.getStartDate())));
+                startDate = cal.getTimeInMillis();
+                cal.setTime(Objects.requireNonNull(dateFormat.parse(goal.getCompletionDate())));
+                long totalDays = TimeUnit.MILLISECONDS.toDays(cal.getTimeInMillis() - startDate);
+                long daysPassed = TimeUnit.MILLISECONDS.toDays(localCalendar.getTimeInMillis() - startDate);
+                totalProgressValue = (int)((float)daysPassed / totalDays * 100);
+                totalProgressValue = Math.max(0 , Math.min(totalProgressValue, 100));
+                goal.setTotalProgress(totalProgressValue);
+                db.collection("users").document(userId).collection("goals").document(goal.getDocID()).update("totalProgress", goal.getTotalProgress());
+            } catch(Exception e) {
+                Log.e("Goal", "Wrongly Formatted goal completion date", e);
+            }
+            furthestGoal = Math.max(totalProgressValue, furthestGoal);
         }
+
+
+
+        totalProgressValue = furthestGoal;
         // Update the ProgressBar and display text
         dbTotalProgressBar.setProgress(totalProgressValue);
         dbTotalProgressText.setText("Total Progress: " + totalProgressValue + "%");
     }
 
+
     private void updateDailyProgress()
     {
+        //daily progress logic
         int dailyProgressValue = 0;
         int totalTasks = 0, completedTasks = 0;
         for(int i = 0; i < goals.size(); i++)
@@ -345,39 +390,104 @@ public class MainAppActivity extends AppCompatActivity {
         }
         if (totalTasks > 0)
             dailyProgressValue = (int)(((float) completedTasks / totalTasks) * 100);
-        // Update the ProgressBar and display text
-        dbDailyProgressBar.setProgress(dailyProgressValue);
-        dbDailyProgressText.setText(dailyProgressValue + "% Complete");
+
+        dailyProgressValue = Math.max(0 , Math.min(dailyProgressValue, 100));
+
+
+        //daily progress animations
+        ValueAnimator progressAnimator = ValueAnimator.ofInt(dbDailyProgressBar.getProgress(), dailyProgressValue);
+        progressAnimator.setDuration(1000);
+        progressAnimator.addUpdateListener(animation -> {
+            int animatedValue = (int) animation.getAnimatedValue();
+            dbDailyProgressBar.setProgress(animatedValue);
+            dbDailyProgressText.setText(animatedValue + "% Complete");
+        });
+        progressAnimator.start();
+
+
+        if (dailyProgressValue < 100)
+        {
+            prevTarget = targetColor;
+            targetColor = (int) new ArgbEvaluator().evaluate((float)dailyProgressValue/100, getResources().getColor(R.color.wheel_gray), getResources().getColor(R.color.accentGreen));
+        }
+        else
+        {
+            prevTarget = targetColor;
+            targetColor = getResources().getColor(R.color.accentBlue);
+        }
+
+
+        ValueAnimator colorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), prevTarget, targetColor);
+        colorAnimator.setDuration(1000);
+        colorAnimator.addUpdateListener(animator -> {
+            int animatedColor = (int) animator.getAnimatedValue();
+            dbDailyProgressBar.getProgressDrawable().setTint(animatedColor);
+            dbDailyProgressText.setTextColor(animatedColor);
+        });
+
+        colorAnimator.start();
+
     }
 
     private void updateDBDailyStreak()
     {
         if(!goals.isEmpty())
         {
-            int compare = Integer.MAX_VALUE;
+            updateStreak(goals.get(goalNumber));
+            int compare = Integer.MIN_VALUE;
             for (Goal goal : goals) {
-                if(goal.getDailyStreak() < compare)
-                    compare = goal.getDailyStreak();
+                compare = Math.max(compare, goal.getDailyStreak());
             }
+
             String output = "" + compare;
             dbDailyStreakText.setText(output);
         }
     }
 
-    private void checkStreak()
+    private void updateStreak(Goal goal)
     {
         boolean isComplete = false;
-        if(goals.get(goalNumber).getTaskAmount() > 0) {
+        if(goal.getTaskAmount() > 0) {
             isComplete = true;
-            for (int i = 0; i < goals.get(goalNumber).getTaskAmount(); i++)
-                if (!goals.get(goalNumber).getTask(i).isComplete())
+            for (int i = 0; i < goal.getTaskAmount(); i++)
+                if (!goal.getTask(i).isComplete())
                     isComplete = false;
         }
-        if(isComplete)
-            goals.get(goalNumber).setDailyStreak(goals.get(goalNumber).getDailyStreak() + 1);
-        else if(goals.get(goalNumber).getDailyStreak() > 0)
-            goals.get(goalNumber).setDailyStreak(goals.get(goalNumber).getDailyStreak() - 1);
-        updateDBDailyStreak();
+
+        if(isComplete && !goal.isCompletedToday())
+        {
+            goal.setDailyStreak(goal.getDailyStreak() + 1);
+            db.collection("users").document(userId).collection("goals").document(goal.getDocID()).update("dailyStreak", goal.getDailyStreak());
+            goal.setCompletedToday(true);
+            db.collection("users").document(userId).collection("goals").document(goal.getDocID()).update("completedToday", goal.isCompletedToday());
+        }
+        else if(goal.getDailyStreak() > 0 && goal.isCompletedToday() && !isComplete) {
+            goal.setDailyStreak(goal.getDailyStreak() - 1);
+            db.collection("users").document(userId).collection("goals").document(goal.getDocID()).update("dailyStreak", goal.getDailyStreak());
+            goal.setCompletedToday(false);
+            db.collection("users").document(userId).collection("goals").document(goal.getDocID()).update("completedToday", goal.isCompletedToday());
+        }
+    }
+
+    private void checkDayResetter()
+    {
+        if(!previousDate.equals(currentDate))
+        {
+            //check if any tasks are incomplete, if so, reset that goal's daily streak, then set all task completions to false
+            for (Goal goal : goals)
+            {
+                goal.setCompletedToday(false);
+                for (int i = 0; i < goal.getTaskAmount(); i++)
+                {
+                    if(!goal.getTask(i).isComplete())
+                    {
+                        goal.setDailyStreak(0);
+                    }
+                    goal.getTask(i).setCompletion(false);
+                }
+                saveGoalToFirestore(goal);
+            }
+        }
     }
 
     private void updateToDoButtons()
@@ -443,9 +553,10 @@ public class MainAppActivity extends AppCompatActivity {
                     goals.get(goalNumber).getTask(0).setCompletion(false);
                     tdTaskTitles.get(0).setPaintFlags(tdTaskTitles.get(0).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
+                db.collection("users").document(userId).collection("goals").document(goals.get(goalNumber).getDocID()).update("task" + 1 + ".isComplete", goals.get(goalNumber).getTask(0).isComplete());
                 updateDailyProgress();
                 updateTotalProgress();
-                checkStreak();
+                updateDBDailyStreak();
             }
         });
 
@@ -461,9 +572,10 @@ public class MainAppActivity extends AppCompatActivity {
                     goals.get(goalNumber).getTask(1).setCompletion(false);
                     tdTaskTitles.get(1).setPaintFlags(tdTaskTitles.get(1).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
+                db.collection("users").document(userId).collection("goals").document(goals.get(goalNumber).getDocID()).update("task" + 2 + ".isComplete", goals.get(goalNumber).getTask(1).isComplete());
                 updateDailyProgress();
                 updateTotalProgress();
-                checkStreak();
+                updateDBDailyStreak();
             }
         });
 
@@ -479,9 +591,10 @@ public class MainAppActivity extends AppCompatActivity {
                     goals.get(goalNumber).getTask(2).setCompletion(false);
                     tdTaskTitles.get(2).setPaintFlags(tdTaskTitles.get(2).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
+                db.collection("users").document(userId).collection("goals").document(goals.get(goalNumber).getDocID()).update("task" + 3 + ".isComplete", goals.get(goalNumber).getTask(2).isComplete());
                 updateDailyProgress();
                 updateTotalProgress();
-                checkStreak();
+                updateDBDailyStreak();
             }
         });
 
@@ -497,9 +610,10 @@ public class MainAppActivity extends AppCompatActivity {
                     goals.get(goalNumber).getTask(3).setCompletion(false);
                     tdTaskTitles.get(3).setPaintFlags(tdTaskTitles.get(3).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
+                db.collection("users").document(userId).collection("goals").document(goals.get(goalNumber).getDocID()).update("task" + 4 + ".isComplete", goals.get(goalNumber).getTask(3).isComplete());
                 updateDailyProgress();
                 updateTotalProgress();
-                checkStreak();
+                updateDBDailyStreak();
             }
         });
 
@@ -515,9 +629,10 @@ public class MainAppActivity extends AppCompatActivity {
                     goals.get(goalNumber).getTask(4).setCompletion(false);
                     tdTaskTitles.get(4).setPaintFlags(tdTaskTitles.get(4).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
+                db.collection("users").document(userId).collection("goals").document(goals.get(goalNumber).getDocID()).update("task" + 5 + ".isComplete", goals.get(goalNumber).getTask(4).isComplete());
                 updateDailyProgress();
                 updateTotalProgress();
-                checkStreak();
+                updateDBDailyStreak();
             }
         });
 
@@ -526,7 +641,6 @@ public class MainAppActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                saveGoalToFirestore(goals.get(goalNumber));
                 tdLayout.setVisibility(View.GONE);
                 tdExitUIButton.setVisibility(View.GONE);
                 dbResourcesButton.setVisibility(View.VISIBLE);
@@ -577,194 +691,6 @@ public class MainAppActivity extends AppCompatActivity {
         dbResourcesButton.setVisibility(View.GONE);
         dbGoalsButton.setVisibility(View.GONE);
         tdLayout.setVisibility(View.VISIBLE);
-    }
-
-    //Quote Screen Functions
-    private void assignQuoteScreenViews() {
-        // after assignDashboard() in onCreate():
-        mainLayout      = findViewById(R.id.mainLayout);
-        quoteOverlay    = findViewById(R.id.quoteOverlay);
-        quoteTextView   = findViewById(R.id.quoteTextView);
-        authorTextView  = findViewById(R.id.authorTextView);
-
-        // prepare handler for auto-hide
-        quoteHandler      = new Handler(Looper.getMainLooper());
-        hideQuoteRunnable = this::hideQuoteScreen;
-    }
-
-    private void showQuoteScreen() {
-        // Hide dashboard & show overlay, but start invisible
-        mainLayout.setVisibility(View.GONE);
-        quoteOverlay.setAlpha(0f);
-        quoteOverlay.setVisibility(View.VISIBLE);
-
-        refreshQuote();
-
-        // Fade the overlay itself in
-        quoteOverlay.animate()
-                .alpha(1f)
-                .setDuration(500)
-                .start();
-
-        // Now fade in the quote text, author, and refresh button
-        quoteTextView.setAlpha(0f);
-        authorTextView.setAlpha(0f);
-
-        quoteTextView.animate()
-                .alpha(1f)
-                .setStartDelay(300)
-                .setDuration(500)
-                .start();
-
-        authorTextView.animate()
-                .alpha(1f)
-                .setStartDelay(500)
-                .setDuration(500)
-                .start();
-
-        // Auto-hide after 5 seconds (with fade-out)
-        quoteHandler.postDelayed(hideQuoteRunnable, 5000);
-    }
-
-    private void hideQuoteScreen() {
-        // Fade out the overlay
-        quoteOverlay.animate()
-                .alpha(0f)
-                .setDuration(500)
-                .withEndAction(() -> {
-                    // when the animation ends, hide it and show the dashboard
-                    quoteOverlay.setVisibility(View.GONE);
-                    mainLayout.setVisibility(View.VISIBLE);
-
-                    // reset overlay alpha for next time
-                    quoteOverlay.setAlpha(1f);
-                })
-                .start();
-    }
-
-    private void refreshQuote() {
-        Quote newQuote = getRandomQuote();
-        quoteTextView.setText("“" + newQuote.getQuote() + "”");
-        authorTextView.setText("- " + newQuote.getAuthor());
-    }
-
-    // Simple in-activity Quote class + random picker
-    private static class Quote {
-        private final String quote, author;
-        Quote(String q, String a) { quote = q; author = a; }
-        String getQuote()  { return quote; }
-        String getAuthor() { return author; }
-    }
-
-    private Quote getRandomQuote() {
-        List<Quote> quotes = new ArrayList<>();
-        quotes.add(new Quote("The only way to do great work is to love what you do.", "Steve Jobs"));
-        quotes.add(new Quote("Strive not to be a success, but rather to be of value.", "Albert Einstein"));
-        quotes.add(new Quote("I have not failed. I've just found 10,000 ways that won't work.", "Thomas A. Edison"));
-        quotes.add(new Quote("The mind is everything. What you think you become.", "Buddha"));
-        quotes.add(new Quote("The best and most beautiful things in the world cannot be seen or even touched—they must be felt with the heart.", "Helen Keller"));
-        quotes.add(new Quote("Success usually comes to those who are too busy to be looking for it.", "Henry David Thoreau"));
-        quotes.add(new Quote("Don’t watch the clock; do what it does. Keep going.", "Sam Levenson"));
-        quotes.add(new Quote("Keep your eyes on the stars, and your feet on the ground.", "Theodore Roosevelt"));
-        quotes.add(new Quote("The future depends on what you do today.", "Mahatma Gandhi"));
-        quotes.add(new Quote("It does not matter how slowly you go as long as you do not stop.", "Confucius"));
-        quotes.add(new Quote("Everything you’ve ever wanted is on the other side of fear.", "George Addair"));
-        quotes.add(new Quote("Hardships often prepare ordinary people for an extraordinary destiny.", "C.S. Lewis"));
-        quotes.add(new Quote("Believe you can and you’re halfway there.", "Theodore Roosevelt"));
-        quotes.add(new Quote("What we achieve inwardly will change outer reality.", "Plutarch"));
-        quotes.add(new Quote("Either you run the day or the day runs you.", "Jim Rohn"));
-        quotes.add(new Quote("Act as if what you do makes a difference. It does.", "William James"));
-        quotes.add(new Quote("Quality is not an act, it is a habit.", "Aristotle"));
-        quotes.add(new Quote("The secret of getting ahead is getting started.", "Mark Twain"));
-        quotes.add(new Quote("Don’t limit your challenges. Challenge your limits.", "Unknown"));
-        quotes.add(new Quote("Dream big and dare to fail.", "Norman Vaughan"));
-        quotes.add(new Quote("If opportunity doesn’t knock, build a door.", "Milton Berle"));
-        quotes.add(new Quote("You miss 100% of the shots you don’t take.", "Wayne Gretzky"));
-        quotes.add(new Quote("The only person you are destined to become is the person you decide to be.", "Ralph Waldo Emerson"));
-        quotes.add(new Quote("Go confidently in the direction of your dreams. Live the life you have imagined.", "Henry David Thoreau"));
-        quotes.add(new Quote("Start where you are. Use what you have. Do what you can.", "Arthur Ashe"));
-        quotes.add(new Quote("The harder the conflict, the more glorious the triumph.", "Thomas Paine"));
-        quotes.add(new Quote("Don’t be afraid to give up the good to go for the great.", "John D. Rockefeller"));
-        quotes.add(new Quote("I attribute my success to this: I never gave or took any excuse.", "Florence Nightingale"));
-        quotes.add(new Quote("You are never too old to set another goal or to dream a new dream.", "C.S. Lewis"));
-        quotes.add(new Quote("A champion is defined not by their wins but by how they can recover when they fall.", "Serena Williams"));
-        quotes.add(new Quote("It always seems impossible until it’s done.", "Nelson Mandela"));
-        quotes.add(new Quote("Fall seven times, stand up eight.", "Japanese Proverb"));
-        quotes.add(new Quote("When the going gets tough, the tough get going.", "Joe Kennedy"));
-        quotes.add(new Quote("Everything you can imagine is real.", "Pablo Picasso"));
-        quotes.add(new Quote("Believe in yourself and all that you are.", "Christian D. Larson"));
-        quotes.add(new Quote("Don’t count the days, make the days count.", "Muhammad Ali"));
-        quotes.add(new Quote("Impossible is just an opinion.", "Paulo Coelho"));
-        quotes.add(new Quote("The only limit to our realization of tomorrow is our doubts of today.", "Franklin D. Roosevelt"));
-        quotes.add(new Quote("Perseverance is failing 19 times and succeeding the 20th.", "Julie Andrews"));
-        quotes.add(new Quote("What you get by achieving your goals is not as important as what you become by achieving your goals.", "Zig Ziglar"));
-        quotes.add(new Quote("Keep going. Everything you need will come to you at the perfect time.", "Unknown"));
-        quotes.add(new Quote("You don’t have to be great to start, but you have to start to be great.", "Zig Ziglar"));
-        quotes.add(new Quote("Success is not final, failure is not fatal: it is the courage to continue that counts.", "Winston Churchill"));
-        quotes.add(new Quote("The best time to plant a tree was 20 years ago. The second best time is now.", "Chinese Proverb"));
-        quotes.add(new Quote("Don’t wish it were easier. Wish you were better.", "Jim Rohn"));
-        quotes.add(new Quote("Everything has beauty, but not everyone can see.", "Confucius"));
-        quotes.add(new Quote("Do something today that your future self will thank you for.", "Unknown"));
-        quotes.add(new Quote("The key to success is to focus on goals, not obstacles.", "Unknown"));
-        quotes.add(new Quote("Small steps in the right direction can turn out to be the biggest step of your life.", "Unknown"));
-        quotes.add(new Quote("The difference between ordinary and extraordinary is that little extra.", "Jimmy Johnson"));
-        quotes.add(new Quote("Challenges are what make life interesting; overcoming them is what makes life meaningful.", "Joshua Marine"));
-        quotes.add(new Quote("Strength does not come from physical capacity. It comes from indomitable will.", "Mahatma Gandhi"));
-        quotes.add(new Quote("You are braver than you believe, stronger than you seem and smarter than you think.", "A.A. Milne"));
-        quotes.add(new Quote("Opportunities don’t happen, you create them.", "Chris Grosser"));
-        quotes.add(new Quote("Success is walking from failure to failure with no loss of enthusiasm.", "Winston Churchill"));
-        quotes.add(new Quote("Dream big. Start small. Act now.", "Robin Sharma"));
-        quotes.add(new Quote("If you can dream it, you can achieve it.", "Zig Ziglar"));
-        quotes.add(new Quote("Magic is believing in yourself, if you can do that, you can make anything happen.", "Johann Wolfgang von Goethe"));
-        quotes.add(new Quote("The only way to achieve the impossible is to believe it is possible.", "Charles Kingsleigh"));
-        quotes.add(new Quote("The harder I work, the luckier I get.", "Samuel Goldwyn"));
-        quotes.add(new Quote("Don’t stop until you’re proud.", "Unknown"));
-        quotes.add(new Quote("Wake up with determination. Go to bed with satisfaction.", "Unknown"));
-        quotes.add(new Quote("The man who moves a mountain begins by carrying away small stones.", "Confucius"));
-        quotes.add(new Quote("Success usually comes to those who are too busy to be looking for it.", "Henry David Thoreau"));
-        quotes.add(new Quote("Opportunities don’t happen, you create them.", "Chris Grosser"));
-        quotes.add(new Quote("Try not to become a man of success but rather try to become a man of value.", "Albert Einstein"));
-        quotes.add(new Quote("What seems to us as bitter trials are often blessings in disguise.", "Oscar Wilde"));
-        quotes.add(new Quote("It’s not whether you get knocked down; it’s whether you get up.", "Vince Lombardi"));
-        quotes.add(new Quote("The road to freedom is uphill, even if it’s downhill.", "Arnold Schwarzenegger"));
-        quotes.add(new Quote("No masterpiece was ever created by a lazy artist.", "Unknown"));
-        quotes.add(new Quote("Good things come to people who wait, but better things come to those who go out and get them.", "Unknown"));
-        quotes.add(new Quote("Success is the sum of small efforts repeated day in and day out.", "Robert Collier"));
-        quotes.add(new Quote("Positive anything is better than negative nothing.", "Elbert Hubbard"));
-        quotes.add(new Quote("Energy and persistence conquer all things.", "Benjamin Franklin"));
-        quotes.add(new Quote("Life is 10% what happens to us and 90% how we react to it.", "Charles R. Swindoll"));
-        quotes.add(new Quote("I find that the harder I work, the more luck I seem to have.", "Thomas Jefferson"));
-        quotes.add(new Quote("Don’t let yesterday take up too much of today.", "Will Rogers"));
-        quotes.add(new Quote("The only place where success comes before work is in the dictionary.", "Vidal Sassoon"));
-        quotes.add(new Quote("The secret of getting things done is to act!", "Unknown"));
-        quotes.add(new Quote("The best revenge is massive success.", "Frank Sinatra"));
-        quotes.add(new Quote("You must do the thing you think you cannot do.", "Eleanor Roosevelt"));
-        quotes.add(new Quote("Success is liking yourself, liking what you do, and liking how you do it.", "Maya Angelou"));
-        quotes.add(new Quote("There are no shortcuts to any place worth going.", "Beverly Sills"));
-        quotes.add(new Quote("Go the extra mile. It’s never crowded there.", "Dr. Wayne Dyer"));
-        quotes.add(new Quote("Hard work beats talent when talent doesn’t work hard.", "Tim Notke"));
-        quotes.add(new Quote("If you want something you’ve never had, you must be willing to do something you’ve never done.", "Thomas Jefferson"));
-        quotes.add(new Quote("Failure will never overtake me if my determination to succeed is strong enough.", "Og Mandino"));
-        quotes.add(new Quote("You don’t have to be great to start, but you have to start to be great.", "Zig Ziglar"));
-        quotes.add(new Quote("Either you run the day or the day runs you.", "Jim Rohn"));
-        quotes.add(new Quote("The way to get started is to quit talking and start doing.", "Walt Disney"));
-        quotes.add(new Quote("Only put off until tomorrow what you are willing to die having left undone.", "Pablo Picasso"));
-        quotes.add(new Quote("The pain you feel today will be the strength you feel tomorrow.", "Unknown"));
-        quotes.add(new Quote("Don’t wait. The time will never be just right.", "Napoleon Hill"));
-        quotes.add(new Quote("We generate fears while we sit. We overcome them by action.", "Dr. Henry Link"));
-        quotes.add(new Quote("Quality is more important than quantity. One home run is much better than two doubles.", "Steve Jobs"));
-        quotes.add(new Quote("It’s not about ideas. It’s about making ideas happen.", "Scott Belsky"));
-        quotes.add(new Quote("If you are not willing to risk the usual you will have to settle for the ordinary.", "Jim Rohn"));
-        quotes.add(new Quote("Build your own dreams, or someone else will hire you to build theirs.", "Farrah Gray"));
-        quotes.add(new Quote("Do one thing every day that scares you.", "Eleanor Roosevelt"));
-        quotes.add(new Quote("Whenever you see a successful person you only see the public glories, never the private sacrifices.", "Vaibhav Shah"));
-        quotes.add(new Quote("What you lack in talent can be made up with desire, hustle, and giving 110% all the time.", "Don Zimmer"));
-        quotes.add(new Quote("Develop success from failures. Discouragement and failure are two of the surest stepping stones to success.", "Dale Carnegie"));
-        quotes.add(new Quote("You don’t drown by falling in water; you drown by staying there.", "Ed Cole"));
-        quotes.add(new Quote("The distance between insanity and genius is measured only by success.", "Bruce Feirstein"));
-
-        int idx = new Random().nextInt(quotes.size());
-        return quotes.get(idx);
     }
 
     //Resource view (rv) Functions
@@ -1198,8 +1124,16 @@ public class MainAppActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
+                try
+                {
+                    dateFormat.parse(gcCompletionDate.getText().toString());
+                }
+                catch(ParseException e)
+                {
+                    return;
+                }
                 if(isNewGoal) {
-                    goals.add(new Goal(gcNameInput.getText().toString(), gcDescriptionInput.getText().toString(), gcCompletionDate.getText().toString()));
+                    goals.add(new Goal(gcNameInput.getText().toString(), gcDescriptionInput.getText().toString(), currentDate, gcCompletionDate.getText().toString()));
                     setContentView(R.layout.fragment_tasks_create);
                     assignTasksCreate();
                     if(!isNewTask)
@@ -1229,7 +1163,8 @@ public class MainAppActivity extends AppCompatActivity {
         gvGoalTitleText = findViewById(R.id.goalViewTitle);
         gvGoalDescriptionText = findViewById(R.id.goalViewDescription);
         gvDailyStreakText = findViewById(R.id.streakCounterText);
-        gvDateText = findViewById(R.id.completionDate);
+        gvStartDateText = findViewById(R.id.startDate);
+        gvEndDateText = findViewById(R.id.completionDate);
 
         gvTaskLayouts.clear();
         gvTaskLayouts.add(findViewById(R.id.taskOneLayout));
@@ -1394,7 +1329,8 @@ public class MainAppActivity extends AppCompatActivity {
             }
             String streakText = "" + goals.get(goalNumber).getDailyStreak();
             gvDailyStreakText.setText(streakText);
-            gvDateText.setText(goals.get(goalNumber).getCompletionDate());
+            gvStartDateText.setText(goals.get(goalNumber).getStartDate());
+            gvEndDateText.setText(goals.get(goalNumber).getCompletionDate());
             gvGoalTitleText.setText(goals.get(goalNumber).getName());
             gvGoalDescriptionText.setText(goals.get(goalNumber).getDescription());
         }
@@ -1609,29 +1545,47 @@ public class MainAppActivity extends AppCompatActivity {
         });
     }
 
-    public void loadGoalFromFirestore()
+    private void loadFirestoreData()
     {
-        db = FirebaseFirestore.getInstance();
-
-        db.collection("users").document(userId).collection("goals").get().addOnSuccessListener(queryDocumentSnapshots ->
+        try
         {
-            for (DocumentSnapshot doc : queryDocumentSnapshots)
+            // Load previous date
+            Task<DocumentSnapshot> userDateTask = db.collection("users").document(userId).get();
+            DocumentSnapshot userDateSnapshot = Tasks.await(userDateTask); // Wait for Firestore response
+            if (userDateSnapshot.exists()) {
+                previousDate = userDateSnapshot.getString("currentDate");
+            }
+
+            // Update current date in Firestore
+            Map<String, Object> updateData = new HashMap<>();
+            updateData.put("currentDate", currentDate);
+            Task<Void> updateTask = db.collection("users").document(userId).update(updateData);
+            Tasks.await(updateTask); // Wait for update completion
+
+            // Load goals
+            Task<QuerySnapshot> goalsTask = db.collection("users").document(userId).collection("goals").orderBy("startDate", Query.Direction.ASCENDING).get();
+            QuerySnapshot goalsSnapshot = Tasks.await(goalsTask); // Wait for Firestore response
+            for (DocumentSnapshot doc : goalsSnapshot.getDocuments())
             {
                 String name = doc.getString("name");
                 String description = doc.getString("description");
+                String startDate = doc.getString("startDate");
                 String completionDate = doc.getString("completionDate");
                 int totalProgress = doc.getLong("totalProgress").intValue();
                 int dailyStreak = doc.getLong("dailyStreak").intValue();
+                boolean dailyCompletion = doc.getBoolean("completedToday");
                 String docID = doc.getId();
-                Goal goal = new Goal(name, description, completionDate, totalProgress, dailyStreak, docID);
-                for(int i = 0; i < 5; i++)
+                Goal goal = new Goal(name, description, startDate, completionDate, totalProgress, dailyStreak, dailyCompletion, docID);
+
+                // Load tasks inside each goal
+                for (int i = 0; i < 5; i++)
                 {
-                    if(doc.contains("task" + (i + 1)))
+                    if (doc.contains("task" + (i + 1)))
                     {
-                        Map<String, Object> taskMap = (Map<String, Object>) doc.get("task" + (i+1));
-                        String taskName = (String)taskMap.get("name");
-                        String taskDescription = (String)taskMap.get("description");
-                        boolean isComplete = (boolean)taskMap.get("isComplete");
+                        Map<String, Object> taskMap = (Map<String, Object>) doc.get("task" + (i + 1));
+                        String taskName = (String) taskMap.get("name");
+                        String taskDescription = (String) taskMap.get("description");
+                        boolean isComplete = (boolean) taskMap.get("isComplete");
                         goal.createTask(taskName, taskDescription, isComplete);
                     }
                 }
@@ -1639,11 +1593,16 @@ public class MainAppActivity extends AppCompatActivity {
             }
 
             Log.d("Firestore", "Goals loaded: " + goals.size());
-        }).addOnFailureListener(e ->
+
+        }
+        catch (ExecutionException | InterruptedException e)
         {
-            Log.e("Firestore", "Error loading goals", e);
-        });
+            Log.e("Firestore", "Error loading data from Firestore", e);
+        }
     }
+
+
+
 
     private void saveGoalToFirestore(Goal goal)
     {
@@ -1653,8 +1612,10 @@ public class MainAppActivity extends AppCompatActivity {
         Map<String, Object> goalMap = new HashMap<>();
         goalMap.put("name", goal.getName());
         goalMap.put("description", goal.getDescription());
+        goalMap.put("startDate", goal.getStartDate());
         goalMap.put("completionDate", goal.getCompletionDate());
         goalMap.put("totalProgress", goal.getTotalProgress());
+        goalMap.put("completedToday", goal.isCompletedToday());
         goalMap.put("dailyStreak", goal.getDailyStreak());
         for(int i = 0; i < goal.getTaskAmount(); i++)
         {
@@ -1694,6 +1655,7 @@ public class MainAppActivity extends AppCompatActivity {
             });
         }
     }
+
     private void deleteGoalFromFirestore(Goal goal)
     {
         db = FirebaseFirestore.getInstance();
