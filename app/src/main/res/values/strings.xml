@@ -82,5 +82,6 @@
     <string name="days_completed">Days Completed</string>
     <string name="goal_end_date">Goal End Date</string>
     <string name="month_year">Month Year</string>
+    <string name="no_goals">No Goals</string>
 
 </resources>

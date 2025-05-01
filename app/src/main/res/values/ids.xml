@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="mainLayout" type="id" />
+    <item name="quoteOverlay" type="id" />
+    <item name="quoteTextView" type="id" />
+    <item name="authorTextView" type="id" />
+</resources>
