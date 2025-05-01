@@ -28,7 +28,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 //java imports
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -36,8 +38,11 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
+
 import com.example.Logic.*;
 import org.json.JSONObject;
 
@@ -149,7 +154,7 @@ public class MainAppActivity extends AppCompatActivity {
 
     //Calendar Variables
     Calendar localCalendar = Calendar.getInstance();
-
+    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
     final private String day = "" + localCalendar.get(Calendar.DATE);
     final public int month = localCalendar.get(Calendar.MONTH);
     private List<YearMonth> monthsList;
@@ -161,8 +166,7 @@ public class MainAppActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_dashboard);
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-        currentDate = formatter.format(localCalendar.getTime());
+        currentDate = dateFormat.format(localCalendar.getTime());
         loadGoalFromFirestore();
 
         // Initialize UI components
@@ -315,18 +319,34 @@ public class MainAppActivity extends AppCompatActivity {
         assignToDoUI();
     }
 
-    private void updateTotalProgress()
-    {
+    private void updateTotalProgress(){
         int totalProgressValue = 0;
-        if (totalProgressValue > 100)
+        long furthestGoal = Long.MIN_VALUE;
+        long startDate = 0;
+        for (Goal goal : goals)
         {
-            totalProgressValue = 100; // Cap progress at 100%
-        }
+            Calendar cal = Calendar.getInstance();
+            try
+            {
+                cal.setTime(Objects.requireNonNull(dateFormat.parse(goal.getStartDate())));
+                startDate = cal.getTimeInMillis();
+                cal.setTime(Objects.requireNonNull(dateFormat.parse(goal.getCompletionDate())));
 
+            } catch(Exception e) {
+                Log.e("Goal", "Wrongly Formatted goal completion date", e);
+            }
+            furthestGoal = Math.max(cal.getTimeInMillis(), furthestGoal);
+        }
+        long totalDays = TimeUnit.MILLISECONDS.toDays(furthestGoal - startDate);
+        long daysPassed = TimeUnit.MILLISECONDS.toDays(localCalendar.getTimeInMillis() - startDate);
+
+        totalProgressValue = (int)((float)daysPassed / totalDays * 100);
+        totalProgressValue = Math.max(0 , Math.min(totalProgressValue, 100));
         // Update the ProgressBar and display text
         dbTotalProgressBar.setProgress(totalProgressValue);
         dbTotalProgressText.setText("Total Progress: " + totalProgressValue + "%");
     }
+
 
     private void updateDailyProgress()
     {
@@ -344,6 +364,8 @@ public class MainAppActivity extends AppCompatActivity {
         if (totalTasks > 0)
             dailyProgressValue = (int)(((float) completedTasks / totalTasks) * 100);
         // Update the ProgressBar and display text
+
+        dailyProgressValue = Math.max(0 , Math.min(dailyProgressValue, 100));
         dbDailyProgressBar.setProgress(dailyProgressValue);
         dbDailyProgressText.setText(dailyProgressValue + "% Complete");
     }
