@@ -76,7 +76,7 @@
         android:id="@+id/goalViewDescription"
         android:layout_width="365dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="112dp"
+        android:layout_marginTop="148dp"
         android:fontFamily="@font/roboto_bold"
         android:text="Goal Description"
         android:textColor="@color/white"
@@ -101,6 +101,18 @@
         app:layout_constraintVertical_bias="0.095" />
 
     <TextView
+        android:id="@+id/startText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/roboto"
+        android:text="Start Date:"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/completionText"
+        app:layout_constraintEnd_toEndOf="@+id/completionText" />
+
+    <TextView
         android:id="@+id/completionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -110,10 +122,10 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.645"
+        app:layout_constraintHorizontal_bias="0.575"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.095" />
+        app:layout_constraintVertical_bias="0.127" />
 
     <TextView
         android:id="@+id/streakCounterText"
@@ -132,14 +144,30 @@
         android:id="@+id/completionDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="23dp"
         android:text="10/10/2025"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/completionText"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/completionText"
-        app:layout_constraintTop_toTopOf="@+id/completionText" />
+        app:layout_constraintTop_toTopOf="@+id/completionText"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/startDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginBottom="8dp"
+        android:text="10/10/2025"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/completionDate"
+        app:layout_constraintStart_toStartOf="@+id/completionDate" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/taskOneLayout"

@@ -98,6 +98,6 @@ public class Goal {
 
     public String getStartDate()
     {
-        return startDate
+        return startDate;
     }
 }

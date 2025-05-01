@@ -1,5 +1,6 @@
 package com.example.fusiondailytest;
 
+//android imports
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -8,19 +9,26 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.graphics.Paint;
-
+import android.widget.Button;
+import android.net.Uri;
+import android.view.LayoutInflater;
+import android.text.util.Linkify;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
-
 import android.view.View;
+import android.util.Log;
 
+//firebase imports
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import android.widget.Button;
 
+//java imports
+import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -31,14 +39,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 import com.example.Logic.*;
-
-import android.net.Uri;
-import android.view.LayoutInflater;
-import android.text.util.Linkify;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 import org.json.JSONObject;
-import android.util.Log;
+
 
 public class MainAppActivity extends AppCompatActivity {
 
@@ -115,7 +117,8 @@ public class MainAppActivity extends AppCompatActivity {
     private Button gvCreateButton;
     private Button gvEditGoalButton;
     private TextView gvDailyStreakText;
-    private TextView gvDateText;
+    private TextView gvStartDateText;
+    private TextView gvEndDateText;
     private TextView gvGoalTitleText;
     private TextView gvGoalDescriptionText;
 
@@ -141,6 +144,8 @@ public class MainAppActivity extends AppCompatActivity {
     private boolean isFromGoalView = false;
     private boolean isNewGoal = true;
     private boolean isNewTask = true;
+    String currentDate = "";
+    String previousDate = "";
 
     //Calendar Variables
     Calendar localCalendar = Calendar.getInstance();
@@ -156,7 +161,10 @@ public class MainAppActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_dashboard);
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+        currentDate = formatter.format(localCalendar.getTime());
         loadGoalFromFirestore();
+
         // Initialize UI components
         assignDashboard();
     }
@@ -314,6 +322,7 @@ public class MainAppActivity extends AppCompatActivity {
         {
             totalProgressValue = 100; // Cap progress at 100%
         }
+
         // Update the ProgressBar and display text
         dbTotalProgressBar.setProgress(totalProgressValue);
         dbTotalProgressText.setText("Total Progress: " + totalProgressValue + "%");
@@ -1000,7 +1009,7 @@ public class MainAppActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 if(isNewGoal) {
-                    goals.add(new Goal(gcNameInput.getText().toString(), gcDescriptionInput.getText().toString(), gcCompletionDate.getText().toString()));
+                    goals.add(new Goal(gcNameInput.getText().toString(), gcDescriptionInput.getText().toString(), currentDate, gcCompletionDate.getText().toString()));
                     setContentView(R.layout.fragment_tasks_create);
                     assignTasksCreate();
                     if(!isNewTask)
@@ -1030,7 +1039,8 @@ public class MainAppActivity extends AppCompatActivity {
         gvGoalTitleText = findViewById(R.id.goalViewTitle);
         gvGoalDescriptionText = findViewById(R.id.goalViewDescription);
         gvDailyStreakText = findViewById(R.id.streakCounterText);
-        gvDateText = findViewById(R.id.completionDate);
+        gvStartDateText = findViewById(R.id.startDate);
+        gvEndDateText = findViewById(R.id.completionDate);
 
         gvTaskLayouts.clear();
         gvTaskLayouts.add(findViewById(R.id.taskOneLayout));
@@ -1195,7 +1205,8 @@ public class MainAppActivity extends AppCompatActivity {
             }
             String streakText = "" + goals.get(goalNumber).getDailyStreak();
             gvDailyStreakText.setText(streakText);
-            gvDateText.setText(goals.get(goalNumber).getCompletionDate());
+            gvStartDateText.setText(goals.get(goalNumber).getStartDate());
+            gvEndDateText.setText(goals.get(goalNumber).getCompletionDate());
             gvGoalTitleText.setText(goals.get(goalNumber).getName());
             gvGoalDescriptionText.setText(goals.get(goalNumber).getDescription());
         }
@@ -1414,17 +1425,28 @@ public class MainAppActivity extends AppCompatActivity {
     {
         db = FirebaseFirestore.getInstance();
 
+        db.collection("users").document(userId).get().addOnSuccessListener(queryDocumentSnapshots ->
+        {
+            previousDate = (String)queryDocumentSnapshots.get("currentDate");
+        }).addOnFailureListener(e ->
+        {
+            Log.e("Firestore", "Error retrieving user data", e);
+        });
+
+        db.collection("users").document(userId).update("currentDate", currentDate).addOnSuccessListener(documentReference -> {});
+
         db.collection("users").document(userId).collection("goals").get().addOnSuccessListener(queryDocumentSnapshots ->
         {
             for (DocumentSnapshot doc : queryDocumentSnapshots)
             {
                 String name = doc.getString("name");
                 String description = doc.getString("description");
+                String startDate = doc.getString("startDate");
                 String completionDate = doc.getString("completionDate");
                 int totalProgress = doc.getLong("totalProgress").intValue();
                 int dailyStreak = doc.getLong("dailyStreak").intValue();
                 String docID = doc.getId();
-                Goal goal = new Goal(name, description, completionDate, totalProgress, dailyStreak, docID);
+                Goal goal = new Goal(name, description, startDate,completionDate, totalProgress, dailyStreak, docID);
                 for(int i = 0; i < 5; i++)
                 {
                     if(doc.contains("task" + (i + 1)))
@@ -1454,6 +1476,7 @@ public class MainAppActivity extends AppCompatActivity {
         Map<String, Object> goalMap = new HashMap<>();
         goalMap.put("name", goal.getName());
         goalMap.put("description", goal.getDescription());
+        goalMap.put("startDate", goal.getStartDate());
         goalMap.put("completionDate", goal.getCompletionDate());
         goalMap.put("totalProgress", goal.getTotalProgress());
         goalMap.put("dailyStreak", goal.getDailyStreak());
