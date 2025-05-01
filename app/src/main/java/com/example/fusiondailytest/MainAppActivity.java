@@ -158,6 +158,7 @@ public class MainAppActivity extends AppCompatActivity {
     private boolean isFromGoalView = false;
     private boolean isNewGoal = true;
     private boolean isNewTask = true;
+    private boolean isNewDay = false;
     String currentDate = "";
     String previousDate = "";
     int targetColor;
@@ -183,10 +184,11 @@ public class MainAppActivity extends AppCompatActivity {
         Executors.newSingleThreadExecutor().execute(() -> {
             loadFirestoreData();
 
-            // Once data is loaded, load quote before switching to main dashboard
+            //Happens once data is loaded, load quote before switching to main dashboard
             runOnUiThread(() ->
             {
                 setContentView(R.layout.fragment_dashboard);
+                checkDayResetter();
                 assignDashboard();
             });
         });
@@ -329,7 +331,7 @@ public class MainAppActivity extends AppCompatActivity {
                 assignResourceView();
             }
         });
-        checkDayResetter();
+
         updateTotalProgress();
         updateDailyProgress();
         updateDBDailyStreak();
@@ -425,30 +427,47 @@ public class MainAppActivity extends AppCompatActivity {
     {
         if(!goals.isEmpty())
         {
+            boolean tasksDone = true;
             int compare = Integer.MAX_VALUE;
             for (Goal goal : goals) {
-                if(goal.getDailyStreak() < compare)
-                    compare = goal.getDailyStreak();
+                if(!checkStreak(goal))
+                    tasksDone = false;
+                compare = Math.min(compare, goal.getDailyStreak());
             }
+
+            if(tasksDone)
+            {
+                isNewDay = false;
+                db.collection("users").document(userId).update("isNewDay", isNewDay);
+            }
+
             String output = "" + compare;
             dbDailyStreakText.setText(output);
         }
     }
 
-    private void checkStreak()
+    private boolean checkStreak(Goal goal)
     {
         boolean isComplete = false;
-        if(goals.get(goalNumber).getTaskAmount() > 0) {
+        if(goal.getTaskAmount() > 0) {
             isComplete = true;
             for (int i = 0; i < goals.get(goalNumber).getTaskAmount(); i++)
                 if (!goals.get(goalNumber).getTask(i).isComplete())
                     isComplete = false;
         }
-        if(isComplete)
-            goals.get(goalNumber).setDailyStreak(goals.get(goalNumber).getDailyStreak() + 1);
-        else if(goals.get(goalNumber).getDailyStreak() > 0)
+
+        if(isComplete && isNewDay)
+        {
+            goal.setDailyStreak(goals.get(goalNumber).getDailyStreak() + 1);
+            db.collection("users").document(userId).collection("goals").document(goal.getDocID()).update("dailyStreak", goal.getDailyStreak());
+        }
+        else if(goals.get(goalNumber).getDailyStreak() > 0 && !isNewDay && !isComplete) {
             goals.get(goalNumber).setDailyStreak(goals.get(goalNumber).getDailyStreak() - 1);
-        updateDBDailyStreak();
+            db.collection("users").document(userId).collection("goals").document(goal.getDocID()).update("dailyStreak", goal.getDailyStreak());
+            isNewDay = true;
+            db.collection("users").document(userId).update("isNewDay", isNewDay);
+        }
+        return isComplete;
     }
 
     private void checkDayResetter()
@@ -456,14 +475,19 @@ public class MainAppActivity extends AppCompatActivity {
         if(!previousDate.equals(currentDate))
         {
             //check if any tasks are incomplete, if so, reset that goal's daily streak, then set all task completions to false
+            isNewDay = true;
+            db.collection("users").document(userId).update("isNewDay", isNewDay);
             for (Goal goal : goals)
             {
                 for (int i = 0; i < goal.getTaskAmount(); i++)
                 {
                     if(!goal.getTask(i).isComplete())
+                    {
                         goal.setDailyStreak(0);
+                    }
                     goal.getTask(i).setCompletion(false);
                 }
+                saveGoalToFirestore(goal);
             }
         }
     }
@@ -531,9 +555,10 @@ public class MainAppActivity extends AppCompatActivity {
                     goals.get(goalNumber).getTask(0).setCompletion(false);
                     tdTaskTitles.get(0).setPaintFlags(tdTaskTitles.get(0).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
+                db.collection("users").document(userId).collection("goals").document(goals.get(goalNumber).getDocID()).update("task" + 1 + ".isComplete", goals.get(goalNumber).getTask(0).isComplete());
                 updateDailyProgress();
                 updateTotalProgress();
-                checkStreak();
+                updateDBDailyStreak();
             }
         });
 
@@ -549,9 +574,10 @@ public class MainAppActivity extends AppCompatActivity {
                     goals.get(goalNumber).getTask(1).setCompletion(false);
                     tdTaskTitles.get(1).setPaintFlags(tdTaskTitles.get(1).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
+                db.collection("users").document(userId).collection("goals").document(goals.get(goalNumber).getDocID()).update("task" + 2 + ".isComplete", goals.get(goalNumber).getTask(1).isComplete());
                 updateDailyProgress();
                 updateTotalProgress();
-                checkStreak();
+                updateDBDailyStreak();
             }
         });
 
@@ -567,9 +593,10 @@ public class MainAppActivity extends AppCompatActivity {
                     goals.get(goalNumber).getTask(2).setCompletion(false);
                     tdTaskTitles.get(2).setPaintFlags(tdTaskTitles.get(2).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
+                db.collection("users").document(userId).collection("goals").document(goals.get(goalNumber).getDocID()).update("task" + 3 + ".isComplete", goals.get(goalNumber).getTask(2).isComplete());
                 updateDailyProgress();
                 updateTotalProgress();
-                checkStreak();
+                updateDBDailyStreak();
             }
         });
 
@@ -585,9 +612,10 @@ public class MainAppActivity extends AppCompatActivity {
                     goals.get(goalNumber).getTask(3).setCompletion(false);
                     tdTaskTitles.get(3).setPaintFlags(tdTaskTitles.get(3).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
+                db.collection("users").document(userId).collection("goals").document(goals.get(goalNumber).getDocID()).update("task" + 4 + ".isComplete", goals.get(goalNumber).getTask(3).isComplete());
                 updateDailyProgress();
                 updateTotalProgress();
-                checkStreak();
+                updateDBDailyStreak();
             }
         });
 
@@ -603,9 +631,10 @@ public class MainAppActivity extends AppCompatActivity {
                     goals.get(goalNumber).getTask(4).setCompletion(false);
                     tdTaskTitles.get(4).setPaintFlags(tdTaskTitles.get(4).getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
+                db.collection("users").document(userId).collection("goals").document(goals.get(goalNumber).getDocID()).update("task" + 5 + ".isComplete", goals.get(goalNumber).getTask(4).isComplete());
                 updateDailyProgress();
                 updateTotalProgress();
-                checkStreak();
+                updateDBDailyStreak();
             }
         });
 
@@ -614,8 +643,6 @@ public class MainAppActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                for(Goal goal : goals)
-                    saveGoalToFirestore(goal);
                 tdLayout.setVisibility(View.GONE);
                 tdExitUIButton.setVisibility(View.GONE);
                 dbResourcesButton.setVisibility(View.VISIBLE);
@@ -1517,10 +1544,11 @@ public class MainAppActivity extends AppCompatActivity {
         try
         {
             // Load previous date
-            Task<DocumentSnapshot> userTask = db.collection("users").document(userId).get();
-            DocumentSnapshot userSnapshot = Tasks.await(userTask); // Wait for Firestore response
-            if (userSnapshot.exists()) {
-                previousDate = userSnapshot.getString("currentDate");
+            Task<DocumentSnapshot> userDateTask = db.collection("users").document(userId).get();
+            DocumentSnapshot userDateSnapshot = Tasks.await(userDateTask); // Wait for Firestore response
+            if (userDateSnapshot.exists()) {
+                previousDate = userDateSnapshot.getString("currentDate");
+                isNewDay = userDateSnapshot.getBoolean("isNewDay");
             }
 
             // Update current date in Firestore
