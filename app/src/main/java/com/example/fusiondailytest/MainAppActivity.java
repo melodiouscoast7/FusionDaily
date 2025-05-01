@@ -2,6 +2,8 @@ package com.example.fusiondailytest;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -28,6 +30,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.Vector;
 import com.example.Logic.*;
@@ -127,7 +130,6 @@ public class MainAppActivity extends AppCompatActivity {
     private TextView gcDescriptionInput;
     private TextView gcCompletionDate;
 
-
     //Task Create (tc) Functions
     private Button tcCancelButton;
     private Button tcSaveButton;
@@ -141,6 +143,14 @@ public class MainAppActivity extends AppCompatActivity {
     private boolean isFromGoalView = false;
     private boolean isNewGoal = true;
     private boolean isNewTask = true;
+
+    //Quote Screen Variables
+    private View mainLayout;
+    private View quoteOverlay;
+    private TextView quoteTextView;
+    private TextView authorTextView;
+    private Handler quoteHandler;
+    private Runnable hideQuoteRunnable;
 
     //Calendar Variables
     Calendar localCalendar = Calendar.getInstance();
@@ -159,6 +169,9 @@ public class MainAppActivity extends AppCompatActivity {
         loadGoalFromFirestore();
         // Initialize UI components
         assignDashboard();
+
+        assignQuoteScreenViews();
+        showQuoteScreen();
     }
 
     // Dashboard (db) Functions
@@ -566,6 +579,95 @@ public class MainAppActivity extends AppCompatActivity {
         dbResourcesButton.setVisibility(View.GONE);
         dbGoalsButton.setVisibility(View.GONE);
         tdLayout.setVisibility(View.VISIBLE);
+    }
+
+    //Quote Screen Functions
+    private void assignQuoteScreenViews() {
+        // after assignDashboard() in onCreate():
+        mainLayout      = findViewById(R.id.mainLayout);
+        quoteOverlay    = findViewById(R.id.quoteOverlay);
+        quoteTextView   = findViewById(R.id.quoteTextView);
+        authorTextView  = findViewById(R.id.authorTextView);
+
+        // prepare handler for auto-hide
+        quoteHandler      = new Handler(Looper.getMainLooper());
+        hideQuoteRunnable = this::hideQuoteScreen;
+    }
+
+    private void showQuoteScreen() {
+        // 1) Hide dashboard & show overlay, but start invisible
+        mainLayout.setVisibility(View.GONE);
+        quoteOverlay.setAlpha(0f);
+        quoteOverlay.setVisibility(View.VISIBLE);
+
+        refreshQuote();
+
+        // 2) Fade the overlay itself in
+        quoteOverlay.animate()
+                .alpha(1f)
+                .setDuration(500)
+                .start();
+
+        // 3) Now fade in the quote text, author, and refresh button
+        quoteTextView.setAlpha(0f);
+        authorTextView.setAlpha(0f);
+
+        quoteTextView.animate()
+                .alpha(1f)
+                .setStartDelay(300)
+                .setDuration(500)
+                .start();
+
+        authorTextView.animate()
+                .alpha(1f)
+                .setStartDelay(500)
+                .setDuration(500)
+                .start();
+
+        // Auto-hide after 5 seconds (with fade-out)
+        quoteHandler.postDelayed(hideQuoteRunnable, 5000);
+    }
+
+    private void hideQuoteScreen() {
+        // 1) Fade out the overlay
+        quoteOverlay.animate()
+                .alpha(0f)
+                .setDuration(500)
+                .withEndAction(() -> {
+                    // 2) when the animation ends, hide it and show the dashboard
+                    quoteOverlay.setVisibility(View.GONE);
+                    mainLayout.setVisibility(View.VISIBLE);
+
+                    // reset overlay alpha for next time
+                    quoteOverlay.setAlpha(1f);
+                })
+                .start();
+    }
+
+    private void refreshQuote() {
+        Quote newQuote = getRandomQuote();
+        quoteTextView.setText("“" + newQuote.getQuote() + "”");
+        authorTextView.setText("- " + newQuote.getAuthor());
+    }
+
+    // Simple in-activity Quote class + random picker
+    private static class Quote {
+        private final String quote, author;
+        Quote(String q, String a) { quote = q; author = a; }
+        String getQuote()  { return quote; }
+        String getAuthor() { return author; }
+    }
+
+    private Quote getRandomQuote() {
+        List<Quote> quotes = new ArrayList<>();
+        quotes.add(new Quote("The only way to do great work is to love what you do.", "Steve Jobs"));
+        quotes.add(new Quote("Strive not to be a success, but rather to be of value.", "Albert Einstein"));
+        quotes.add(new Quote("I have not failed. I've just found 10,000 ways that won't work.", "Thomas A. Edison"));
+        quotes.add(new Quote("The mind is everything. What you think you become.", "Buddha"));
+        quotes.add(new Quote("The best and most beautiful things in the world cannot be seen or even touched—they must be felt with the heart.", "Helen Keller"));
+
+        int idx = new Random().nextInt(quotes.size());
+        return quotes.get(idx);
     }
 
     //Resource view (rv) Functions
@@ -1410,7 +1512,7 @@ public class MainAppActivity extends AppCompatActivity {
         });
     }
 
-    private void loadGoalFromFirestore()
+    public void loadGoalFromFirestore()
     {
         db = FirebaseFirestore.getInstance();
 
