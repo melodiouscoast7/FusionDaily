@@ -19,6 +19,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 import android.view.View;
 import android.util.Log;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import java.util.concurrent.*;
 
 //firebase imports
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,7 +31,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 //java imports
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -41,9 +43,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.Vector;
-import java.util.concurrent.TimeUnit;
 
 import com.example.Logic.*;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import org.json.JSONObject;
 
 
@@ -167,10 +171,17 @@ public class MainAppActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_dashboard);
         currentDate = dateFormat.format(localCalendar.getTime());
-        loadGoalFromFirestore();
 
-        // Initialize UI components
-        assignDashboard();
+        Executors.newSingleThreadExecutor().execute(() -> {
+            loadGoalFromFirestore();
+
+            // Once data is loaded, switch to the main UI
+            runOnUiThread(() ->
+            {
+                setContentView(R.layout.fragment_dashboard);
+                assignDashboard();
+            });
+        });
     }
 
     // Dashboard (db) Functions
@@ -206,8 +217,6 @@ public class MainAppActivity extends AppCompatActivity {
         dbToDoLabels.add(findViewById(R.id.todoButtonText3));
         dbToDoLabels.add(findViewById(R.id.todoButtonText4));
         dbToDoLabels.add(findViewById(R.id.todoButtonText5));
-
-
 
         dbToDoButtons.get(0).setOnClickListener(new View.OnClickListener()
         {
@@ -312,6 +321,7 @@ public class MainAppActivity extends AppCompatActivity {
                 assignResourceView();
             }
         });
+        checkDayResetter();
         updateTotalProgress();
         updateDailyProgress();
         updateDBDailyStreak();
@@ -398,6 +408,23 @@ public class MainAppActivity extends AppCompatActivity {
         else if(goals.get(goalNumber).getDailyStreak() > 0)
             goals.get(goalNumber).setDailyStreak(goals.get(goalNumber).getDailyStreak() - 1);
         updateDBDailyStreak();
+    }
+
+    private void checkDayResetter()
+    {
+        if(!previousDate.equals(currentDate))
+        {
+            //check if any tasks are incomplete, if so, reset that goal's daily streak, then set all task completions to false
+            for (Goal goal : goals)
+            {
+                for (int i = 0; i < goal.getTaskAmount(); i++)
+                {
+                    if(!goal.getTask(i).isComplete())
+                        goal.setDailyStreak(0);
+                    goal.getTask(i).setCompletion(false);
+                }
+            }
+        }
     }
 
     private void updateToDoButtons()
@@ -1445,22 +1472,24 @@ public class MainAppActivity extends AppCompatActivity {
 
     private void loadGoalFromFirestore()
     {
-        db = FirebaseFirestore.getInstance();
+        try {
+            // Load previous date
+            Task<DocumentSnapshot> userTask = db.collection("users").document(userId).get();
+            DocumentSnapshot userSnapshot = Tasks.await(userTask); // Wait for Firestore response
+            if (userSnapshot.exists()) {
+                previousDate = userSnapshot.getString("currentDate");
+            }
 
-        db.collection("users").document(userId).get().addOnSuccessListener(queryDocumentSnapshots ->
-        {
-            previousDate = (String)queryDocumentSnapshots.get("currentDate");
-        }).addOnFailureListener(e ->
-        {
-            Log.e("Firestore", "Error retrieving user data", e);
-        });
+            // Update current date in Firestore
+            Map<String, Object> updateData = new HashMap<>();
+            updateData.put("currentDate", currentDate);
+            Task<Void> updateTask = db.collection("users").document(userId).update(updateData);
+            Tasks.await(updateTask); // Wait for update completion
 
-        db.collection("users").document(userId).update("currentDate", currentDate).addOnSuccessListener(documentReference -> {});
-
-        db.collection("users").document(userId).collection("goals").get().addOnSuccessListener(queryDocumentSnapshots ->
-        {
-            for (DocumentSnapshot doc : queryDocumentSnapshots)
-            {
+            // Load goals
+            Task<QuerySnapshot> goalsTask = db.collection("users").document(userId).collection("goals").get();
+            QuerySnapshot goalsSnapshot = Tasks.await(goalsTask); // Wait for Firestore response
+            for (DocumentSnapshot doc : goalsSnapshot.getDocuments()) {
                 String name = doc.getString("name");
                 String description = doc.getString("description");
                 String startDate = doc.getString("startDate");
@@ -1468,15 +1497,15 @@ public class MainAppActivity extends AppCompatActivity {
                 int totalProgress = doc.getLong("totalProgress").intValue();
                 int dailyStreak = doc.getLong("dailyStreak").intValue();
                 String docID = doc.getId();
-                Goal goal = new Goal(name, description, startDate,completionDate, totalProgress, dailyStreak, docID);
-                for(int i = 0; i < 5; i++)
-                {
-                    if(doc.contains("task" + (i + 1)))
-                    {
-                        Map<String, Object> taskMap = (Map<String, Object>) doc.get("task" + (i+1));
-                        String taskName = (String)taskMap.get("name");
-                        String taskDescription = (String)taskMap.get("description");
-                        boolean isComplete = (boolean)taskMap.get("isComplete");
+                Goal goal = new Goal(name, description, startDate, completionDate, totalProgress, dailyStreak, docID);
+
+                // Load tasks inside each goal
+                for (int i = 0; i < 5; i++) {
+                    if (doc.contains("task" + (i + 1))) {
+                        Map<String, Object> taskMap = (Map<String, Object>) doc.get("task" + (i + 1));
+                        String taskName = (String) taskMap.get("name");
+                        String taskDescription = (String) taskMap.get("description");
+                        boolean isComplete = (boolean) taskMap.get("isComplete");
                         goal.createTask(taskName, taskDescription, isComplete);
                     }
                 }
@@ -1484,11 +1513,14 @@ public class MainAppActivity extends AppCompatActivity {
             }
 
             Log.d("Firestore", "Goals loaded: " + goals.size());
-        }).addOnFailureListener(e ->
-        {
-            Log.e("Firestore", "Error loading goals", e);
-        });
+
+        } catch (ExecutionException | InterruptedException e) {
+            Log.e("Firestore", "Error loading data from Firestore", e);
+        }
     }
+
+
+
 
     private void saveGoalToFirestore(Goal goal)
     {
@@ -1540,6 +1572,7 @@ public class MainAppActivity extends AppCompatActivity {
             });
         }
     }
+
     private void deleteGoalFromFirestore(Goal goal)
     {
         db = FirebaseFirestore.getInstance();
