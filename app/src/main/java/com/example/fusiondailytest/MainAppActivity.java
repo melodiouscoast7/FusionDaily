@@ -1,12 +1,10 @@
 package com.example.fusiondailytest;
+import com.example.Logic.*;
 
 //android imports
 import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,7 +26,7 @@ import android.view.View;
 import android.util.Log;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-
+import android.view.animation.AccelerateInterpolator;
 import java.text.ParseException;
 import java.util.Random;
 import java.util.concurrent.*;
@@ -39,10 +37,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 //java imports
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -53,12 +52,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.Vector;
-
-import com.example.Logic.*;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
 import org.json.JSONObject;
 
 
@@ -419,7 +412,7 @@ public class MainAppActivity extends AppCompatActivity {
         if (dailyProgressValue < 100)
         {
             prevTarget = targetColor;
-            targetColor = (int) new ArgbEvaluator().evaluate((float)dailyProgressValue/100, getResources().getColor(R.color.wheel_gray), getResources().getColor(R.color.accentGreen));
+            targetColor = (int) new ArgbEvaluator().evaluate((float)Math.pow((float)dailyProgressValue/100, 2), getResources().getColor(R.color.wheel_gray), getResources().getColor(R.color.accentGreen));
         }
         else
         {
@@ -430,14 +423,15 @@ public class MainAppActivity extends AppCompatActivity {
 
         ValueAnimator colorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), prevTarget, targetColor);
         colorAnimator.setDuration(1000);
+        colorAnimator.setInterpolator(new AccelerateInterpolator(2f));
         colorAnimator.addUpdateListener(animator -> {
+
             int animatedColor = (int) animator.getAnimatedValue();
+
             dbDailyProgressBar.getProgressDrawable().setTint(animatedColor);
             dbDailyProgressText.setTextColor(animatedColor);
         });
-
         colorAnimator.start();
-
     }
 
     private void updateDBDailyStreak()
