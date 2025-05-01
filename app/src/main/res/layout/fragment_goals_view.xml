@@ -65,7 +65,7 @@
         android:fontFamily="@font/roboto_bold"
         android:text="Goal View"
         android:textColor="@color/white"
-        android:textSize="38dp"
+        android:textSize="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,7 +80,7 @@
         android:fontFamily="@font/roboto_bold"
         android:text="Goal Description"
         android:textColor="@color/white"
-        android:textSize="20dp"
+        android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

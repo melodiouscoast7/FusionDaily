@@ -345,151 +345,191 @@ public class MainAppActivity extends AppCompatActivity {
         assignToDoUI();
     }
 
-    private void updateTotalProgress(){
-        int totalProgressValue = 0;
-        int furthestGoal = Integer.MIN_VALUE;
-        long startDate = 0;
-        for (Goal goal : goals)
-        {
-            Calendar cal = Calendar.getInstance();
-            try
-            {
+    private void updateTotalProgress() {
+        int totalProgressValue = 0; // Stores the progress percentage for each goal
+        int furthestGoal = Integer.MIN_VALUE; // Tracks the highest progress value across all goals
+
+        // Iterate through all goals
+        for (Goal goal : goals) {
+            Calendar cal = Calendar.getInstance(); // Create a Calendar instance for date manipulation
+            try {
+                // Parse the start date of the goal and convert it to milliseconds
+                long startDate = 0; // Variable to store the goal's start date in milliseconds
                 cal.setTime(Objects.requireNonNull(dateFormat.parse(goal.getStartDate())));
                 startDate = cal.getTimeInMillis();
+
+                // Parse the completion date of the goal and convert it to milliseconds
                 cal.setTime(Objects.requireNonNull(dateFormat.parse(goal.getCompletionDate())));
-                long totalDays = TimeUnit.MILLISECONDS.toDays(cal.getTimeInMillis() - startDate);
-                long daysPassed = TimeUnit.MILLISECONDS.toDays(localCalendar.getTimeInMillis() - startDate);
-                totalProgressValue = (int)((float)daysPassed / totalDays * 100);
-                totalProgressValue = Math.max(0 , Math.min(totalProgressValue, 100));
+                long totalDays = TimeUnit.MILLISECONDS.toDays(cal.getTimeInMillis() - startDate); // Total duration of the goal in days
+                long daysPassed = TimeUnit.MILLISECONDS.toDays(localCalendar.getTimeInMillis() - startDate); // Days elapsed since start
+
+                // Calculate progress as a percentage (ensuring it stays within 0-100 range)
+                totalProgressValue = (int) ((float) daysPassed / totalDays * 100);
+                totalProgressValue = Math.max(0, Math.min(totalProgressValue, 100)); // Clamps value between 0 and 100
+
+                // Set the calculated progress for this goal
                 goal.setTotalProgress(totalProgressValue);
-                db.collection("users").document(userId).collection("goals").document(goal.getDocID()).update("totalProgress", goal.getTotalProgress());
-            } catch(Exception e) {
-                Log.e("Goal", "Wrongly Formatted goal completion date", e);
+
+                // Update the goal's progress in the database
+                db.collection("users").document(userId)
+                        .collection("goals").document(goal.getDocID())
+                        .update("totalProgress", goal.getTotalProgress());
+            } catch (Exception e) {
+                Log.e("Goal", "Wrongly formatted goal completion date", e); // Log an error if parsing fails
             }
+
+            // Keep track of the furthest (highest) progress among all goals
             furthestGoal = Math.max(totalProgressValue, furthestGoal);
         }
 
-
-
+        // Set total progress to the furthest goal's progress value
         totalProgressValue = furthestGoal;
-        // Update the ProgressBar and display text
+
+        // Update the UI elements (ProgressBar and TextView) to reflect the total progress
         dbTotalProgressBar.setProgress(totalProgressValue);
         dbTotalProgressText.setText("Total Progress: " + totalProgressValue + "%");
     }
 
 
-    private void updateDailyProgress()
-    {
-        //daily progress logic
+    private void updateDailyProgress() {
+        // Initialize daily progress variables
         int dailyProgressValue = 0;
         int totalTasks = 0, completedTasks = 0;
-        for(int i = 0; i < goals.size(); i++)
-        {
-            for (int j = 0; j < goals.get(i).getTaskAmount(); j++)
-            {
-                if(goals.get(i).getTask(j).isComplete())
+
+        // Loop through all goals and count completed tasks
+        for (int i = 0; i < goals.size(); i++) {
+            for (int j = 0; j < goals.get(i).getTaskAmount(); j++) {
+                // Check if the task is marked as complete
+                if (goals.get(i).getTask(j).isComplete()) {
                     completedTasks++;
-                totalTasks++;
+                }
+                totalTasks++; // Count total tasks
             }
         }
-        if (totalTasks > 0)
-            dailyProgressValue = (int)(((float) completedTasks / totalTasks) * 100);
 
-        dailyProgressValue = Math.max(0 , Math.min(dailyProgressValue, 100));
+        // Calculate daily progress as a percentage (avoid division by zero)
+        if (totalTasks > 0) {
+            dailyProgressValue = (int) (((float) completedTasks / totalTasks) * 100);
+        }
 
+        // Ensure daily progress stays within the valid range (0-100)
+        dailyProgressValue = Math.max(0, Math.min(dailyProgressValue, 100));
 
-        //daily progress animations
+        // Animate progress bar update smoothly
         ValueAnimator progressAnimator = ValueAnimator.ofInt(dbDailyProgressBar.getProgress(), dailyProgressValue);
-        progressAnimator.setDuration(1000);
+        progressAnimator.setDuration(1000); // Animation duration in milliseconds
         progressAnimator.addUpdateListener(animation -> {
             int animatedValue = (int) animation.getAnimatedValue();
-            dbDailyProgressBar.setProgress(animatedValue);
-            dbDailyProgressText.setText(animatedValue + "% Complete");
+            dbDailyProgressBar.setProgress(animatedValue); // Update progress bar
+            dbDailyProgressText.setText(animatedValue + "% Complete"); // Update text display
         });
-        progressAnimator.start();
+        progressAnimator.start(); // Start animation
 
-
-        if (dailyProgressValue < 100)
-        {
+        // Determine target color based on progress value
+        if (dailyProgressValue < 100) {
             prevTarget = targetColor;
-            targetColor = (int) new ArgbEvaluator().evaluate((float)Math.pow((float)dailyProgressValue/100, 2), getResources().getColor(R.color.wheel_gray), getResources().getColor(R.color.accentGreen));
-        }
-        else
-        {
+            // Apply a quadratic curve to create a smoother color transition
+            targetColor = (int) new ArgbEvaluator().evaluate(
+                    (float) Math.pow((float) dailyProgressValue / 100, 2),
+                    getResources().getColor(R.color.wheel_gray),
+                    getResources().getColor(R.color.accentGreen)
+            );
+        } else {
             prevTarget = targetColor;
-            targetColor = getResources().getColor(R.color.accentBlue);
+            targetColor = getResources().getColor(R.color.accentBlue); // 100% progress changes to blue
         }
 
-
+        // Animate the color transition
         ValueAnimator colorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), prevTarget, targetColor);
-        colorAnimator.setDuration(1000);
-        colorAnimator.setInterpolator(new AccelerateInterpolator(2f));
+        colorAnimator.setDuration(1000); // Smooth transition over 1 second
+        colorAnimator.setInterpolator(new AccelerateInterpolator(2f)); // Speed up at the end
         colorAnimator.addUpdateListener(animator -> {
-
             int animatedColor = (int) animator.getAnimatedValue();
-
-            dbDailyProgressBar.getProgressDrawable().setTint(animatedColor);
-            dbDailyProgressText.setTextColor(animatedColor);
+            dbDailyProgressBar.getProgressDrawable().setTint(animatedColor); // Change progress bar color
+            dbDailyProgressText.setTextColor(animatedColor); // Change text color
         });
-        colorAnimator.start();
+        colorAnimator.start(); // Start color animation
     }
 
-    private void updateDBDailyStreak()
-    {
-        if(!goals.isEmpty())
-        {
+    private void updateDBDailyStreak() {
+        // Ensure there are goals to process
+        if (!goals.isEmpty()) {
+            // Update streak for the currently selected goal
             updateStreak(goals.get(goalNumber));
-            int compare = Integer.MIN_VALUE;
+
+            int compare = Integer.MIN_VALUE; // Variable to store the highest streak value among all goals
+
+            // Iterate through all goals and find the highest daily streak value
             for (Goal goal : goals) {
                 compare = Math.max(compare, goal.getDailyStreak());
             }
 
+            // Convert highest streak value to a string and update the UI
             String output = "" + compare;
             dbDailyStreakText.setText(output);
         }
     }
 
-    private void updateStreak(Goal goal)
-    {
-        boolean isComplete = false;
-        if(goal.getTaskAmount() > 0) {
+    private void updateStreak(Goal goal) {
+        boolean isComplete = false; // Flag to check if all tasks for the goal are complete
+
+        // If the goal contains tasks, verify if all tasks are completed
+        if (goal.getTaskAmount() > 0) {
             isComplete = true;
-            for (int i = 0; i < goal.getTaskAmount(); i++)
-                if (!goal.getTask(i).isComplete())
-                    isComplete = false;
+            for (int i = 0; i < goal.getTaskAmount(); i++) {
+                if (!goal.getTask(i).isComplete()) {
+                    isComplete = false; // If any task is incomplete, set the flag to false
+                }
+            }
         }
 
-        if(isComplete && !goal.isCompletedToday())
-        {
+        // If the goal is completed and hasn't been marked as completed today
+        if (isComplete && !goal.isCompletedToday()) {
+            // Increment the daily streak
             goal.setDailyStreak(goal.getDailyStreak() + 1);
-            db.collection("users").document(userId).collection("goals").document(goal.getDocID()).update("dailyStreak", goal.getDailyStreak());
+            // Update the daily streak value in Firestore
+            db.collection("users").document(userId).collection("goals").document(goal.getDocID())
+                    .update("dailyStreak", goal.getDailyStreak());
+
+            // Mark the goal as completed today
             goal.setCompletedToday(true);
-            db.collection("users").document(userId).collection("goals").document(goal.getDocID()).update("completedToday", goal.isCompletedToday());
+            db.collection("users").document(userId).collection("goals").document(goal.getDocID())
+                    .update("completedToday", goal.isCompletedToday());
         }
-        else if(goal.getDailyStreak() > 0 && goal.isCompletedToday() && !isComplete) {
+        // If the goal was marked as completed today but is now incomplete, reduce streak
+        else if (goal.getDailyStreak() > 0 && goal.isCompletedToday() && !isComplete) {
+            // Decrement the daily streak
             goal.setDailyStreak(goal.getDailyStreak() - 1);
-            db.collection("users").document(userId).collection("goals").document(goal.getDocID()).update("dailyStreak", goal.getDailyStreak());
+            // Update the streak in Firestore
+            db.collection("users").document(userId).collection("goals").document(goal.getDocID())
+                    .update("dailyStreak", goal.getDailyStreak());
+
+            // Mark the goal as incomplete for today
             goal.setCompletedToday(false);
-            db.collection("users").document(userId).collection("goals").document(goal.getDocID()).update("completedToday", goal.isCompletedToday());
+            db.collection("users").document(userId).collection("goals").document(goal.getDocID())
+                    .update("completedToday", goal.isCompletedToday());
         }
     }
 
-    private void checkDayResetter()
-    {
-        if(!previousDate.equals(currentDate))
-        {
-            //check if any tasks are incomplete, if so, reset that goal's daily streak, then set all task completions to false
-            for (Goal goal : goals)
-            {
+    private void checkDayResetter() {
+        // If the stored previous date is different from the current date, reset the streaks
+        if (!previousDate.equals(currentDate)) {
+            // Loop through all goals
+            for (Goal goal : goals) {
+                // Reset today's completion flag for the goal
                 goal.setCompletedToday(false);
-                for (int i = 0; i < goal.getTaskAmount(); i++)
-                {
-                    if(!goal.getTask(i).isComplete())
-                    {
+
+                // Iterate through all tasks in the goal
+                for (int i = 0; i < goal.getTaskAmount(); i++) {
+                    // If any task is incomplete, reset the goal's daily streak
+                    if (!goal.getTask(i).isComplete()) {
                         goal.setDailyStreak(0);
                     }
+                    // Set all task completions to false since the day has reset
                     goal.getTask(i).setCompletion(false);
                 }
+
+                // Save updated goal state to Firestore
                 saveGoalToFirestore(goal);
             }
         }
@@ -1527,21 +1567,19 @@ public class MainAppActivity extends AppCompatActivity {
         for (int i = 0; i < gvTaskLayouts.size(); i++)
             gvTaskLayouts.get(i).setVisibility(View.INVISIBLE);
 
-        if(goals.get(goalNumber).getTaskAmount() > 0)
-        {
-            for (int i = 0; i < goals.get(goalNumber).getTaskAmount(); i++)
-            {
+        if(goals.get(goalNumber).getTaskAmount() > 0) {
+            for (int i = 0; i < goals.get(goalNumber).getTaskAmount(); i++) {
                 gvTaskLayouts.get(i).setVisibility(View.VISIBLE);
                 gvTaskTitles.get(i).setText(goals.get(goalNumber).getTask(i).getName());
                 gvTaskDescriptions.get(i).setText(goals.get(goalNumber).getTask(i).getDescription());
             }
-            String streakText = "" + goals.get(goalNumber).getDailyStreak();
-            gvDailyStreakText.setText(streakText);
-            gvStartDateText.setText(goals.get(goalNumber).getStartDate());
-            gvEndDateText.setText(goals.get(goalNumber).getCompletionDate());
-            gvGoalTitleText.setText(goals.get(goalNumber).getName());
-            gvGoalDescriptionText.setText(goals.get(goalNumber).getDescription());
         }
+        String streakText = "" + goals.get(goalNumber).getDailyStreak();
+        gvDailyStreakText.setText(streakText);
+        gvStartDateText.setText(goals.get(goalNumber).getStartDate());
+        gvEndDateText.setText(goals.get(goalNumber).getCompletionDate());
+        gvGoalTitleText.setText(goals.get(goalNumber).getName());
+        gvGoalDescriptionText.setText(goals.get(goalNumber).getDescription());
         if(goals.get(goalNumber).getTaskAmount() >= 5)
             gvCreateButton.setVisibility(View.INVISIBLE);
     }
