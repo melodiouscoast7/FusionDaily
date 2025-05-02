@@ -384,7 +384,7 @@ public class MainAppActivity extends AppCompatActivity {
 
         // Set total progress to the furthest goal's progress value
         totalProgressValue = furthestGoal;
-
+        totalProgressValue = Math.max(0, Math.min(totalProgressValue, 100));
         // Update the UI elements (ProgressBar and TextView) to reflect the total progress
         dbTotalProgressBar.setProgress(totalProgressValue);
         dbTotalProgressText.setText("Total Progress: " + totalProgressValue + "%");
